@@ -88,18 +88,4 @@ public class AuthRepository {
         }
     }
 
-    public AuthUserDTO findDtoByUsername(String username) {
-
-        Map<String, Object> row =
-                findByUsername(username);
-
-        return AuthMapper.toDTO(row);
-    }
-    public AuthUserDTO findDtoById(BigDecimal id) {
-
-        Map<String, Object> row =
-                findById(id);
-
-        return AuthMapper.toDTO(row);
-    }
 }

@@ -5,19 +5,19 @@ import com.bank.enums.Role;
 
 public class AuthUserDTO {
 
-    private long id;
+    private Long id;
     private String username;
     private String passwordHash;
-    private long customerId;
+    private Long customerId;
     private Role role;
 
     public AuthUserDTO() {
     }
 
-    public AuthUserDTO(long id,
+    public AuthUserDTO(Long id,
                        String username,
                        String passwordHash,
-                       long customerId,
+                       Long customerId,
                        Role role) {
         this.id = id;
         this.username = username;
@@ -30,7 +30,7 @@ public class AuthUserDTO {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,7 +54,7 @@ public class AuthUserDTO {
         return customerId;
     }
 
-    public void setCustomerId(long customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

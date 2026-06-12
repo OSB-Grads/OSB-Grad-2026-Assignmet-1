@@ -16,10 +16,10 @@ public class AuthMapper {
 
         AuthUserDTO dto = new AuthUserDTO();
 
-        dto.setId((java.math.BigDecimal) row.get("id"));
+        dto.setId((Long) row.get("id"));
         dto.setUsername((String) row.get("username"));
         dto.setPasswordHash((String) row.get("password_hash"));
-        dto.setCustomerId((java.math.BigDecimal) row.get("customer_id"));
+        dto.setCustomerId((Long) row.get("customer_id"));
 
         if (row.get("role") != null) {
             dto.setRole(Role.valueOf(row.get("role").toString()));
