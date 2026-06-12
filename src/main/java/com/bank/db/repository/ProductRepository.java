@@ -38,7 +38,7 @@ public class ProductRepository {
         return (Long) productRow.get(0).get("id");
     }
 
-    public List<Map<String,Object>> getByProductCategory(String category) throws SQLException
+    public List<Map<String,Object>> findAllByProductCategory(String category) throws SQLException
     {
         String sql = "SELECT * FROM products WHERE category = ?";
         List<Map<String,Object>> productNames = db.query(sql,category);
