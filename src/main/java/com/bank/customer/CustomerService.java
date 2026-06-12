@@ -1,6 +1,6 @@
 package com.bank.customer;
 
-import com.bank.db.customer.CustomerRepository;
+import com.bank.db.repository.CustomerRepository;
 import com.bank.dto.CustomerDTO;
 
 import java.util.List;
