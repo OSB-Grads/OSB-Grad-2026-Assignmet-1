@@ -22,8 +22,7 @@ public class LogMapper {
         );
         dto.setAction((String) row.get("action"));
         dto.setDetails((String) row.get("details"));
-        dto.setIpAddress((String) row.get("ip_address"));
-        dto.setStatus((String) row.get("status"));
+        dto.setType((String) row.get("type"));
 
         dto.setCreatedAt(row.get("created_at") != null
                         ? row.get("created_at").toString()
@@ -40,8 +39,7 @@ public class LogMapper {
         row.put("user_id", dto.getUserId());
         row.put("action", dto.getAction());
         row.put("details", dto.getDetails());
-        row.put("ip_address", dto.getIpAddress());
-        row.put("status", dto.getStatus());
+        row.put("type", dto.getType());
         row.put("created_at", dto.getCreatedAt());
 
         return row;
