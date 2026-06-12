@@ -211,8 +211,6 @@ public class DatabaseManager {
             // transaction_id  — the business transaction (ledger identity)
             "CREATE TABLE IF NOT EXISTS inbox (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "correlation_id VARCHAR(64) NOT NULL, " +
-            "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
             "message_type VARCHAR(40) NOT NULL, " +
             "payload TEXT NOT NULL, " +

@@ -52,10 +52,8 @@ public class InboxRepository {
     public Long insert(Map<String, Object> inboxFields) {
         
         try {
-            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,idempotency_key,transaction_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?, ?,?)",
+            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?, ?,?)",
                             inboxFields.get("correlation_id"),
-                            inboxFields.get("idempotency_key"),
-                            inboxFields.get("transaction_id"),
                             inboxFields.get("message_type"),
                             inboxFields.get("payload"),
                             inboxFields.get("status"),
@@ -83,10 +81,8 @@ public class InboxRepository {
 
         try {
             List<Map<String, Object>> result =
-                    db.query( "UPDATE inbox SET correlation_id=?,idempotency_key=?,transaction_id=?,message_type=?,payload=?,status=?,reason=? WHERE id = ?",
+                    db.query( "UPDATE inbox SET correlation_id=?,message_type=?,payload=?,status=?,reason=? WHERE id = ?",
                             changedFields.get("correlation_id"),
-                            changedFields.get("idempotency_key"),
-                            changedFields.get("transaction_id"),
                             changedFields.get("message_type"),
                             changedFields.get("payload"),
                             changedFields.get("status"),
