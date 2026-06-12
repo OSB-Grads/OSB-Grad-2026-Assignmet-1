@@ -2,6 +2,7 @@ package com.bank.mapper;
 
 import com.bank.dto.CustomerDTO;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,7 +26,23 @@ public class CustomerMapper {
      */
     public static CustomerDTO toDTO(Map<String, Object> row) {
         // TODO: map each column from `row` onto a new CustomerDTO and return it.
-        throw new UnsupportedOperationException("TODO: implement toDTO");
+        if(row == null) {
+            return null;
+        }
+        CustomerDTO dto = new CustomerDTO();
+        dto.setId(((Number) row.get("id")).longValue());
+        dto.setUsername((String) row.get("username"));
+        dto.setRole((String) row.get("role"));
+        dto.setFirstName((String) row.get("first_name"));
+        dto.setLastName((String) row.get("last_name"));
+        dto.setDateOfBirth((String) row.get("date_of_birth"));
+        dto.setEmail((String) row.get("email"));
+        dto.setPhone((String) row.get("phone"));
+        dto.setAddress((String) row.get("address"));
+        dto.setNationalId((String) row.get("national_id"));
+        dto.setCreatedAt(String.valueOf(row.get("created_at")));
+        dto.setUpdatedAt(String.valueOf(row.get("updated_at")));
+        return dto;
     }
 
     /**
@@ -35,6 +52,19 @@ public class CustomerMapper {
      */
     public static Map<String, Object> toRow(CustomerDTO dto) {
         // TODO: put each DTO field into a Map keyed by column name and return it.
-        throw new UnsupportedOperationException("TODO: implement toRow");
+        Map<String ,Object> row = new HashMap<>();
+        row.put("id", dto.getId());
+        row.put("username", dto.getUsername());
+        row.put("role", dto.getRole());
+        row.put("first_name", dto.getFirstName());
+        row.put("last_name", dto.getLastName());
+        row.put("date_of_birth", dto.getDateOfBirth());
+        row.put("email", dto.getEmail());
+        row.put("phone", dto.getPhone());
+        row.put("address", dto.getAddress());
+        row.put("national_id", dto.getNationalId());
+        row.put("created_at", dto.getCreatedAt());
+        row.put("updated_at", dto.getUpdatedAt());
+        return row;
     }
 }

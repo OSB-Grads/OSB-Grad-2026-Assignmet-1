@@ -1,0 +1,152 @@
+package com.bank.db.repository;
+
+import com.bank.db.DatabaseManager;
+import com.bank.exception.DatabaseOperationException;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Data access (DAO) for customers. Repositories stay <strong>small</strong>:
+ * only CRUD and simple lookups. No business rules here &mdash; those belong in
+ * the service / orchestrator layer.
+ *
+ * <p>Repositories return raw database rows ({@code Map<String,Object>}); the
+ * {@link com.bank.mapper.CustomerMapper} turns those rows into DTOs. This keeps
+ * the database shape out of the higher layers.</p>
+ *
+ * <p>This is a skeleton showing the expected shape &mdash; method bodies are
+ * intentionally unimplemented.</p>
+ */
+public class CustomerRepository {
+
+    private final DatabaseManager db;
+
+    public CustomerRepository() {
+        this.db = DatabaseManager.getInstance();
+    }
+
+    /**
+     * Find a single customer by username.
+     * @param username the login username
+     * @return the raw row, or {@code null} if no such customer exists
+     */
+    public Map<String, Object> findByUsername(String username) throws SQLException {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "SELECT * FROM customers WHERE username = ?"
+                            ,username
+                    );
+            if (results.isEmpty()) {
+                return null;
+            }
+            return results.get(0);
+    }
+
+    /**
+     * Find a single customer by primary key.
+     * @param id the customer id
+     * @return the raw row, or {@code null} if not found
+     */
+    public Map<String, Object> findById(Long id) throws SQLException {
+        // TODO: SELECT * FROM customers WHERE id = ...
+        try {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "SELECT * FROM customers where id = ?"
+                            ,id
+                    );
+            if (results.isEmpty()) {
+                return null;
+            }
+            return results.get(0);
+        }catch(SQLException e) {
+            throw new DatabaseOperationException("Failed to retrieve Customer with customer ID: " + id,e);
+        }
+    }
+
+    /**
+     * Insert a new customer.
+     * @return the generated customer id
+     */
+    public Long insert(Map<String, Object> customerFields) throws SQLException {
+        // TODO: INSERT INTO customers (...) VALUES (...) and return the generated key.
+        try {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "INSERT INTO customers " +
+                                    "(username, password_hash, full_name, email, phone) " +
+                                    "VALUES (?, ?, ?, ?, ?)",
+
+                            customerFields.get("username"),
+                            customerFields.get("password_hash"),
+                            customerFields.get("full_name"),
+                            customerFields.get("email"),
+                            customerFields.get("phone")
+                    );
+            if(results.isEmpty()) {
+                return null;
+            }
+            Object generatedKey = results.get(0).get("generated_key");
+            return generatedKey == null ? null : ((Number) generatedKey).longValue();
+        }catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to insert customer Field",e);
+        }
+    }
+
+    /**
+     * Update an existing customer's mutable profile fields.
+     * @return number of rows affected
+     */
+    public int update(Long id, Map<String, Object> changedFields) throws SQLException {
+        // TODO: UPDATE customers SET ... WHERE id = ...
+        try {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "UPDATE customers " +
+                                    "SET role = ?, " +
+                                    "first_name = ?, " +
+                                    "last_name = ?, " +
+                                    "date_of_birth = ?, " +
+                                    "email = ?, " +
+                                    "phone = ?, " +
+                                    "address = ?, " +
+                                    "national_id = ?, " +
+                                    "updated_at = CURRENT_TIMESTAMP " +
+                                    "WHERE id = ?",
+
+                            changedFields.get("role"),
+                            changedFields.get("first_name"),
+                            changedFields.get("last_name"),
+                            changedFields.get("date_of_birth"),
+                            changedFields.get("email"),
+                            changedFields.get("phone"),
+                            changedFields.get("address"),
+                            changedFields.get("national_id"),
+                            id
+                    );
+            if (results.isEmpty()) {
+                return 0;
+            }
+            return ((Number) results.get(0)
+                    .get("affected_rows"))
+                    .intValue();
+        }catch(SQLException e) {
+            throw new DatabaseOperationException("Failed to update in database", e);
+        }
+    }
+
+    /**
+     * List every customer (admin use).
+     * @return raw rows
+     */
+    public List<Map<String, Object>> findAll() throws SQLException {
+        // TODO: SELECT * FROM customers
+        try {
+            return db.query( "SELECT * FROM customers");
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to fetch all the customers", e);
+        }
+    }
+}
