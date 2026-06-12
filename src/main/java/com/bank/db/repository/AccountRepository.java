@@ -169,7 +169,7 @@ public class AccountRepository {
         try {
 
             List<Map<String, Object>> result =
-                    db.query("UPDATE accounts SET is_locked=FALSE,satus='ACTIVE' WHERE id=?",id);
+                    db.query("UPDATE accounts SET is_locked=FALSE,status='ACTIVE' WHERE id=?",id);
 
             return ((Number) result.get(0).get("affected_rows")).intValue();
 
