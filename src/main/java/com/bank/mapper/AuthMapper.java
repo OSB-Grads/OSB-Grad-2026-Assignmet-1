@@ -38,7 +38,7 @@ public class AuthMapper {
         row.put("customer_id", dto.getCustomerId());
 
         if (dto.getRole() != null) {
-            row.put("role", dto.getRole().name());
+            row.put("role", dto.getRole().toString());
         }
 
         return row;
