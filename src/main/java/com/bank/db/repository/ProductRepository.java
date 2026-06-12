@@ -19,7 +19,7 @@ public class ProductRepository {
     {
         String sql = "SELECT * FROM products where id = ? ";
         List<Map<String,Object>> row = db.query(sql,productId);
-        if(row==null){
+        if(row.isEmpty()){
             return null;
         }
 
