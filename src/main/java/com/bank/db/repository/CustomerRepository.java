@@ -1,4 +1,4 @@
-package com.bank.db.customer;
+package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
 
