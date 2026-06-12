@@ -50,7 +50,6 @@ public class CustomerRepository {
      * @return the raw row, or {@code null} if not found
      */
     public Map<String, Object> findById(Long id) throws SQLException {
-        // TODO: SELECT * FROM customers WHERE id = ...
         try {
             List<Map<String, Object>> results =
                     db.query(
@@ -113,7 +112,6 @@ public class CustomerRepository {
      * @return number of rows affected
      */
     public int update(Long id, Map<String, Object> changedFields) throws SQLException {
-        // TODO: UPDATE customers SET ... WHERE id = ...
         try {
             List<Map<String, Object>> results =
                     db.query(
@@ -155,7 +153,6 @@ public class CustomerRepository {
      * @return raw rows
      */
     public List<Map<String, Object>> findAll() throws SQLException {
-        // TODO: SELECT * FROM customers
         try {
             return db.query( "SELECT * FROM customers");
         } catch (SQLException e) {

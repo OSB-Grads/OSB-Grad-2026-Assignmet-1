@@ -25,7 +25,6 @@ public class CustomerMapper {
      * @return the mapped DTO, or {@code null} if the row is {@code null}
      */
     public static CustomerDTO toDTO(Map<String, Object> row) {
-        // TODO: map each column from `row` onto a new CustomerDTO and return it.
         if(row == null) {
             return null;
         }
@@ -51,7 +50,6 @@ public class CustomerMapper {
      * @return a map of column name to value for the repository to insert/update
      */
     public static Map<String, Object> toRow(CustomerDTO dto) {
-        // TODO: put each DTO field into a Map keyed by column name and return it.
         Map<String ,Object> row = new HashMap<>();
         row.put("id", dto.getId());
         row.put("username", dto.getUsername());
