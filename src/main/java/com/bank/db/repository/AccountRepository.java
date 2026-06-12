@@ -198,4 +198,15 @@ public class AccountRepository {
             );
         }
     }
+        public List<Map<String, Object>> gteAccountWithProductByCustomerId(Long id){
+            try{
+                List<Map<String, Object>> result=db.query(
+                    "SELECT * FROM accounts join products on accounts.product_id=products.id WHERE id=?",id
+                );
+                return result;
+            }
+            catch(SQLException e){
+                throw new DatabaseOperationException("failed to return data",e);
+            }
+    }
 }

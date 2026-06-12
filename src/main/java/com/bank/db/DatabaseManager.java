@@ -163,18 +163,14 @@ public class DatabaseManager {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "account_number VARCHAR(20) UNIQUE NOT NULL, " +
             "customer_id INTEGER NOT NULL, " +
-            "account_type VARCHAR(20) NOT NULL CHECK (account_type IN ('SAVINGS', 'FIXED_DEPOSIT')), " +
             "product_id INTEGER NOT NULL"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
+            "status TEXT NOT NULL"+
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-<<<<<<< Updated upstream
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
-=======
-            "FOREIGN KEY (user_id) REFERENCES users(id)" +
             "FOREIGN KEY (product_id) REFERENCES products(id)"+
->>>>>>> Stashed changes
             ")",
             
             // Transactions table
