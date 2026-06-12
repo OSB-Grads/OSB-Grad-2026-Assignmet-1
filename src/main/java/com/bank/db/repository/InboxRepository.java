@@ -32,7 +32,7 @@ public class InboxRepository {
         }
     }
 
-    public Map<String,Object> findByOne(){
+    public Map<String,Object> findFirst(){
         try {
             List<Map<String, Object>> rows =
                     db.query(
@@ -105,7 +105,7 @@ public class InboxRepository {
         }
     }
 
-    public Map<String, Object> deleteById(Long id) {
+    public  Map<String,Object> deleteById(Long id) {
 
         try {
             List<Map<String, Object>> rows =
@@ -120,11 +120,11 @@ public class InboxRepository {
 
         } catch (SQLException e) {
 
-            throw new DatabaseOperationException("Failed to retrieve first inbox",e);
+            throw new DatabaseOperationException("Failed to delete the inbox",e);
         }
     }
 
-    public Map<String, Object> findAll(Long id) {
+    public List<Map<String, Object>> findAll() {
 
         try {
             List<Map<String, Object>> rows =
@@ -134,11 +134,11 @@ public class InboxRepository {
 
             return rows.isEmpty()
                     ? null
-                    : rows.get(0);
+                    : rows;
 
         } catch (SQLException e) {
 
-            throw new DatabaseOperationException("Failed to retrieve inbox",e);
+            throw new DatabaseOperationException("Failed to retrive inbox",e);
         }
     }
 }
