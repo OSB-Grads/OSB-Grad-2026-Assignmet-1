@@ -49,6 +49,62 @@ public class InboxRepository {
         }
     }
 
+    public Long insert(Map<String, Object> inboxFields) {
+        
+        try {
+            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,idempotency_key,transaction_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?, ?,?)",
+                            inboxFields.get("correlation_id"),
+                            inboxFields.get("idempotency_key"),
+                            inboxFields.get("transaction_id"),
+                            inboxFields.get("message_type"),
+                            inboxFields.get("payload"),
+                            inboxFields.get("status"),
+                            inboxFields.get("reason")
+                    );
+
+            Object generatedKey =
+                    result.get(0).get("generated_key");
+
+            return generatedKey == null
+                    ? null
+                    : ((Number) generatedKey).longValue();
+
+        } catch (SQLException e) {
+
+            throw new DatabaseOperationException(
+                    "Failed to create inbox",
+                    e
+            );
+        }
+    }
+
+    public int update(Long id,
+                      Map<String, Object> changedFields) {
+
+        try {
+            List<Map<String, Object>> result =
+                    db.query( "UPDATE inbox SET correlation_id=?,idempotency_key=?,transaction_id=?,message_type=?,payload=?,status=?,reason=? WHERE id = ?",
+                            changedFields.get("correlation_id"),
+                            changedFields.get("idempotency_key"),
+                            changedFields.get("transaction_id"),
+                            changedFields.get("message_type"),
+                            changedFields.get("payload"),
+                            changedFields.get("status"),
+                            changedFields.get("reason"),
+                            id
+                    );
+
+            return ((Number) result.get(0).get("affected_rows")).intValue();
+
+        } catch (SQLException e) {
+
+            throw new DatabaseOperationException(
+                    "Failed to update inbox with id: " + id,
+                    e
+            );
+        }
+    }
+
     public Map<String, Object> deleteById(Long id) {
 
         try {
