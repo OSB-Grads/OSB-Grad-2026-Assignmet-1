@@ -193,8 +193,7 @@ public class DatabaseManager {
             "customer_id INTEGER, " +
             "action VARCHAR(100) NOT NULL, " +
             "details TEXT, " +
-            "ip_address VARCHAR(45), " +
-            "status VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
+            "type VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",

@@ -6,8 +6,7 @@ public class LogDTO {
     private Long userId;
     private String action;
     private String details;
-    private String ipAddress;
-    private String status;
+    private String type;
     private String createdAt;
 
     public LogDTO() {
@@ -18,16 +17,14 @@ public class LogDTO {
             Long userId,
             String action,
             String details,
-            String ipAddress,
-            String status,
+            String type,
             String createdAt) {
 
         this.id = id;
         this.userId = userId;
         this.action = action;
         this.details = details;
-        this.ipAddress = ipAddress;
-        this.status = status;
+        this.type = type;
         this.createdAt = createdAt;
     }
 
@@ -63,20 +60,12 @@ public class LogDTO {
         this.details = details;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public String getType() {
+        return type;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreatedAt() {
@@ -94,8 +83,7 @@ public class LogDTO {
                 ", userId=" + userId +
                 ", action='" + action + '\'' +
                 ", details='" + details + '\'' +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", status='" + status + '\'' +
+                ", type='" + type + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 '}';
     }

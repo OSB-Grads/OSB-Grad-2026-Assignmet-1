@@ -1,6 +1,6 @@
 package com.bank.enums.log;
 
-public enum LogStatus {
+public enum LogType {
     SUCCESS,
     FAILURE,
     ERROR
