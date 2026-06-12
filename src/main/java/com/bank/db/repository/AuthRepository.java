@@ -76,6 +76,8 @@ public class AuthRepository {
                     dto.getUsername(),
                     dto.getPasswordHash(),
                     dto.getCustomerId(),
+                    // Convert the enum to a String
+                    // like the role.CUSTOMER is mapped and username is taken
                     dto.getRole().name()
             );
 
@@ -93,7 +95,6 @@ public class AuthRepository {
 
         return AuthMapper.toDTO(row);
     }
-    // repo --> mapper---> dto
     public AuthUserDTO findDtoById(BigDecimal id) {
 
         Map<String, Object> row =

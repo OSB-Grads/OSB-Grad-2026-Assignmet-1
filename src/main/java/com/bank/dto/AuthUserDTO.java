@@ -1,23 +1,23 @@
 package com.bank.dto;
 
 import com.bank.enums.Role;
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 
 public class AuthUserDTO {
 
-    private BigDecimal id;
+    private long id;
     private String username;
     private String passwordHash;
-    private BigDecimal customerId;
+    private long customerId;
     private Role role;
 
     public AuthUserDTO() {
     }
 
-    public AuthUserDTO(BigDecimal id,
+    public AuthUserDTO(long id,
                        String username,
                        String passwordHash,
-                       BigDecimal customerId,
+                       long customerId,
                        Role role) {
         this.id = id;
         this.username = username;
@@ -26,11 +26,11 @@ public class AuthUserDTO {
         this.role = role;
     }
 
-    public BigDecimal getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -50,11 +50,11 @@ public class AuthUserDTO {
         this.passwordHash = passwordHash;
     }
 
-    public BigDecimal getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(BigDecimal customerId) {
+    public void setCustomerId(long customerId) {
         this.customerId = customerId;
     }
 
