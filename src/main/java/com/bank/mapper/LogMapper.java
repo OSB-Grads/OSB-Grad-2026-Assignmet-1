@@ -12,12 +12,12 @@ public class LogMapper {
         LogDTO dto = new LogDTO();
         dto.setId(
                 row.get("id") != null
-                        ? ((Number) row.get("id")).longValue()
+                        ? ((Long) row.get("id"))
                         : null
         );
         dto.setUserId(
                 row.get("user_id") != null
-                        ? ((Number) row.get("user_id")).longValue()
+                        ? ((Long) row.get("user_id"))
                         : null
         );
         dto.setAction((String) row.get("action"));

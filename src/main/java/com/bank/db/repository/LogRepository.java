@@ -17,7 +17,7 @@ public class LogRepository {
         String sql = "SELECT * FROM logs WHERE id = ?";
         List<Map<String, Object>> rows = db.query(sql, logId);
 
-        if (rows == null || rows.isEmpty()) {
+        if (rows.isEmpty()) {
             return null;
         }
         return rows.get(0);
@@ -36,7 +36,7 @@ public class LogRepository {
                 logFields.get("ip_address"),
                 logFields.get("status")
         );
-        return (Long) result.get(0).get("generated_key");
+        return (Long) result.get(0).get("id");
     }
 
     public List<Map<String, Object>> findAll()
