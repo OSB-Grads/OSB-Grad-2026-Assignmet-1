@@ -71,27 +71,40 @@ public class CustomerRepository {
      * @return the generated customer id
      */
     public Long insert(Map<String, Object> customerFields) throws SQLException {
-        // TODO: INSERT INTO customers (...) VALUES (...) and return the generated key.
         try {
             List<Map<String, Object>> results =
                     db.query(
                             "INSERT INTO customers " +
-                                    "(username, password_hash, full_name, email, phone) " +
-                                    "VALUES (?, ?, ?, ?, ?)",
+                                    "(username, role, first_name, last_name, " +
+                                    "date_of_birth, email, phone, address, national_id) " +
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 
                             customerFields.get("username"),
-                            customerFields.get("password_hash"),
-                            customerFields.get("full_name"),
+                            customerFields.get("role"),
+                            customerFields.get("first_name"),
+                            customerFields.get("last_name"),
+                            customerFields.get("date_of_birth"),
                             customerFields.get("email"),
-                            customerFields.get("phone")
+                            customerFields.get("phone"),
+                            customerFields.get("address"),
+                            customerFields.get("national_id")
                     );
-            if(results.isEmpty()) {
+
+            if (results.isEmpty()) {
                 return null;
             }
+
             Object generatedKey = results.get(0).get("generated_key");
-            return generatedKey == null ? null : ((Number) generatedKey).longValue();
-        }catch (SQLException e) {
-            throw new DatabaseOperationException("Failed to insert customer Field",e);
+
+            return generatedKey == null
+                    ? null
+                    : ((Number) generatedKey).longValue();
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(
+                    "Failed to insert customer",
+                    e
+            );
         }
     }
 
