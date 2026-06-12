@@ -220,7 +220,16 @@ public class DatabaseManager {
             "reason TEXT, " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "processed_at TIMESTAMP" +
-            ")"
+            ")",
+
+             "CREATE TABLE IF NOT EXISTS products (" +
+             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+             "product_name VARCHAR(64) NOT NULL UNIQUE, " +
+             "category VARCHAR(64) NOT NULL, " +
+             "interest_rate DECIMAL(4,2) NOT NULL, " +
+             "min_operating_balance DECIMAL(15,2) NOT NULL , " +
+             "term_months INTEGER " +
+             ")"
         };
         
         for (String query : createTableQueries) {
