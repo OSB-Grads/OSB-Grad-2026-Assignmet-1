@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 public class InboxDTO {
     private Long id;
     private String correlationId;
-    private String idempotencyKey;
-    private String transactionId;
     private String messageType;
     private String payload;
     private String status;
@@ -20,8 +18,6 @@ public class InboxDTO {
 
     public InboxDTO(Long id,
                     String correlationId,
-                    String idempotencyKey,
-                    String transactionId,
                     String messageType,
                     String payload,
                     String status,
@@ -31,8 +27,6 @@ public class InboxDTO {
                     ) {
         this.id = id;
         this.correlationId = correlationId;
-        this.idempotencyKey = idempotencyKey;
-        this.transactionId = transactionId;
         this.messageType = messageType;
         this.payload = payload;
         this.status = status;
@@ -52,18 +46,6 @@ public class InboxDTO {
     }
     public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
-    }
-    public String getIdempotencyKey() {
-        return idempotencyKey;
-    }
-    public void setIdempotencyKey(String idempotencyKey) {
-        this.idempotencyKey = idempotencyKey;
-    }
-    public String getTransactionId() {
-        return transactionId;
-    }
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
     }
     public String getMessageType(){
         return messageType;

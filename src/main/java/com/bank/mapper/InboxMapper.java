@@ -13,8 +13,6 @@ public class InboxMapper {
         InboxDTO dto = new InboxDTO();
         dto.setId(((Number) row.get("id")).longValue());
         dto.setCorrelationId((String) row.get("correlation_id"));
-        dto.setIdempotencyKey((String) row.get("idempotency_key"));
-        dto.setTransactionId((String) row.get("transaction_id"));
         dto.setMessageType((String) row.get("message_type"));
         dto.setPayload((String) row.get("payload"));
         dto.setStatus((String) row.get("status"));
@@ -37,8 +35,6 @@ public class InboxMapper {
         Map<String, Object> row = new HashMap<>();
         row.put("id", dto.getId());
         row.put("correlation_id", dto.getCorrelationId());
-        row.put("idempotency_key", dto.getIdempotencyKey());
-        row.put("transaction_id", dto.getTransactionId());
         row.put("message_type", dto.getMessageType());
         row.put("payload", dto.getPayload());
         row.put("status", dto.getStatus());
