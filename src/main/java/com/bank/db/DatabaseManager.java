@@ -166,7 +166,7 @@ public class DatabaseManager {
             "product_id INTEGER NOT NULL"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
-            "status TEXT NOT NULL"+
+            "status VARCHAR(20) NOT NULL CHECK(status IN('ACTIVE','CLOSED','MATURED'))" +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +

@@ -14,126 +14,109 @@ public class AccountRepository {
         this.db = DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findById(Long id) {
+    public Map<String, Object> findAccountsById(Long id) {
 
         try {
 
-            List<Map<String, Object>> rows =
-                    db.query(
-                            "SELECT * FROM accounts WHERE id = ?",
-                            id
-                    );
+            List<Map<String, Object>> row = db.query(
+                    "SELECT * FROM accounts WHERE id = ?",
+                    id);
 
-            return rows.isEmpty()
-                    ? null
-                    : rows.get(0);
+            return row.isEmpty() || row == null ? null : row.get(0);
 
         } catch (SQLException e) {
 
-            throw new DatabaseOperationException("Failed to retrieve account",e);
+            throw new DatabaseOperationException("Failed to retrieve account", e);
         }
     }
 
-    public Map<String, Object> findByAccountNumber(String accountNumber) {
+    public Map<String, Object> findProductByAccountNumber(String accountNumber) {
 
         try {
 
-            List<Map<String, Object>> rows =
-                    db.query(
-                            "SELECT * FROM accounts WHERE account_number = ?",
-                            accountNumber
-                    );
+            List<Map<String, Object>> row = db.query(
+                    "SELECT * FROM accounts WHERE account_number = ?",
+                    accountNumber);
 
-            return rows.isEmpty()
-                    ? null
-                    : rows.get(0);
+            return row.isEmpty() || row == null ? null : row.get(0);
 
         } catch (SQLException e) {
 
-            throw new DatabaseOperationException("Failed to retrieve account with account number: " + accountNumber,e);
+            throw new DatabaseOperationException("Failed to retrieve account with account number: " + accountNumber, e);
         }
     }
 
-    public List<Map<String, Object>> findByCustomerId(Long customerId) {
+    public List<Map<String, Object>> findAccountsByCustomerId(Long customerId) {
 
         try {
 
-            return db.query(
+            List<Map<String, Object>> rows = db.query(
                     "SELECT * FROM accounts WHERE customer_id = ?",
-                    customerId
-            );
+                    customerId);
+
+            return rows.isEmpty() || rows == null ? null : rows;
 
         } catch (SQLException e) {
-
             throw new DatabaseOperationException(
                     "Failed to retrieve accounts for customer id: " + customerId,
-                    e
-            );
+                    e);
         }
     }
 
-    public List<Map<String, Object>> findByProductId(Long productId) {
+    public List<Map<String, Object>> findAccountsByProductId(Long productId) {
 
         try {
 
-            return db.query(
+            List<Map<String, Object>> rows = db.query(
                     "SELECT * FROM accounts WHERE product_id = ?",
-                    productId
-            );
+                    productId);
+
+            return rows.isEmpty() || rows == null ? null : rows;
 
         } catch (SQLException e) {
 
             throw new DatabaseOperationException(
                     "Failed to retrieve accounts for product id: " + productId,
-                    e
-            );
+                    e);
         }
     }
 
     public Long insert(Map<String, Object> accountFields) {
-        
+
         try {
-            List<Map<String, Object>> result =db.query(" INSERT INTO accounts( account_number,customer_id,product_id,balance,status,opening_date,is_locked                            )VALUES (?, ?, ?, ?, ?, ?, ?)",
-                            accountFields.get("account_number"),
-                            accountFields.get("customer_id"),
-                            accountFields.get("product_id"),
-                            accountFields.get("balance"),
-                            accountFields.get("status"),
-                            accountFields.get("opening_date"),
-                            accountFields.get("is_locked")
-                    );
+            List<Map<String, Object>> rows = db.query(
+                    " INSERT INTO accounts(account_number, customer_id,product_id,balance,status,opening_date,is_locked) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    accountFields.get("account_number"),
+                    accountFields.get("customer_id"),
+                    accountFields.get("product_id"),
+                    accountFields.get("balance"),
+                    accountFields.get("status"),
+                    accountFields.get("opening_date"),
+                    accountFields.get("is_locked"));
 
-            Object generatedKey =
-                    result.get(0).get("generated_key");
-
-            return generatedKey == null
-                    ? null
-                    : ((Number) generatedKey).longValue();
+            return (Long) rows.get(0).get("id");
 
         } catch (SQLException e) {
 
             throw new DatabaseOperationException(
                     "Failed to create account",
-                    e
-            );
+                    e);
         }
     }
 
-    public int update(Long id,
-                      Map<String, Object> changedFields) {
+    public int update(Long id, Map<String, Object> changedFields) {
 
         try {
-            List<Map<String, Object>> result =
-                    db.query( "UPDATE accounts SET account_number = ?,customer_id = ?,product_id = ?, balance = ?,status = ?,opening_date = ?,is_locked = ? WHERE id = ?",
-                            changedFields.get("account_number"),
-                            changedFields.get("customer_id"),
-                            changedFields.get("product_id"),
-                            changedFields.get("balance"),
-                            changedFields.get("status"),
-                            changedFields.get("opening_date"),
-                            changedFields.get("is_locked"),
-                            id
-                    );
+            List<Map<String, Object>> result = db.query(
+                    "UPDATE accounts SET account_number = ?,customer_id = ?,product_id = ?, balance = ?,status = ?,opening_date = ?,is_locked = ? WHERE id = ?",
+                    changedFields.get("account_number"),
+                    changedFields.get("customer_id"),
+                    changedFields.get("product_id"),
+                    changedFields.get("balance"),
+                    changedFields.get("status"),
+                    changedFields.get("opening_date"),
+                    changedFields.get("is_locked"),
+                    id);
 
             return ((Number) result.get(0).get("affected_rows")).intValue();
 
@@ -141,8 +124,7 @@ public class AccountRepository {
 
             throw new DatabaseOperationException(
                     "Failed to update account with id: " + id,
-                    e
-            );
+                    e);
         }
     }
 
@@ -150,8 +132,8 @@ public class AccountRepository {
 
         try {
 
-            List<Map<String, Object>> result =
-                    db.query("UPDATE accounts SET is_locked = TRUE, status = 'LOCKED' WHERE id = ?",id);
+            List<Map<String, Object>> result = db
+                    .query("UPDATE accounts SET is_locked = TRUE, status = 'ACTIVE' WHERE id = ?", id);
 
             return ((Number) result.get(0).get("affected_rows")).intValue();
 
@@ -159,8 +141,7 @@ public class AccountRepository {
 
             throw new DatabaseOperationException(
                     "Failed to lock account with id: " + id,
-                    e
-            );
+                    e);
         }
     }
 
@@ -168,8 +149,8 @@ public class AccountRepository {
 
         try {
 
-            List<Map<String, Object>> result =
-                    db.query("UPDATE accounts SET is_locked=FALSE,status='ACTIVE' WHERE id=?",id);
+            List<Map<String, Object>> result = db
+                    .query("UPDATE accounts SET is_locked=FALSE,status='ACTIVE' WHERE id=?", id);
 
             return ((Number) result.get(0).get("affected_rows")).intValue();
 
@@ -177,8 +158,7 @@ public class AccountRepository {
 
             throw new DatabaseOperationException(
                     "Failed to unlock account with id: " + id,
-                    e
-            );
+                    e);
         }
     }
 
@@ -186,27 +166,27 @@ public class AccountRepository {
 
         try {
 
-            return db.query(
-                    "SELECT * FROM accounts"
-            );
+            List<Map<String, Object>> rows = db.query(
+                    "SELECT * FROM accounts");
+
+            return rows.isEmpty() || rows == null ? null : rows;
 
         } catch (SQLException e) {
 
             throw new DatabaseOperationException(
                     "Failed to retrieve all accounts",
-                    e
-            );
+                    e);
         }
     }
-        public List<Map<String, Object>> gteAccountWithProductByCustomerId(Long id){
-            try{
-                List<Map<String, Object>> result=db.query(
-                    "SELECT * FROM accounts join products on accounts.product_id=products.id WHERE id=?",id
-                );
-                return result;
-            }
-            catch(SQLException e){
-                throw new DatabaseOperationException("failed to return data",e);
-            }
+
+    public List<Map<String, Object>> gteAccountWithProductByCustomerId(Long id) {
+        try {
+            List<Map<String, Object>> rows = db.query(
+                    "SELECT * FROM accounts join products on accounts.product_id=products.id WHERE customer_id=?", id);
+            return rows.isEmpty() || rows == null ? null : rows;
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("failed to return data", e);
+        }
     }
 }

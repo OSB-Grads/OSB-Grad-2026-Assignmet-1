@@ -1,5 +1,8 @@
 package com.bank.mapper;
+
 import com.bank.dto.AccountDTO;
+import com.bank.enums.AccountStatus;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,27 +16,23 @@ public class AccountMapper {
 
         AccountDTO dto = new AccountDTO();
 
-        dto.setId(((Number) row.get("id")).longValue());
+        dto.setId((Long) row.get("id"));
 
         dto.setAccountNumber((String) row.get("account_number"));
 
-        dto.setCustomerId(((Number) row.get("customer_id")).longValue());
+        dto.setCustomerId((Long) row.get("customer_id"));
 
-        dto.setProductId(((Number) row.get("product_id")).longValue());
+        dto.setProductId((Long) row.get("product_id"));
 
-        dto.setBalance((java.math.BigDecimal) row.get("balance"));
+        dto.setBalance((BigDecimal) row.get("balance"));
 
-        dto.setStatus((String) row.get("status"));
+        if (row.get("status") != null) {
+            dto.setStatus(AccountStatus.valueOf(row.get("status").toString()));
+        }
 
         dto.setOpeningDate((String) row.get("opening_date"));
 
-        Object lockedValue = row.get("is_locked");
-
-        if (lockedValue instanceof Boolean) {
-            dto.setIsLocked((Boolean) lockedValue);
-        } else if (lockedValue instanceof Number) {
-            dto.setIsLocked(((Number) lockedValue).intValue() == 1);
-        }
+        dto.setIsLocked((boolean) row.get("is_locked"));
 
         return dto;
     }
@@ -52,7 +51,10 @@ public class AccountMapper {
 
         row.put("balance", dto.getBalance());
 
-        row.put("status", dto.getStatus());
+        if (dto.getStatus() != null) {
+            row.put("status", dto.getStatus().toString());
+
+        }
 
         row.put("opening_date", dto.getOpeningDate());
 
