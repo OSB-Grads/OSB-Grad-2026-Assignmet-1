@@ -42,10 +42,14 @@ public class ProductRepository {
     {
         String sql = "SELECT * FROM products WHERE category = ?";
         List<Map<String,Object>> productNames = db.query(sql,category);
-        if(productNames.isEmpty())
-        {
-            return null;
-        }
         return productNames;
+    }
+
+    public List<Map<String,Object>> findAllProducts() throws SQLException
+    {
+        String sql = "SELECT * FROM products";
+        List<Map<String,Object>> products = db.query(sql);
+
+        return products;
     }
 }
