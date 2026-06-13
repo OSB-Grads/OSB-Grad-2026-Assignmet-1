@@ -42,10 +42,6 @@ public class ProductRepository {
     {
         String sql = "SELECT * FROM products WHERE category = ?";
         List<Map<String,Object>> productNames = db.query(sql,category);
-        if(productNames.isEmpty())
-        {
-            return null;
-        }
         return productNames;
     }
 

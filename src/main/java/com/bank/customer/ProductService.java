@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProductService {
      private final ProductRepository repository;
@@ -16,14 +17,13 @@ public class ProductService {
          this.repository = new ProductRepository();
      }
 
-     public List<ProductDTO> listAllProducts() throws SQLException {
-         List<Map<String,Object>> allProducts = repository.findAllProducts();
-         List<ProductDTO> listOfProducts = new ArrayList<>();
-         for(Map<String,Object> product : allProducts)
-         {
-             ProductDTO dto = ProductMapper.toDTO(product);
-             listOfProducts.add(dto);
-         }
+     public List<ProductDTO> listProductsByCategory(String category) throws SQLException {
+         List<Map<String,Object>> allProducts = repository.findAllByProductCategory(category);
+//
+         List<ProductDTO> listOfProducts = allProducts.stream()
+                 .map(ProductMapper::toDTO)
+                 .collect(Collectors.toList());
+
          return listOfProducts;
      }
 }
