@@ -1,6 +1,7 @@
 package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
+import com.bank.exception.DatabaseOperationException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -32,8 +33,15 @@ public class CustomerRepository {
      * @return the raw row, or {@code null} if no such customer exists
      */
     public Map<String, Object> findByUsername(String username) throws SQLException {
-        // TODO: SELECT * FROM customers WHERE username = ... and return the first row (or null).
-        throw new UnsupportedOperationException("TODO: implement findByUsername");
+            List<Map<String, Object>> results =
+                    db.query(
+                            "SELECT * FROM customers WHERE username = ?"
+                            ,username
+                    );
+            if (results.isEmpty()) {
+                return null;
+            }
+            return results.get(0);
     }
 
     /**
@@ -42,8 +50,19 @@ public class CustomerRepository {
      * @return the raw row, or {@code null} if not found
      */
     public Map<String, Object> findById(Long id) throws SQLException {
-        // TODO: SELECT * FROM customers WHERE id = ...
-        throw new UnsupportedOperationException("TODO: implement findById");
+        try {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "SELECT * FROM customers where id = ?"
+                            ,id
+                    );
+            if (results.isEmpty()) {
+                return null;
+            }
+            return results.get(0);
+        }catch(SQLException e) {
+            throw new DatabaseOperationException("Failed to retrieve Customer with customer ID: " + id,e);
+        }
     }
 
     /**
@@ -51,8 +70,41 @@ public class CustomerRepository {
      * @return the generated customer id
      */
     public Long insert(Map<String, Object> customerFields) throws SQLException {
-        // TODO: INSERT INTO customers (...) VALUES (...) and return the generated key.
-        throw new UnsupportedOperationException("TODO: implement insert");
+        try {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "INSERT INTO customers " +
+                                    "(username, role, first_name, last_name, " +
+                                    "date_of_birth, email, phone, address, national_id) " +
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+
+                            customerFields.get("username"),
+                            customerFields.get("role"),
+                            customerFields.get("first_name"),
+                            customerFields.get("last_name"),
+                            customerFields.get("date_of_birth"),
+                            customerFields.get("email"),
+                            customerFields.get("phone"),
+                            customerFields.get("address"),
+                            customerFields.get("national_id")
+                    );
+
+            if (results.isEmpty()) {
+                return null;
+            }
+
+            Object generatedKey = results.get(0).get("generated_key");
+
+            return generatedKey == null
+                    ? null
+                    : ((Number) generatedKey).longValue();
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(
+                    "Failed to insert customer",
+                    e
+            );
+        }
     }
 
     /**
@@ -60,8 +112,40 @@ public class CustomerRepository {
      * @return number of rows affected
      */
     public int update(Long id, Map<String, Object> changedFields) throws SQLException {
-        // TODO: UPDATE customers SET ... WHERE id = ...
-        throw new UnsupportedOperationException("TODO: implement update");
+        try {
+            List<Map<String, Object>> results =
+                    db.query(
+                            "UPDATE customers " +
+                                    "SET role = ?, " +
+                                    "first_name = ?, " +
+                                    "last_name = ?, " +
+                                    "date_of_birth = ?, " +
+                                    "email = ?, " +
+                                    "phone = ?, " +
+                                    "address = ?, " +
+                                    "national_id = ?, " +
+                                    "updated_at = CURRENT_TIMESTAMP " +
+                                    "WHERE id = ?",
+
+                            changedFields.get("role"),
+                            changedFields.get("first_name"),
+                            changedFields.get("last_name"),
+                            changedFields.get("date_of_birth"),
+                            changedFields.get("email"),
+                            changedFields.get("phone"),
+                            changedFields.get("address"),
+                            changedFields.get("national_id"),
+                            id
+                    );
+            if (results.isEmpty()) {
+                return 0;
+            }
+            return ((Number) results.get(0)
+                    .get("affected_rows"))
+                    .intValue();
+        }catch(SQLException e) {
+            throw new DatabaseOperationException("Failed to update in database", e);
+        }
     }
 
     /**
@@ -69,7 +153,10 @@ public class CustomerRepository {
      * @return raw rows
      */
     public List<Map<String, Object>> findAll() throws SQLException {
-        // TODO: SELECT * FROM customers
-        throw new UnsupportedOperationException("TODO: implement findAll");
+        try {
+            return db.query( "SELECT * FROM customers");
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to fetch all the customers", e);
+        }
     }
 }
