@@ -1,5 +1,7 @@
 package com.bank.cli.display;
 
+import com.bank.dto.CustomerDTO;
+
 import java.util.Scanner;
 
 /**
@@ -172,20 +174,50 @@ public class MenuDisplay {
     }
     
     private void handleCreateProfile() {
+
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
-        System.out.print("Username: ");
+        System.out.println("Username: ");
         String username = scanner.nextLine().trim();
-        System.out.print("Password: ");
-        String password = scanner.nextLine().trim();
-        System.out.print("Full Name: ");
-        String fullName = scanner.nextLine().trim();
+
+        String password;
+        String confirmPassword;
+
+        do{
+            System.out.print("Password: ");
+            password = scanner.nextLine().trim();
+
+            System.out.println("Retype Password : ");
+            confirmPassword = scanner.nextLine().trim();
+
+            if(!password.equals(confirmPassword))
+            {
+                System.out.println("Password do not match");
+            }
+        }while(!password.equals(confirmPassword));
+
+        System.out.print("First Name: ");
+        String firstName = scanner.nextLine().trim();
+        System.out.println("Last Name: ");
+        String lastName = scanner.nextLine().trim();
+        System.out.println("Date of Birth in YYYY-MM-DD");
+        String dateOfBirth = scanner.nextLine().trim();
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
         System.out.print("Phone: ");
         String phone = scanner.nextLine().trim();
-        
-        // TODO: Call UserService to create new user
-        System.out.println("TODO: Implement user creation logic using UserService");
+        System.out.println("Address: ");
+        String address = scanner.nextLine().trim();
+        System.out.println("National ID: ");
+        String nationalId = scanner.nextLine().trim();
+
+        CustomerDTO customerDTO = new CustomerDTO(null,username,null,firstName,lastName,
+                dateOfBirth,email,phone,address,nationalId,null,null);
+
+        // TODO: Call SignUpOrchestrator and pass above created CustomerDTO , AuthDTO to it
+        // TODO: this returns a string message based on Different services
+        // orchestrator.SignupOrchestra(customerDTO, String password)
+        // TODO: Uncomment the below message print for customer to see the result
+        //System.out.println(message);
     }
     
     private void handleOpenAccount() {
