@@ -1,7 +1,5 @@
 package com.bank.cli.display;
 
-import com.bank.dto.CustomerDTO;
-
 import java.util.Scanner;
 
 /**
@@ -191,7 +189,7 @@ public class MenuDisplay {
 
             if(!password.equals(confirmPassword))
             {
-                System.out.println("Password do not match");
+                System.out.println("Passwords do not match");
             }
         }while(!password.equals(confirmPassword));
 
@@ -210,13 +208,7 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        CustomerDTO customerDTO = new CustomerDTO(null,username,null,firstName,lastName,
-                dateOfBirth,email,phone,address,nationalId,null,null);
-
-        // TODO: Call SignUpOrchestrator and pass above created CustomerDTO , AuthDTO to it
-        // TODO: this returns a string message based on Different services
-        // orchestrator.SignupOrchestra(customerDTO, String password)
-        // TODO: Uncomment the below message print for customer to see the result
+        // orchestrator.SignupOrchestrar(pass all input values)
         //System.out.println(message);
     }
     
