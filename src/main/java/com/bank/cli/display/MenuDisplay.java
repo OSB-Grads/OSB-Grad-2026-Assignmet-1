@@ -172,20 +172,44 @@ public class MenuDisplay {
     }
     
     private void handleCreateProfile() {
+
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
         System.out.print("Username: ");
         String username = scanner.nextLine().trim();
-        System.out.print("Password: ");
-        String password = scanner.nextLine().trim();
-        System.out.print("Full Name: ");
-        String fullName = scanner.nextLine().trim();
+
+        String password;
+        String confirmPassword;
+
+        do{
+            System.out.print("Password: ");
+            password = scanner.nextLine().trim();
+
+            System.out.print("Retype Password : ");
+            confirmPassword = scanner.nextLine().trim();
+
+            if(!password.equals(confirmPassword))
+            {
+                System.out.println("Passwords do not match");
+            }
+        }while(!password.equals(confirmPassword));
+
+        System.out.print("First Name: ");
+        String firstName = scanner.nextLine().trim();
+        System.out.print("Last Name: ");
+        String lastName = scanner.nextLine().trim();
+        System.out.print("Date of Birth in YYYY-MM-DD");
+        String dateOfBirth = scanner.nextLine().trim();
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
         System.out.print("Phone: ");
         String phone = scanner.nextLine().trim();
-        
-        // TODO: Call UserService to create new user
-        System.out.println("TODO: Implement user creation logic using UserService");
+        System.out.print("Address: ");
+        String address = scanner.nextLine().trim();
+        System.out.print("National ID: ");
+        String nationalId = scanner.nextLine().trim();
+
+        // orchestrator.SignupOrchestrar(pass all input values)
+        //System.out.println(message);
     }
     
     private void handleOpenAccount() {
