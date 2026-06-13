@@ -1,44 +1,33 @@
 package com.bank.dto;
 
 import java.math.BigDecimal;
+import com.bank.enums.AccountStatus;
 
-/**
- * Data Transfer Object for Account information.
- *
- * <p>Carries account data between layers so that higher layers (services, CLI)
- * never see the raw database entity. Fields follow the assignment spec: an
- * account has an account number, an owning customer, a product, a balance,
- * a status, and an opening date.</p>
- *
- * <p>Note: the account's type/rates are NOT stored here directly &mdash; they
- * come from the {@code Product} (and its {@code Product Category} default).
- * This DTO only references the product by name/id; resolve product values
- * ("product value if set, otherwise category default") in the service layer.</p>
- */
 public class AccountDTO {
     private Long id;
     private String accountNumber;
-    private Long customerId;        // the owning customer
-    private Long productId;         // the product this account was opened under
-    private String productName;     // convenience for display, e.g. "Bonus Saver"
-    private BigDecimal balance;     // money is always BigDecimal, never double
-    private String status;          // e.g. ACTIVE, CLOSED, MATURED
+    private Long customerId; // the owning customer
+    private Long productId; // the product this account was opened under
+    private BigDecimal balance; // money is always BigDecimal, never double
+    private AccountStatus status; // e.g. ACTIVE, CLOSED, MATURED
     private String openingDate;
+    private boolean isLocked; // by Default False
 
     /** Default constructor. */
-    public AccountDTO() {}
+    public AccountDTO() {
+    }
 
     /** Constructor with all fields. */
     public AccountDTO(Long id, String accountNumber, Long customerId, Long productId,
-                      String productName, BigDecimal balance, String status, String openingDate) {
+            String productName, BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.customerId = customerId;
         this.productId = productId;
-        this.productName = productName;
         this.balance = balance;
         this.status = status;
         this.openingDate = openingDate;
+        this.isLocked = isLocked;
     }
 
     public Long getId() {
@@ -73,14 +62,6 @@ public class AccountDTO {
         this.productId = productId;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public BigDecimal getBalance() {
         return balance;
     }
@@ -89,11 +70,11 @@ public class AccountDTO {
         this.balance = balance;
     }
 
-    public String getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
 
@@ -105,17 +86,25 @@ public class AccountDTO {
         this.openingDate = openingDate;
     }
 
+    public boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+
     @Override
     public String toString() {
         return "AccountDTO{" +
                 "id=" + id +
                 ", accountNumber='" + accountNumber + '\'' +
-                ", customerId=" + customerId +
-                ", productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", balance=" + balance +
+                ", customerId=" + customerId + '\'' +
+                ", productId=" + productId + '\'' +
+                ", balance=" + balance + '\'' +
                 ", status='" + status + '\'' +
                 ", openingDate='" + openingDate + '\'' +
+                ", isLocked='" + isLocked + '\'' +
                 '}';
     }
 }
