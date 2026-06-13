@@ -215,6 +215,7 @@ public class MenuDisplay {
     private void handleViewAccounts() {
         System.out.println("\n=== YOUR ACCOUNTS ===");
         // TODO: Call AccountService to get user's accounts and display them
+        
         System.out.println("TODO: Implement account viewing using AccountService");
     }
     
