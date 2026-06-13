@@ -1,6 +1,7 @@
 package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
+import com.bank.enums.log.LogType;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,7 +27,7 @@ public class LogRepository {
     public Long create(Map<String, Object> logFields)
             throws SQLException {
         String sql = "INSERT INTO logs " +
-                        "(user_id, action, details, type) " + "VALUES (?, ?, ?, ?)";
+                "(user_id, action, details, type) " + "VALUES (?, ?, ?, ?)";
 
         List<Map<String, Object>> result = db.query(
                 sql,
@@ -48,24 +49,24 @@ public class LogRepository {
     public List<Map<String, Object>> findByUserId(Long userId)
             throws SQLException {
         String sql = "SELECT * FROM logs " +
-                        "WHERE user_id = ? " +
-                        "ORDER BY created_at DESC";
+                "WHERE user_id = ? " +
+                "ORDER BY created_at DESC";
         return db.query(sql, userId);
     }
 
     public List<Map<String, Object>> findByAction(String action)
             throws SQLException {
         String sql = "SELECT * FROM logs " +
-                        "WHERE action = ? " +
-                        "ORDER BY created_at DESC";
+                "WHERE action = ? " +
+                "ORDER BY created_at DESC";
         return db.query(sql, action);
     }
 
-    public List<Map<String, Object>> findByType(String type)
+    public List<Map<String, Object>> findByType(LogType type)
             throws SQLException {
         String sql = "SELECT * FROM logs " +
-                        "WHERE type = ? " +
-                        "ORDER BY created_at DESC";
-        return db.query(sql, type);
+                "WHERE type = ? " +
+                "ORDER BY created_at DESC";
+        return db.query(sql, type.name());
     }
 }

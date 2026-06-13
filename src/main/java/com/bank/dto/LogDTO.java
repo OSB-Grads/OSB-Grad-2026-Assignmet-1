@@ -1,12 +1,14 @@
 package com.bank.dto;
 
+import com.bank.enums.log.LogType;
+
 public class LogDTO {
 
     private Long id;
     private Long userId;
     private String action;
     private String details;
-    private String type;
+    private LogType type;
     private String createdAt;
 
     public LogDTO() {
@@ -17,7 +19,7 @@ public class LogDTO {
             Long userId,
             String action,
             String details,
-            String type,
+            LogType type,
             String createdAt) {
 
         this.id = id;
@@ -60,11 +62,11 @@ public class LogDTO {
         this.details = details;
     }
 
-    public String getType() {
+    public LogType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(LogType type) {
         this.type = type;
     }
 
@@ -83,7 +85,7 @@ public class LogDTO {
                 ", userId=" + userId +
                 ", action='" + action + '\'' +
                 ", details='" + details + '\'' +
-                ", type='" + type + '\'' +
+                ", type=" + type +
                 ", createdAt='" + createdAt + '\'' +
                 '}';
     }
