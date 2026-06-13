@@ -176,7 +176,7 @@ public class MenuDisplay {
     private void handleCreateProfile() {
 
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
-        System.out.println("Username: ");
+        System.out.print("Username: ");
         String username = scanner.nextLine().trim();
 
         String password;
@@ -186,7 +186,7 @@ public class MenuDisplay {
             System.out.print("Password: ");
             password = scanner.nextLine().trim();
 
-            System.out.println("Retype Password : ");
+            System.out.print("Retype Password : ");
             confirmPassword = scanner.nextLine().trim();
 
             if(!password.equals(confirmPassword))
@@ -197,17 +197,17 @@ public class MenuDisplay {
 
         System.out.print("First Name: ");
         String firstName = scanner.nextLine().trim();
-        System.out.println("Last Name: ");
+        System.out.print("Last Name: ");
         String lastName = scanner.nextLine().trim();
-        System.out.println("Date of Birth in YYYY-MM-DD");
+        System.out.print("Date of Birth in YYYY-MM-DD");
         String dateOfBirth = scanner.nextLine().trim();
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
         System.out.print("Phone: ");
         String phone = scanner.nextLine().trim();
-        System.out.println("Address: ");
+        System.out.print("Address: ");
         String address = scanner.nextLine().trim();
-        System.out.println("National ID: ");
+        System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
         CustomerDTO customerDTO = new CustomerDTO(null,username,null,firstName,lastName,
