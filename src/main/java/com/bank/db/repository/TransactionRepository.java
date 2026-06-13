@@ -34,6 +34,26 @@ public class TransactionRepository {
             );
         }
     }
+public List<Map<String, Object>> findByCustomerId(Long customerId) {
+
+    try {
+
+        List<Map<String, Object>> rows =
+                db.query(
+                        "SELECT * FROM transactions WHERE customer_id = ?",
+                        customerId
+                );
+
+        return rows.isEmpty() ? null : rows;
+
+    } catch (SQLException e) {
+
+        throw new DatabaseOperationException(
+                "Failed to retrieve transactions for customer: " + customerId,
+                e
+        );
+    }
+}
 
     public Long insert(Map<String, Object> transactionFields) {
 
