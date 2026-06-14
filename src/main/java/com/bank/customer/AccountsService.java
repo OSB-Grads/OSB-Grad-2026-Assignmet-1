@@ -5,26 +5,23 @@ import com.bank.dto.AccountDTO;
 import com.bank.mapper.AccountMapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AccountsService {
     private final AccountRepository accountRepository;
 
-    public AccountsService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public AccountsService() {
+        this.accountRepository = new AccountRepository();
     }
-
     public List<AccountDTO> getAllAccountsForCustomer(Long customerId) {
         List<Map<String ,Object>> rows = accountRepository.
                 getAccountWithProductByCustomerId(customerId);
-        List<AccountDTO> accounts = new ArrayList<>();
         if(rows == null || rows.isEmpty()) {
-            return accounts;
+            return Collections.emptyList();
         }
-        for(Map<String,Object> row : rows) {
-            accounts.add(AccountMapper.toDTO(row));
-        }
-        return accounts;
+        return rows.stream().map(AccountMapper::toDTO).collect(Collectors.toList());
     }
 }
