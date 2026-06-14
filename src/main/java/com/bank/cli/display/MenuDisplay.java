@@ -160,25 +160,38 @@ public class MenuDisplay {
     }
     
     // TODO: Implement these methods by calling appropriate services/orchestrators
-    
+
     private void handleLogin() {
+
         System.out.println("\n=== LOGIN ===");
+
         System.out.print("Username: ");
         String username = scanner.nextLine().trim();
+
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-        
-        // TODO: Call AuthService to validate credentials
 
-        if (user.getRole() == Role.ADMIN) {
-            showAdminMenu();
-        } else {
-            showCustomerMenu();
-        }
-        System.out.println("TODO: Implement login logic using AuthService");
+        // TODO: Call AuthService.login(username, password)
 
+        // If login returns DTO:
+        // AuthUserDTO user = authService.login(username, password);
+        // if (user.getRole() == Role.ADMIN) {
+        //     showAdminMenu();
+        // } else {
+        //     showCustomerMenu();
+        // }
+
+        // If login returns Map:
+        // Map<String, Object> user = authService.login(username, password);
+        // if ("ADMIN".equals(user.get("role"))) {
+        //     showAdminMenu();
+        // } else {
+        //     showCustomerMenu();
+        // }
+
+        System.out.println("Login functionality pending AuthService implementation.");
     }
-    
+
     private void handleCreateProfile() {
 
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
