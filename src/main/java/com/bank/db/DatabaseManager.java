@@ -149,7 +149,7 @@ public class DatabaseManager {
 
             // Auth table — login credentials and authorisation role.
             // One auth record per customer (customer_id UNIQUE).
-            "CREATE TABLE IF NOT EXISTS auth (" +
+            "CREATE TABLE IF NOT EXISTS auth_users (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "username VARCHAR(50) UNIQUE NOT NULL, " +
             "password_hash VARCHAR(255) NOT NULL, " +

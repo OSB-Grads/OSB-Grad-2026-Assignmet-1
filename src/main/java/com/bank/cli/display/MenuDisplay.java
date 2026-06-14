@@ -166,8 +166,12 @@ public class MenuDisplay {
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
         
-        // TODO: Call AuthService to validate credentials
-        // TODO: If successful, branch on role: showCustomerMenu() or showAdminMenu()
+        // validate the credentials
+        // TODO: authservice.login(username,password)-> login function will handle this.
+        // if (user.getRole() == Role.ADMIN) {
+        //    showAdminMenu();
+        //} else {
+        //    showCustomerMenu();
         System.out.println("TODO: Implement login logic using AuthService");
     }
     

@@ -15,7 +15,7 @@ public class AuthRepository {
         this.db = DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findById(BigDecimal id) {
+    public Map<String, Object> findById(Long id) {
 
         try {
 
