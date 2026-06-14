@@ -52,7 +52,7 @@ public class InboxRepository {
     public Long insert(Map<String, Object> inboxFields) {
         
         try {
-            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?, ?,?)",
+            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?)",
                             inboxFields.get("correlation_id"),
                             inboxFields.get("message_type"),
                             inboxFields.get("payload"),
