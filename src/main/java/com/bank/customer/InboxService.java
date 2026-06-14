@@ -5,6 +5,7 @@ import com.bank.dto.InboxDTO;
 import com.bank.mapper.InboxMapper;
 import com.bank.mapper.ProductMapper;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class InboxService {
@@ -14,10 +15,11 @@ public class InboxService {
         this.repository = new InboxRepository();
     }
 
-    public Long createInbox(InboxDTO inboxDto)
+    public Long createInboxMessage(String correlationId, String messageType, String payload , String status , String reason) throws SQLException
     {
-        Map<String,Object> inboxRow = InboxMapper.toRow(inboxDto);
-        Long inbox_id = repository.insert(inboxRow);
-        return inbox_id;
+        InboxDTO inboxMessageDto = new InboxDTO(null,correlationId,messageType,payload,status,reason,null,null);
+        Map<String,Object> inboxRow = InboxMapper.toRow(inboxMessageDto);
+        Long inboxMessageId = repository.insert(inboxRow);
+        return inboxMessageId;
     }
 }
