@@ -1,6 +1,7 @@
 package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
+import com.bank.exception.DatabaseOperationException;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -61,22 +62,29 @@ public class AuthRepository {
         }
     }
 
-    public Long insert(Map<String, Object> authFields) throws SQLException {
+    public Long insert(Map<String, Object> authFields) {
 
-        String sql =
-                "INSERT INTO auth " +
-                        "(username, password_hash, customer_id, role) " +
-                        "VALUES (?, ?, ?, ?)";
+        try {
 
-        List<Map<String, Object>> authRow =
-                db.query(
-                        sql,
-                        authFields.get("username"),
-                        authFields.get("password_hash"),
-                        authFields.get("customer_id"),
-                        authFields.get("role")
-                );
+            String sql =
+                    "INSERT INTO auth " +
+                            "(username, password_hash, customer_id, role) " +
+                            "VALUES (?, ?, ?, ?)";
 
-        return (Long) authRow.get(0).get("id");
+            List<Map<String, Object>> authRow =
+                    db.query(
+                            sql,
+                            authFields.get("username"),
+                            authFields.get("password_hash"),
+                            authFields.get("customer_id"),
+                            authFields.get("role")
+                    );
+
+            return (Long) authRow.get(0).get("id");
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(
+                    "Failed to create auth user", e);
+        }
     }
 }
