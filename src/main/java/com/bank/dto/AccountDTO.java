@@ -12,6 +12,8 @@ public class AccountDTO {
     private AccountStatus status; // e.g. ACTIVE, CLOSED, MATURED
     private String openingDate;
     private boolean isLocked; // by Default False
+    private String productName;
+    private String category;
 
     /** Default constructor. */
     public AccountDTO() {
@@ -19,7 +21,9 @@ public class AccountDTO {
 
     /** Constructor with all fields. */
     public AccountDTO(Long id, String accountNumber, Long customerId, Long productId,
-            String productName, BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked) {
+             BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked
+                      ,String productName, String category
+    ) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.customerId = customerId;
@@ -28,6 +32,8 @@ public class AccountDTO {
         this.status = status;
         this.openingDate = openingDate;
         this.isLocked = isLocked;
+        this.productName = productName;
+        this.category = category;
     }
 
     public Long getId() {
@@ -94,6 +100,19 @@ public class AccountDTO {
         this.isLocked = isLocked;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "AccountDTO{" +
@@ -105,6 +124,8 @@ public class AccountDTO {
                 ", status='" + status + '\'' +
                 ", openingDate='" + openingDate + '\'' +
                 ", isLocked='" + isLocked + '\'' +
+                ", productName='" + productName + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 }
