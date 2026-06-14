@@ -20,7 +20,7 @@ public class AuthRepository {
         try {
 
             String sql =
-                    "SELECT * FROM auth_users WHERE id = ?";
+                    "SELECT * FROM auth WHERE id = ?";
 
             List<Map<String, Object>> results =
                     db.query(sql, id);
@@ -43,7 +43,7 @@ public class AuthRepository {
         try {
 
             String sql =
-                    "SELECT * FROM auth_users WHERE username = ?";
+                    "SELECT * FROM auth WHERE username = ?";
 
             List<Map<String, Object>> results =
                     db.query(sql, username);
@@ -64,7 +64,7 @@ public class AuthRepository {
     public Long insert(Map<String, Object> authFields) throws SQLException {
 
         String sql =
-                "INSERT INTO auth_users " +
+                "INSERT INTO auth " +
                         "(username, password_hash, customer_id, role) " +
                         "VALUES (?, ?, ?, ?)";
 
