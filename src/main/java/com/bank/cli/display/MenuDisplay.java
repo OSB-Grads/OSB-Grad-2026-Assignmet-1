@@ -1,6 +1,13 @@
 package com.bank.cli.display;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
+
+import com.bank.customer.ProductService;
+import com.bank.dto.AccountDTO;
+import com.bank.dto.ProductDTO;
+import com.bank.orchestrator.AccountOpeningOrchestrator;
 
 /**
  * Handles all CLI menu display and user input.
@@ -214,9 +221,59 @@ public class MenuDisplay {
     
     private void handleOpenAccount() {
         System.out.println("\n=== OPEN BANK ACCOUNT ===");
+        
+           System.out.println("1. Savings");
+           System.out.println("2. Fixed Deposit");
+           System.out.println("3. Limited Access");
+           
+           int ch=scanner.nextInt();
+           ProductService productService = new ProductService();
+            List<ProductDTO> productList=null;
+            int i;
+            int Pc;
+    try{
+           switch(ch){
+            case 1:
+             productList = productService.listProductsByCategory("Savings");
+             i=0;
+             for(ProductDTO PrintProducts: productList){
+                System.out.println(i +"."+ PrintProducts.getProductName());
+                i++;
+             }
+              System.out.println("select a product");
+              Pc=scanner.nextInt();
+              AccountDTO Acc= AccountOpeningOrchestrator.openAccount( ,get(Pc).get);
+            break;
+            case 2:
+            productList = productService.listProductsByCategory("Fixed Deposit");
+              i=0;
+             for(ProductDTO PrintProducts: productList){
+                System.out.println(i+"." + PrintProducts.getProductName());
+                i++;
+             }
+            break;
+            case 3:
+             productList = productService.listProductsByCategory("LimitedAccess");
+               i=0;
+             for(ProductDTO PrintProducts: productList){
+                System.out.println(i +"."+ PrintProducts.getProductName());
+                i++;
+             }
+            break;
+            default:
+              System.out.println("Invalid choice");
+            break;
+           }
+        }
+        
+        catch(SQLException e){
+               System.out.println("unable to fetch the products");
+        }
+        
         // TODO: pick category -> pick product -> open account via AccountOpeningOrchestrator
         System.out.println("TODO: Implement account opening using AccountOpeningOrchestrator");
     }
+
     
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");

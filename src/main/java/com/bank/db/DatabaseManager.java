@@ -163,14 +163,12 @@ public class DatabaseManager {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "account_number VARCHAR(20) UNIQUE NOT NULL, " +
             "customer_id INTEGER NOT NULL, " +
-            "product_id INTEGER NOT NULL"+
+            "account_type VARCHAR(20) NOT NULL CHECK (account_type IN ('SAVINGS', 'FIXED_DEPOSIT')), " +
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
-            "status VARCHAR(20) NOT NULL CHECK(status IN('ACTIVE','CLOSED','MATURED'))" +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
-            "FOREIGN KEY (product_id) REFERENCES products(id)"+
             ")",
             
             // Transactions table
@@ -195,7 +193,8 @@ public class DatabaseManager {
             "customer_id INTEGER, " +
             "action VARCHAR(100) NOT NULL, " +
             "details TEXT, " +
-            "type VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
+            "ip_address VARCHAR(45), " +
+            "status VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
@@ -212,6 +211,8 @@ public class DatabaseManager {
             // transaction_id  — the business transaction (ledger identity)
             "CREATE TABLE IF NOT EXISTS inbox (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "correlation_id VARCHAR(64) NOT NULL, " +
+            "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
             "message_type VARCHAR(40) NOT NULL, " +
             "payload TEXT NOT NULL, " +
@@ -219,16 +220,7 @@ public class DatabaseManager {
             "reason TEXT, " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "processed_at TIMESTAMP" +
-            ")",
-
-             "CREATE TABLE IF NOT EXISTS products (" +
-             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-             "product_name VARCHAR(64) NOT NULL UNIQUE, " +
-             "category VARCHAR(64) NOT NULL, " +
-             "interest_rate DECIMAL(4,2) NOT NULL, " +
-             "min_operating_balance DECIMAL(15,2) NOT NULL , " +
-             "term_months INTEGER " +
-             ")"
+            ")"
         };
         
         for (String query : createTableQueries) {
