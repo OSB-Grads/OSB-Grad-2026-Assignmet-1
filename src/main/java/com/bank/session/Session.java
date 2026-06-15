@@ -2,18 +2,19 @@ package com.bank.session;
 
 import com.bank.enums.Role;
 
-public class UserSession {
+public class Session {
 
-    private static UserSession instance; // object for us
+    private static Session instance;
 
     private Long customerId;
     private Role role;
 
-    private UserSession() {}
-    // returns the instance
-    public static UserSession getInstance() {
+    private Session() {
+    }
+
+    public static Session getInstance() {
         if (instance == null) {
-            instance = new UserSession();
+            instance = new Session();
         }
         return instance;
     }
@@ -29,5 +30,10 @@ public class UserSession {
 
     public Role getRole() {
         return role;
+    }
+
+    public void logout() {
+        customerId = null;
+        role = null;
     }
 }
