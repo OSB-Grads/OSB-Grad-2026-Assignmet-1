@@ -231,6 +231,7 @@ public class MenuDisplay {
             List<ProductDTO> productList=null;
             int i;
             int Pc;
+            Long Acc;
     try{
            switch(ch){
             case 1:
@@ -242,7 +243,8 @@ public class MenuDisplay {
              }
               System.out.println("select a product");
               Pc=scanner.nextInt();
-              AccountDTO Acc= AccountOpeningOrchestrator.openAccount( ,get(Pc).get);
+               Acc= AccountOpeningOrchestrator.openAccount(customerId,get(Pc).getProductid());
+              System.out.println("Account Number is: " + Acc);
             break;
             case 2:
             productList = productService.listProductsByCategory("Fixed Deposit");
@@ -251,6 +253,10 @@ public class MenuDisplay {
                 System.out.println(i+"." + PrintProducts.getProductName());
                 i++;
              }
+             System.out.println("select a product");
+              Pc=scanner.nextInt();
+               Acc= AccountOpeningOrchestrator.openAccount(customerId,get(Pc).getProductid());
+              System.out.println("Account Number is: " + Acc);
             break;
             case 3:
              productList = productService.listProductsByCategory("LimitedAccess");
@@ -259,6 +265,10 @@ public class MenuDisplay {
                 System.out.println(i +"."+ PrintProducts.getProductName());
                 i++;
              }
+              System.out.println("select a product");
+              Pc=scanner.nextInt();
+               Acc= AccountOpeningOrchestrator.openAccount(customerId,get(Pc).getId());
+              System.out.println("Account Number is: " + Acc);
             break;
             default:
               System.out.println("Invalid choice");
