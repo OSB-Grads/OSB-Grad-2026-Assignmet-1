@@ -1,6 +1,7 @@
 package com.bank.cli.display;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -11,27 +12,27 @@ import java.util.Scanner;
  */
 public class MenuDisplay {
     private Scanner scanner;
-    
+
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
     }
-    
+
     /**
      * Display the main menu and handle user navigation.
      */
     public void showMainMenu() {
         boolean running = true;
-        
+
         while (running) {
             System.out.println("\n=== MAIN MENU ===");
             System.out.println("1. Login");
             System.out.println("2. Create Customer Profile");
             System.out.println("3. Exit");
             System.out.print("Please select an option (1-3): ");
-            
+
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
-                
+
                 switch (choice) {
                     case 1:
                         handleLogin();
@@ -51,7 +52,7 @@ public class MenuDisplay {
             }
         }
     }
-    
+
     /**
      * Display the customer menu after a CUSTOMER logs in.
      */
@@ -159,21 +160,21 @@ public class MenuDisplay {
             }
         }
     }
-    
+
     // TODO: Implement these methods by calling appropriate services/orchestrators
-    
+
     private void handleLogin() {
         System.out.println("\n=== LOGIN ===");
         System.out.print("Username: ");
         String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-        
+
         // TODO: Call AuthService to validate credentials
         // TODO: If successful, branch on role: showCustomerMenu() or showAdminMenu()
         System.out.println("TODO: Implement login logic using AuthService");
     }
-    
+
     private void handleCreateProfile() {
 
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
@@ -183,18 +184,17 @@ public class MenuDisplay {
         String password;
         String confirmPassword;
 
-        do{
+        do {
             System.out.print("Password: ");
             password = scanner.nextLine().trim();
 
             System.out.print("Retype Password : ");
             confirmPassword = scanner.nextLine().trim();
 
-            if(!password.equals(confirmPassword))
-            {
+            if (!password.equals(confirmPassword)) {
                 System.out.println("Passwords do not match");
             }
-        }while(!password.equals(confirmPassword));
+        } while (!password.equals(confirmPassword));
 
         System.out.print("First Name: ");
         String firstName = scanner.nextLine().trim();
@@ -212,185 +212,118 @@ public class MenuDisplay {
         String nationalId = scanner.nextLine().trim();
 
         // orchestrator.SignupOrchestrar(pass all input values)
-        //System.out.println(message);
+        // System.out.println(message);
     }
-    
+
     private void handleOpenAccount() {
         System.out.println("\n=== OPEN BANK ACCOUNT ===");
-        // TODO: pick category -> pick product -> open account via AccountOpeningOrchestrator
+        // TODO: pick category -> pick product -> open account via
+        // AccountOpeningOrchestrator
         System.out.println("TODO: Implement account opening using AccountOpeningOrchestrator");
     }
-    
+
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");
         // TODO: Show user's accounts, get account selection and amount
         System.out.println("TODO: Implement deposit logic using TransactionOrchestrator");
     }
-    
+
     private void handleWithdraw() {
         System.out.println("\n=== WITHDRAW MONEY ===");
         // TODO: Show user's savings accounts only, get account selection and amount
         System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
     }
-    
+
     private void handleTransfer() {
         System.out.println("\n=== TRANSFER MONEY ===");
         // TODO: Show transfer options (Savings to Savings, Savings to FD)
         System.out.println("TODO: Implement transfer logic using appropriate Orchestrator");
     }
-    
+
     private void handleViewAccounts() {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
+        
+        List<Map<String, Object>> accounts = AccountService.getAllAccountsForCustomer(session.getCustomerId());
 
-        List<Map<String, Object>> accounts = Productservice.getAllAccountsForCustomer(session.getCustomerId());
+        HashMap<String, BigDecimal> balances = new HashMap<>();
 
-        BigDecimal totalBalance = BigDecimal.ZERO;
-
-        BigDecimal totalFixedDepositBalance = BigDecimal.ZERO;
-
-        BigDecimal totalSavingsBalance = BigDecimal.ZERO;
-
-        BigDecimal totalLimitedAccessBalance = BigDecimal.ZERO;
+        balances.put("Total Balance", BigDecimal.ZERO);
+        balances.put("Savings", BigDecimal.ZERO);
+        balances.put("Fixed Deposits", BigDecimal.ZERO);
+        balances.put("Limited Access", BigDecimal.ZERO);
 
         for (Map<String, Object> account : accounts) {
 
             String category = (String) account.get("category");
-
             BigDecimal balance = (BigDecimal) account.get("balance");
 
-            if ("Savings".equals(category)) {
-
-                totalBalance = totalBalance.add(balance);
-
-                totalSavingsBalance = totalSavingsBalance.add(balance);
-
-            } else if ("Fixed Deposits".equals(category)) {
-
-                totalBalance = totalBalance.add(balance);
-
-                totalFixedDepositBalance = totalFixedDepositBalance.add(balance);
-
-            } else if ("Limited Access".equals(category)) {
-
-                totalBalance = totalBalance.add(balance);
-
-                totalLimitedAccessBalance = totalLimitedAccessBalance.add(balance);
-
-            }
-
+            balances.put("Total Balance",balances.get("Total Balance").add(balance));
+            balances.put(category,balances.getOrDefault(category, BigDecimal.ZERO).add(balance));
         }
 
-        System.out.println(
-                "Total Balance: $" + totalBalance);
+        System.out.println("Total Balance: $" + balances.get("Total Balance"));
 
-        if (totalSavingsBalance.compareTo(BigDecimal.ZERO) > 0) {
+        if (balances.get("Savings").compareTo(BigDecimal.ZERO) > 0) {
 
-            System.out.println(
-                    "\nA) Savings Accounts $"
-                            + totalSavingsBalance);
-
+            System.out.println("\nA) Savings Accounts $" + balances.get("Savings"));
             int count = 1;
-
             for (Map<String, Object> account : accounts) {
 
                 if ("Savings".equals(account.get("category"))) {
 
-                    System.out.println(
-                            count + ") Product Name: "
-                                    + account.get("product_name"));
-
-                    System.out.println(
-                            "   Account Number: "
-                                    + account.get("account_number"));
-
-                    System.out.println(
-                            "   Balance: $"
-                                    + account.get("balance"));
-
+                    System.out.println(count + ") Product Name: "+ account.get("product_name"));
+                    System.out.println("   Account Number: "+ account.get("account_number"));
+                    System.out.println("   Balance: $"+ account.get("balance"));
                     count++;
-
                 }
-
             }
-
         }
 
-        if (totalLimitedAccessBalance.compareTo(BigDecimal.ZERO) > 0) {
+        if (balances.get("Limited Access").compareTo(BigDecimal.ZERO) > 0) {
 
-            System.out.println(
-                    "\nB) Limited Access Accounts $"
-                            + totalLimitedAccessBalance);
+            System.out.println("\nB) Limited Access Accounts $"+ balances.get("Limited Access"));
 
             int count = 1;
-
             for (Map<String, Object> account : accounts) {
-
                 if ("Limited Access".equals(account.get("category"))) {
 
-                    System.out.println(
-                            count + ") Product Name: "
-                                    + account.get("product_name"));
-
-                    System.out.println(
-                            "   Account Number: "
-                                    + account.get("account_number"));
-
-                    System.out.println(
-                            "   Balance: $"
-                                    + account.get("balance"));
-
+                    System.out.println(count + ") Product Name: "+ account.get("product_name"));
+                    System.out.println("   Account Number: "+ account.get("account_number"));
+                    System.out.println("   Balance: $"+ account.get("balance"));
                     count++;
-
                 }
-
             }
-
         }
 
-        if (totalFixedDepositBalance.compareTo(BigDecimal.ZERO) > 0) {
+        if (balances.get("Fixed Deposits").compareTo(BigDecimal.ZERO) > 0) {
 
-            System.out.println(
-                    "\nC) Fixed Deposit Accounts $"
-                            + totalFixedDepositBalance);
-
+            System.out.println("\nC) Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
             int count = 1;
 
             for (Map<String, Object> account : accounts) {
-
                 if ("Fixed Deposits".equals(account.get("category"))) {
-
-                    System.out.println(
-                            count + ") Product Name: "
-                                    + account.get("product_name"));
-
-                    System.out.println(
-                            "   Account Number: "
-                                    + account.get("account_number"));
-
-                    System.out.println(
-                            "   Balance: $"
-                                    + account.get("balance"));
-
+                    
+                    System.out.println(count + ") Product Name: "+ account.get("product_name"));
+                    System.out.println("   Account Number: "+ account.get("account_number"));
+                    System.out.println("   Balance: $"+ account.get("balance"));
                     count++;
-
                 }
-
             }
-
         }
-
     }
-    
+
     private void handleViewTransactionHistory() {
         System.out.println("\n=== TRANSACTION HISTORY ===");
-        // TODO: Show user's accounts, let them select one, then show transaction history
+        // TODO: Show user's accounts, let them select one, then show transaction
+        // history
         System.out.println("TODO: Implement transaction history using TransactionService");
     }
-    
+
     private void handleRequestLoan() {
         System.out.println("\n=== REQUEST A LOAN ===");
-        // TODO: pick loan category + amount -> LoanOrchestrator assesses, offers or rejects
+        // TODO: pick loan category + amount -> LoanOrchestrator assesses, offers or
+        // rejects
         System.out.println("TODO: Implement loan request using LoanOrchestrator");
     }
 
@@ -413,13 +346,14 @@ public class MenuDisplay {
         // TODO: list our inbox rows (results from the real-world bank) with
         // status/correlation_id/reason — useful for spotting stuck payments.
         // Seeding real-world accounts now lives in the real-world bank app:
-        //   java -jar real-world-bank/target/real-world-bank-1.0.0.jar seed
+        // java -jar real-world-bank/target/real-world-bank-1.0.0.jar seed
         System.out.println("TODO: Implement inbox viewing");
     }
 
     private void handleRunPaymentProcessor() {
         System.out.println("\n=== RUN PAYMENT PROCESSOR ===");
-        // TODO: process pending deposit/withdraw queue entries via PaymentProcessorOrchestrator
+        // TODO: process pending deposit/withdraw queue entries via
+        // PaymentProcessorOrchestrator
         System.out.println("TODO: Implement processor run using PaymentProcessorOrchestrator");
     }
 
@@ -434,7 +368,7 @@ public class MenuDisplay {
         // TODO: display recent log entries via LogService
         System.out.println("TODO: Implement log viewing using LogService");
     }
-    
+
     /**
      * Utility method to get user input with prompt.
      */
@@ -442,14 +376,14 @@ public class MenuDisplay {
         System.out.print(prompt);
         return scanner.nextLine().trim();
     }
-    
+
     /**
      * Utility method to display error messages.
      */
     public void showError(String message) {
         System.err.println("ERROR: " + message);
     }
-    
+
     /**
      * Utility method to display success messages.
      */
