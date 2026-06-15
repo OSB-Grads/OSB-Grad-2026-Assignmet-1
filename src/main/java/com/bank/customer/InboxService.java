@@ -12,7 +12,7 @@ public class InboxService {
         try {
            inboxRepository.deleteById(id);
         } catch (Exception e) {
-             System.out.println("Unable to delete");
+             throw new RuntimeException("Unable to delete");
         }
     }
 }
