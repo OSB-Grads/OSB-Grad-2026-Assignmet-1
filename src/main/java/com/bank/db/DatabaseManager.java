@@ -138,14 +138,20 @@ public class DatabaseManager {
     private void createTables() {
         String[] createTableQueries = {
             // Customers table — profile data only, no credentials
-            "CREATE TABLE IF NOT EXISTS customers (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "full_name VARCHAR(100) NOT NULL, " +
-            "email VARCHAR(100), " +
-            "phone VARCHAR(20), " +
-            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-            "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-            ")",
+                "CREATE TABLE IF NOT EXISTS customers (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "username VARCHAR(50) UNIQUE NOT NULL, " +
+                        "role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER', " +
+                        "first_name VARCHAR(50) NOT NULL, " +
+                        "last_name VARCHAR(50) NOT NULL, " +
+                        "date_of_birth DATE NOT NULL, " +
+                        "email VARCHAR(100) UNIQUE, " +
+                        "phone VARCHAR(20), " +
+                        "address TEXT, " +
+                        "national_id VARCHAR(50) UNIQUE, " +
+                        "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                        "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                        ")",
 
             // Auth table — login credentials and authorisation role.
             // One auth record per customer (customer_id UNIQUE).

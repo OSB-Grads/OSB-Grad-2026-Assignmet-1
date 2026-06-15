@@ -2,8 +2,12 @@ package com.bank.customer;
 
 import com.bank.db.repository.CustomerRepository;
 import com.bank.dto.CustomerDTO;
+import com.bank.mapper.CustomerMapper;
+import com.bank.utils.ValidationUtils;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Business logic for customer profiles.
@@ -34,9 +38,29 @@ public class CustomerService {
      *
      * @return the created customer
      */
-    public CustomerDTO createCustomer(String username, String rawPassword, CustomerDTO profile) {
-        // TODO: validate -> hash password -> repository.insert(...) -> return mapped DTO.
-        throw new UnsupportedOperationException("TODO: implement createCustomer");
+    public void createCustomer(Long customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
+        ValidationUtils.validateName(firstName,"First name");
+        ValidationUtils.validateName(lastName,"Last name");
+        ValidationUtils.validateDateOfBirth(dateOfBirth);
+        ValidationUtils.validateEmail(email);
+        ValidationUtils.validatePhone(phone);
+        ValidationUtils.validateAddress(address);
+        ValidationUtils.validateNationalId(nationalId);
+
+        CustomerDTO profile = new CustomerDTO();
+        profile.setId(customerId);
+        profile.setFirstName(firstName);
+        profile.setLastName(lastName);
+        profile.setDateOfBirth(dateOfBirth);
+        profile.setEmail(email);
+        profile.setPhone(phone);
+        profile.setAddress(address);
+        profile.setNationalId(nationalId);
+
+        Map<String, Object> row = CustomerMapper.toRow(profile);
+
+        repository.insert(row);
+
     }
 
     /**
