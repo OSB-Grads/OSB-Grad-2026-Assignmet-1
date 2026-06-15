@@ -34,10 +34,6 @@ public class AccountMapper {
 
         dto.setIsLocked((boolean) row.get("is_locked"));
 
-        dto.setProductName((String) row.get("product_name"));
-
-        dto.setCategory((String) row.get("category"));
-
         return dto;
     }
 

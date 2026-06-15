@@ -16,12 +16,12 @@ public class AccountsService {
     public AccountsService() {
         this.accountRepository = new AccountRepository();
     }
-    public List<AccountDTO> getAllAccountsForCustomer(Long customerId) {
+    public List<Map<String,Object>> getAllAccountsForCustomer(Long customerId) {
         List<Map<String ,Object>> rows = accountRepository.
                 getAccountWithProductByCustomerId(customerId);
         if(rows == null || rows.isEmpty()) {
-            return Collections.emptyList();
+            return null;
         }
-        return rows.stream().map(AccountMapper::toDTO).collect(Collectors.toList());
+        return rows;
     }
 }
