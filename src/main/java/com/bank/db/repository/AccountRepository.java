@@ -179,7 +179,7 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> getAccountWithProductByCustomerId(Long id) {
+    public List<Map<String, Object>> getAccountsWithProductByCustomerId(Long id) {
         try {
             List<Map<String, Object>> rows = db.query(
                     "SELECT * FROM accounts join products on accounts.product_id=products.id WHERE customer_id=?", id);
