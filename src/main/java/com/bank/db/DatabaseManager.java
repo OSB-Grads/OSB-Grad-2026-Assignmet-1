@@ -153,9 +153,9 @@ public class DatabaseManager {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "username VARCHAR(50) UNIQUE NOT NULL, " +
             "password_hash VARCHAR(255) NOT NULL, " +
-            "customer_id INTEGER NOT NULL UNIQUE, " +
+            //"customer_id INTEGER NOT NULL UNIQUE, " +
             "role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER' CHECK (role IN ('CUSTOMER', 'ADMIN')), " +
-            "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
+            //"FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
             
             // Accounts table

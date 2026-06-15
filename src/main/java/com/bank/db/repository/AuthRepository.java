@@ -68,19 +68,21 @@ public class AuthRepository {
 
             String sql =
                     "INSERT INTO auth " +
-                            "(username, password_hash, customer_id, role) " +
-                            "VALUES (?, ?, ?, ?)";
+                            "(username, password_hash, role) " +
+                            "VALUES (?, ?, ?)";
 
             List<Map<String, Object>> authRow =
                     db.query(
                             sql,
                             authFields.get("username"),
                             authFields.get("password_hash"),
-                            authFields.get("customer_id"),
+                            //authFields.get("customer_id"),
                             authFields.get("role")
                     );
 
             return (Long) authRow.get(0).get("id");
+
+            // here we are returning the id
 
         } catch (SQLException e) {
             throw new DatabaseOperationException(

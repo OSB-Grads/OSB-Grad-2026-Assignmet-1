@@ -1,6 +1,8 @@
 package com.bank.utils;
 
-public class PasswordUtils {
+import com.bank.exception.UserCreationException;
+
+public class ValidationUtils {
 
     public static void validatePassword(String password) {
 
@@ -12,7 +14,7 @@ public class PasswordUtils {
                         password.matches(".*\\d.*");
 
         if (!valid) {
-            throw new RuntimeException(
+            throw new UserCreationException(
                     "Password must be at least 8 characters long and contain uppercase, lowercase and a digit");
         }
     }
