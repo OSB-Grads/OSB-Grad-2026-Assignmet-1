@@ -140,8 +140,6 @@ public class DatabaseManager {
             // Customers table — profile data only, no credentials
                 "CREATE TABLE IF NOT EXISTS customers (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "username VARCHAR(50) UNIQUE NOT NULL, " +
-                        "role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER', " +
                         "first_name VARCHAR(50) NOT NULL, " +
                         "last_name VARCHAR(50) NOT NULL, " +
                         "date_of_birth DATE NOT NULL, " +

@@ -40,6 +40,7 @@ public class CustomerService {
      */
     public void createCustomer(Long customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
 
+        ValidationUtils.validateCustomer(firstName,lastName,dateOfBirth,email,phone,address,nationalId);
 
         CustomerDTO profile = new CustomerDTO();
         profile.setId(customerId);
