@@ -36,7 +36,7 @@ public class LogRepository {
                 logFields.get("details"),
                 logFields.get("type")
         );
-        return (Long) result.get(0).get("id");
+        return (Long) result.get(0).get("generated_key");
     }
 
     public List<Map<String, Object>> findAll()
