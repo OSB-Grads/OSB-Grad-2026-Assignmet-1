@@ -5,7 +5,7 @@ import com.bank.enums.AccountStatus;
 
 public class AccountDTO {
     private Long id;
-    private String accountNumber;
+    private Long accountNumber;
     private Long customerId; // the owning customer
     private Long productId; // the product this account was opened under
     private BigDecimal balance; // money is always BigDecimal, never double
@@ -18,9 +18,8 @@ public class AccountDTO {
     }
 
     /** Constructor with all fields. */
-    public AccountDTO(Long id, String accountNumber, Long customerId, Long productId,
-             BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked
-    ) {
+    public AccountDTO(Long id, Long accountNumber, Long customerId, Long productId,
+            BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.customerId = customerId;
@@ -39,11 +38,11 @@ public class AccountDTO {
         this.id = id;
     }
 
-    public String getAccountNumber() {
+    public Long getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(Long accountNumber) {
         this.accountNumber = accountNumber;
     }
 
