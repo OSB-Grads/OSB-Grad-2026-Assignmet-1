@@ -1,6 +1,7 @@
 package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
+import com.bank.exception.DatabaseOperationException;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class AuthRepository {
         try {
 
             String sql =
-                    "SELECT * FROM auth_users WHERE id = ?";
+                    "SELECT * FROM auth WHERE id = ?";
 
             List<Map<String, Object>> results =
                     db.query(sql, id);
