@@ -1,59 +1,54 @@
 package com.bank.customer;
 
 import com.bank.db.repository.AuthRepository;
-import com.bank.db.repository.CustomerRepository;
-// import com.bank.db.repository.ProductRepository;
-// import com.bank.dto.ProductDTO;
-// import com.bank.mapper.ProductMapper;
+import com.bank.db.repository.ProductRepository;
+import com.bank.dto.AuthUserDTO;
+import com.bank.dto.ProductDTO;
+import com.bank.mapper.AuthMapper;
+import com.bank.mapper.ProductMapper;
 
 import java.sql.SQLException;
-// import java.util.ArrayList;
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-// import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
 public class AuthService {
-     private final AuthRepository authRepository;
-     private final CustomerRepository customerRepository;
+     private final AuthRepository repository;
 
      public AuthService(){
-         this.authRepository = new AuthRepository();
-         this.customerRepository = new CustomerRepository();
+         this.repository = new AuthRepository();
      }
 
-     public String LoginAuthservice(String UserName, String Password) throws SQLException {
-        
-        try {
-            
-            if(UserName==null || UserName.trim().isEmpty() ){
-                return "Invalid username";
-            }
-            if(Password==null || Password.trim().isEmpty() ){
-                return "Invalid Password";
-            }
+   public Map<String, Object> login(String username, String password)
+        throws SQLException {
 
-            Map<String, Object> userInfo=authRepository.findByUsername(UserName);
-            Object tempPassword = userInfo.get("password_hash");
-            String passwordHash = tempPassword.toString();
-            if(passwordHash.equals(Password)){
-                 Map<String, Object> Roleinfo = customerRepository.findByUsername(UserName);
-                 Object Roleobject= Roleinfo.get("role");
-                  String Role = Roleobject.toString();
-                  return Role;
-                 
-            }else{
-                return "Enter valid Password";
-            }
-        
-            
+    if (username == null || username.trim().isEmpty()) {
+        throw new RuntimeException("username is empty");
+    }
 
-        } catch (SQLException e) {
-            System.out.println("failed to login");
-            
-        }
+    if (password == null || password.trim().isEmpty()) {
+        throw new RuntimeException("Passwor is  empty");
+    }
 
-        
+    Map<String, Object> userInfo = repository.findByUsername(username);
 
-         return "";
-     }
+    if (userInfo == null || userInfo.isEmpty()) {
+        throw new RuntimeException("Invalid");
+    }
+      
+       AuthUserDTO dto = AuthMapper.toDTO(userInfo);
+
+    if (password.equals(dto.getPasswordHash())) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("authId", dto.getId());
+        result.put("role",dto.getRole() );
+        return result;
+    }
+    else{
+        throw new RuntimeException("Invalid username or password");
+    }
 }
+ }
+
