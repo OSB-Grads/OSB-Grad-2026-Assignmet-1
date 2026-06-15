@@ -172,7 +172,7 @@ public class MenuDisplay {
 
         // TODO: Call AuthService to validate credentials
 
-        if (user.getRole() == Role.ADMIN) {
+        if (session.getRole() == Role.ADMIN) {
             showAdminMenu();
         } else {
             showCustomerMenu();
