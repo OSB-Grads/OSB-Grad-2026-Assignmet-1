@@ -1,5 +1,7 @@
 package com.bank.cli.display;
 
+import com.bank.enums.Role;
+
 import java.util.Scanner;
 
 /**
@@ -165,17 +167,14 @@ public class MenuDisplay {
         String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-        
-        // TODO: Call AuthService to validate credentials
-        // TODO: If successful, branch on role: showCustomerMenu() or showAdminMenu()
 
-        // validate the credentials
-        // TODO: authservice.login(username,password)-> login function will handle this.
-        // if (user.getRole() == Role.ADMIN) {
-        //    showAdminMenu();
-        //} else {
-        //    showCustomerMenu();
+        if (session.getRole() == Role.ADMIN) {
+            showAdminMenu();
+        } else {
+            showCustomerMenu();
+        }
         System.out.println("TODO: Implement login logic using AuthService");
+
     }
     
     private void handleCreateProfile() {
