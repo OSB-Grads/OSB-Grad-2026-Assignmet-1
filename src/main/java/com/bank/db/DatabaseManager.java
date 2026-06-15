@@ -163,7 +163,7 @@ public class DatabaseManager {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "account_number VARCHAR(20) UNIQUE NOT NULL, " +
             "customer_id INTEGER NOT NULL, " +
-            "product_id INTEGER NOT NULL"+
+            "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
             "status VARCHAR(20) NOT NULL CHECK(status IN('ACTIVE','CLOSED','MATURED'))" +
