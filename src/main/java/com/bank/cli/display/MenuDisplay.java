@@ -15,9 +15,12 @@ import com.bank.orchestrator.AccountOpeningOrchestrator;
  */
 public class MenuDisplay {
     private Scanner scanner;
+    // private Principle ctx = Principle.getInstance();
+    private final ProductService productService;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
+        this.productService = new ProductService();
     }
     
     /**
@@ -227,61 +230,44 @@ public class MenuDisplay {
            System.out.println("3. Limited Access");
            
            int ch=scanner.nextInt();
-           ProductService productService = new ProductService();
-            List<ProductDTO> productList=null;
+          
+            List<ProductDTO> productList;
             int i;
-            int Pc;
+            int productChoice;
             Long Acc;
+            String category;
     try{
            switch(ch){
             case 1:
-             productList = productService.listProductsByCategory("Savings");
+               productList = productService.listProductsByCategory("Savings");
+            break;
+            case 2:
+               productList = productService.listProductsByCategory("Fixed Deposit");
+            break;
+            case 3:
+               productList = productService.listProductsByCategory("Limited Access");
+            break;
+            default:
+              System.out.println("Invalid choice");
+            break;
+           }
+           
              i=0;
              for(ProductDTO PrintProducts: productList){
                 System.out.println(i +"."+ PrintProducts.getProductName());
                 i++;
              }
               System.out.println("select a product");
-              Pc=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(customerId,get(Pc).getProductid());
+              productChoice=scanner.nextInt();
+               Acc= AccountOpeningOrchestrator.openAccount(session.getCustomerId,productList.get(productChoice-1).getId());
               System.out.println("Account Number is: " + Acc);
-            break;
-            case 2:
-            productList = productService.listProductsByCategory("Fixed Deposit");
-              i=0;
-             for(ProductDTO PrintProducts: productList){
-                System.out.println(i+"." + PrintProducts.getProductName());
-                i++;
-             }
-             System.out.println("select a product");
-              Pc=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(customerId,get(Pc).getProductid());
-              System.out.println("Account Number is: " + Acc);
-            break;
-            case 3:
-             productList = productService.listProductsByCategory("LimitedAccess");
-               i=0;
-             for(ProductDTO PrintProducts: productList){
-                System.out.println(i +"."+ PrintProducts.getProductName());
-                i++;
-             }
-              System.out.println("select a product");
-              Pc=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(customerId,get(Pc).getId());
-              System.out.println("Account Number is: " + Acc);
-            break;
-            default:
-              System.out.println("Invalid choice");
-            break;
-           }
         }
         
         catch(SQLException e){
                System.out.println("unable to fetch the products");
         }
-        
-        // TODO: pick category -> pick product -> open account via AccountOpeningOrchestrator
-        System.out.println("TODO: Implement account opening using AccountOpeningOrchestrator");
+    
+        // System.out.println("TODO: Implement account opening using AccountOpeningOrchestrator");
     }
 
     
