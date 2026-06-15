@@ -1,5 +1,8 @@
 package com.bank.cli.display;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -237,10 +240,146 @@ public class MenuDisplay {
     }
     
     private void handleViewAccounts() {
+
         System.out.println("\n=== YOUR ACCOUNTS ===");
-        // TODO: Call AccountService to get user's accounts and display them
-        
-        System.out.println("TODO: Implement account viewing using AccountService");
+
+        List<Map<String, Object>> accounts = Productservice.getAllAccountsForCustomer(customerId);
+
+        BigDecimal totalBalance = BigDecimal.ZERO;
+
+        BigDecimal totalFixedDepositBalance = BigDecimal.ZERO;
+
+        BigDecimal totalSavingsBalance = BigDecimal.ZERO;
+
+        BigDecimal totalLimitedAccessBalance = BigDecimal.ZERO;
+
+        for (Map<String, Object> account : accounts) {
+
+            String category = (String) account.get("category");
+
+            BigDecimal balance = (BigDecimal) account.get("balance");
+
+            if ("Savings".equals(category)) {
+
+                totalBalance = totalBalance.add(balance);
+
+                totalSavingsBalance = totalSavingsBalance.add(balance);
+
+            } else if ("Fixed Deposits".equals(category)) {
+
+                totalBalance = totalBalance.add(balance);
+
+                totalFixedDepositBalance = totalFixedDepositBalance.add(balance);
+
+            } else if ("Limited Access".equals(category)) {
+
+                totalBalance = totalBalance.add(balance);
+
+                totalLimitedAccessBalance = totalLimitedAccessBalance.add(balance);
+
+            }
+
+        }
+
+        System.out.println(
+                "Total Balance: $" + totalBalance);
+
+        if (totalSavingsBalance.compareTo(BigDecimal.ZERO) > 0) {
+
+            System.out.println(
+                    "\nA) Savings Accounts $"
+                            + totalSavingsBalance);
+
+            int count = 1;
+
+            for (Map<String, Object> account : accounts) {
+
+                if ("Savings".equals(account.get("category"))) {
+
+                    System.out.println(
+                            count + ") Product Name: "
+                                    + account.get("product_name"));
+
+                    System.out.println(
+                            "   Account Number: "
+                                    + account.get("account_number"));
+
+                    System.out.println(
+                            "   Balance: $"
+                                    + account.get("balance"));
+
+                    count++;
+
+                }
+
+            }
+
+        }
+
+        if (totalLimitedAccessBalance.compareTo(BigDecimal.ZERO) > 0) {
+
+            System.out.println(
+                    "\nB) Limited Access Accounts $"
+                            + totalLimitedAccessBalance);
+
+            int count = 1;
+
+            for (Map<String, Object> account : accounts) {
+
+                if ("Limited Access".equals(account.get("category"))) {
+
+                    System.out.println(
+                            count + ") Product Name: "
+                                    + account.get("product_name"));
+
+                    System.out.println(
+                            "   Account Number: "
+                                    + account.get("account_number"));
+
+                    System.out.println(
+                            "   Balance: $"
+                                    + account.get("balance"));
+
+                    count++;
+
+                }
+
+            }
+
+        }
+
+        if (totalFixedDepositBalance.compareTo(BigDecimal.ZERO) > 0) {
+
+            System.out.println(
+                    "\nC) Fixed Deposit Accounts $"
+                            + totalFixedDepositBalance);
+
+            int count = 1;
+
+            for (Map<String, Object> account : accounts) {
+
+                if ("Fixed Deposits".equals(account.get("category"))) {
+
+                    System.out.println(
+                            count + ") Product Name: "
+                                    + account.get("product_name"));
+
+                    System.out.println(
+                            "   Account Number: "
+                                    + account.get("account_number"));
+
+                    System.out.println(
+                            "   Balance: $"
+                                    + account.get("balance"));
+
+                    count++;
+
+                }
+
+            }
+
+        }
+
     }
     
     private void handleViewTransactionHistory() {
