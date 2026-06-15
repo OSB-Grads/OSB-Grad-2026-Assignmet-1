@@ -39,13 +39,7 @@ public class CustomerService {
      * @return the created customer
      */
     public void createCustomer(Long customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
-        ValidationUtils.validateName(firstName,"First name");
-        ValidationUtils.validateName(lastName,"Last name");
-        ValidationUtils.validateDateOfBirth(dateOfBirth);
-        ValidationUtils.validateEmail(email);
-        ValidationUtils.validatePhone(phone);
-        ValidationUtils.validateAddress(address);
-        ValidationUtils.validateNationalId(nationalId);
+
 
         CustomerDTO profile = new CustomerDTO();
         profile.setId(customerId);

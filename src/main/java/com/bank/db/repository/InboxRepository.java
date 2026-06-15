@@ -3,6 +3,7 @@ package com.bank.db.repository;
 import com.bank.db.DatabaseManager;
 import com.bank.exception.DatabaseOperationException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class InboxRepository {
     public Long insert(Map<String, Object> inboxFields) {
         
         try {
-            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?, ?,?)",
+            List<Map<String, Object>> result =db.query(" INSERT INTO inbox( correlation_id,message_type,payload,status,reason) VALUES (?, ?, ?, ?, ?)",
                             inboxFields.get("correlation_id"),
                             inboxFields.get("message_type"),
                             inboxFields.get("payload"),
