@@ -163,9 +163,10 @@ public class DatabaseManager {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "account_number VARCHAR(20) UNIQUE NOT NULL, " +
             "customer_id INTEGER NOT NULL, " +
-            "account_type VARCHAR(20) NOT NULL CHECK (account_type IN ('SAVINGS', 'FIXED_DEPOSIT')), " +
+            "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
+            "status VARCHAR(20) NOT NULL CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
@@ -182,7 +183,7 @@ public class DatabaseManager {
             "description TEXT, " +
             "status VARCHAR(20) DEFAULT 'COMPLETED' CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY (from_account_id) REFERENCES accounts(id), " +
+            "FOREIGN KEY (from_account_id) REFERENCES accounts(id) " +
             "FOREIGN KEY (to_account_id) REFERENCES accounts(id)" +
             ")",
             
@@ -220,7 +221,16 @@ public class DatabaseManager {
             "reason TEXT, " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "processed_at TIMESTAMP" +
-            ")"
+            ")",
+
+             "CREATE TABLE IF NOT EXISTS products (" +
+             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+             "product_name VARCHAR(64) NOT NULL UNIQUE, " +
+             "category VARCHAR(64) NOT NULL CHECK (category IN ('Savings', 'Limited Access','Fixed Deposits')), " +
+             "interest_rate DECIMAL(4,2) NOT NULL, " +
+             "min_operating_balance DECIMAL(15,2) NOT NULL , " +
+             "term_months INTEGER " +
+             ")"
         };
         
         for (String query : createTableQueries) {

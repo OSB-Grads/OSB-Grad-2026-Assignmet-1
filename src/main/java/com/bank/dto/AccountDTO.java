@@ -19,7 +19,8 @@ public class AccountDTO {
 
     /** Constructor with all fields. */
     public AccountDTO(Long id, String accountNumber, Long customerId, Long productId,
-            String productName, BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked) {
+             BigDecimal balance, AccountStatus status, String openingDate, boolean isLocked
+    ) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.customerId = customerId;
