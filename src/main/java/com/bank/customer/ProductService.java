@@ -9,6 +9,7 @@ import com.bank.mapper.ProductMapper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,11 +37,11 @@ public class ProductService {
     public List<AccountDTO> getAllAccountsForProductCategory(String category)
             throws SQLException {
 
-        List<Long> productIds = productRepository
+        List<Long> productIds = Collections.unmodifiableList(productRepository
                 .findAllByProductCategory(category)
                 .stream()
                 .map(row -> (Long) row.get("id"))
-                .toList();
+                .toList());
 
         List<AccountDTO> accounts = new ArrayList<>();
 
@@ -54,5 +55,7 @@ public class ProductService {
                             .map(AccountMapper::toDTO)
                             .toList()
             );
+        }
+        return accounts;
     }
 }
