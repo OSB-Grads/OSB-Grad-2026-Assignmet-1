@@ -243,7 +243,7 @@ public class MenuDisplay {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
 
-        List<Map<String, Object>> accounts = Productservice.getAllAccountsForCustomer(customerId);
+        List<Map<String, Object>> accounts = Productservice.getAllAccountsForCustomer(session.getCustomerId());
 
         BigDecimal totalBalance = BigDecimal.ZERO;
 
