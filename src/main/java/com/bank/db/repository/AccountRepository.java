@@ -14,7 +14,7 @@ public class AccountRepository {
         this.db = DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findAccountsById(Long id) {
+    public Map<String, Object> findAccountById(Long id) {
 
         try {
 
@@ -179,7 +179,7 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> gteAccountWithProductByCustomerId(Long id) {
+    public List<Map<String, Object>> getAccountWithProductByCustomerId(Long id) {
         try {
             List<Map<String, Object>> rows = db.query(
                     "SELECT * FROM accounts join products on accounts.product_id=products.id WHERE customer_id=?", id);
