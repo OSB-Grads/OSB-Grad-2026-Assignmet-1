@@ -11,8 +11,8 @@ import java.util.Map;
 public class LoggerService {
     private final LogRepository logRepository;
 
-    public LoggerService(LogRepository logRepository) {
-        this.logRepository = logRepository;
+    public LoggerService() {
+        this.logRepository = new LogRepository();
     }
 
     public void log(Long customerId,String action, String details, LogType type) {
