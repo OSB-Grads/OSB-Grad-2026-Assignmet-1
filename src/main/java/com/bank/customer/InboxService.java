@@ -12,7 +12,7 @@ public class InboxService {
 
     private final InboxRepository inboxRepository;
 
-    public InboxService(InboxRepository inboxRepository) {
+    public InboxService() {
         this.inboxRepository = new InboxRepository();
     }
 
