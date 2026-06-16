@@ -183,7 +183,7 @@ public class DatabaseManager {
             "description TEXT, " +
             "status VARCHAR(20) DEFAULT 'COMPLETED' CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-           "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+            "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
             "FOREIGN KEY (from_account_id) REFERENCES accounts(id) " +
             "FOREIGN KEY (to_account_id) REFERENCES accounts(id)" +
             ")",
