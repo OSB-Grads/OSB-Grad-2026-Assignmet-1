@@ -74,12 +74,11 @@ public class CustomerRepository {
             List<Map<String, Object>> results =
                     db.query(
                             "INSERT INTO customers " +
-                                    "(username, role, first_name, last_name, " +
+                                    "(id ,first_name, last_name, " +
                                     "date_of_birth, email, phone, address, national_id) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    "VALUES (? ,?, ?, ?, ?, ?, ?, ?)",
 
-                            customerFields.get("username"),
-                            customerFields.get("role"),
+                            customerFields.get("id"),
                             customerFields.get("first_name"),
                             customerFields.get("last_name"),
                             customerFields.get("date_of_birth"),
@@ -116,7 +115,6 @@ public class CustomerRepository {
             List<Map<String, Object>> results =
                     db.query(
                             "UPDATE customers " +
-                                    "SET role = ?, " +
                                     "first_name = ?, " +
                                     "last_name = ?, " +
                                     "date_of_birth = ?, " +
@@ -127,7 +125,6 @@ public class CustomerRepository {
                                     "updated_at = CURRENT_TIMESTAMP " +
                                     "WHERE id = ?",
 
-                            changedFields.get("role"),
                             changedFields.get("first_name"),
                             changedFields.get("last_name"),
                             changedFields.get("date_of_birth"),

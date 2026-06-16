@@ -140,9 +140,13 @@ public class DatabaseManager {
             // Customers table — profile data only, no credentials
             "CREATE TABLE IF NOT EXISTS customers (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "full_name VARCHAR(100) NOT NULL, " +
+            "first_name VARCHAR(100) NOT NULL, " +
+            "last_name VARCHAR(100) NOT NULL, " +
+            "date_of_birth DATE NOT NULL,"+
             "email VARCHAR(100), " +
             "phone VARCHAR(20), " +
+            "address VARCHAR(255) NOT NULL,"+
+            "national_id VARCHAR(50) UNIQUE NOT NULL ,"+
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
             ")",
@@ -154,14 +158,14 @@ public class DatabaseManager {
             "username VARCHAR(50) UNIQUE NOT NULL, " +
             "password_hash VARCHAR(255) NOT NULL, " +
             //"customer_id INTEGER NOT NULL UNIQUE, " +
-            "role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER' CHECK (role IN ('CUSTOMER', 'ADMIN')), " +
+            "role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER' CHECK (role IN ('CUSTOMER', 'ADMIN')) " +
             //"FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
             
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "account_number INTEGER UNIQUE NOT NULL AUTOINCREMENT, " +
+            "account_number INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "customer_id INTEGER NOT NULL, " +
             "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
@@ -175,6 +179,8 @@ public class DatabaseManager {
             // Transactions table
             "CREATE TABLE IF NOT EXISTS transactions (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +"customer_id INTEGER, " +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "customer_id INTEGER, " +
             "from_account_id INTEGER, " +
             "to_account_id INTEGER, " +
             "customer_id INTEGER NOT NULL" +

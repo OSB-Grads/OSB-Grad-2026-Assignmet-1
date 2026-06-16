@@ -1,54 +1,92 @@
 package com.bank.customer;
 
 import com.bank.db.repository.AuthRepository;
-import com.bank.db.repository.ProductRepository;
 import com.bank.dto.AuthUserDTO;
-import com.bank.dto.ProductDTO;
+import com.bank.enums.log.LogType;
 import com.bank.mapper.AuthMapper;
-import com.bank.mapper.ProductMapper;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class AuthService {
-     private final AuthRepository repository;
 
-     public AuthService(){
-         this.repository = new AuthRepository();
-     }
+    private final AuthRepository repository;
+    private final LoggerService loggerService;
 
-   public Map<String, Object> login(String username, String password)
-        throws SQLException {
-
-    if (username == null || username.trim().isEmpty()) {
-        throw new RuntimeException("username is empty");
+    public AuthService() {
+        this.repository = new AuthRepository();
+        this.loggerService = new LoggerService();
     }
 
-    if (password == null || password.trim().isEmpty()) {
-        throw new RuntimeException("Passwor is  empty");
-    }
+    public Map<String, Object> login(String username, String password)
+            throws SQLException {
 
-    Map<String, Object> userInfo = repository.findByUsername(username);
+        if (username == null || username.trim().isEmpty()) {
 
-    if (userInfo == null || userInfo.isEmpty()) {
-        throw new RuntimeException("Invalid");
-    }
-      
-       AuthUserDTO dto = AuthMapper.toDTO(userInfo);
+            loggerService.log(
+                    null,
+                    "LOGIN",
+                    "Username is empty",
+                    LogType.FAILURE
+            );
 
-    if (password.equals(dto.getPasswordHash())) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("authId", dto.getId());
-        result.put("role",dto.getRole() );
-        return result;
-    }
-    else{
-        throw new RuntimeException("Invalid username or password");
+            throw new RuntimeException("username is empty");
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+
+            loggerService.log(
+                    null,
+                    "LOGIN",
+                    "Password is empty",
+                    LogType.FAILURE
+            );
+
+            throw new RuntimeException("Password is  empty");
+        }
+
+        Map<String, Object> userInfo = repository.findByUsername(username);
+
+        if (userInfo == null || userInfo.isEmpty()) {
+
+            loggerService.log(
+                    null,
+                    "LOGIN",
+                    "User not found",
+                    LogType.FAILURE
+            );
+
+            throw new RuntimeException("Invalid");
+        }
+
+        AuthUserDTO dto = AuthMapper.toDTO(userInfo);
+
+        if (password.equals(dto.getPasswordHash())) {
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("authId", dto.getId());
+            result.put("role", dto.getRole());
+
+            loggerService.log(
+                    dto.getId(),
+                    "LOGIN",
+                    "User logged in successfully",
+                    LogType.SUCCESS
+            );
+
+            return result;
+
+        } else {
+
+            loggerService.log(
+                    dto.getId(),
+                    "LOGIN",
+                    "Invalid password",
+                    LogType.FAILURE
+            );
+
+            throw new RuntimeException("Invalid username or password");
+        }
     }
 }
- }
-

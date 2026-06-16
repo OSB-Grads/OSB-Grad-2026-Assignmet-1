@@ -1,19 +1,19 @@
 package com.bank.cli.display;
 
+import com.bank.customer.AccountsService;
 import com.bank.enums.Role;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import com.bank.customer.ProductService;
-import com.bank.dto.AccountDTO;
 import com.bank.dto.ProductDTO;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
+import com.bank.session.Session;
 
 /**
  * Handles all CLI menu display and user input.
@@ -21,12 +21,20 @@ import com.bank.orchestrator.AccountOpeningOrchestrator;
  */
 public class MenuDisplay {
     private Scanner scanner;
-    // private Principle ctx = Principle.getInstance();
     private final ProductService productService;
+    private final Session session;
+    private final SignupOrchestrator signupOrchestrator;
+    private final TransferOrchestrator transferOrchestrator;
+    private final AccountsService accountsService;
+    private final Session session;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
+        this.session = Session.getInstance();
+        this.signupOrchestrator = new SignupOrchestrator();
+        this.accountsService = new AccountsService();
+        this.transferOrchestrator = new TransferOrchestrator();
     }
 
     /**
@@ -113,8 +121,7 @@ public class MenuDisplay {
                         handleUpdateProfile();
                         break;
                     case 9:
-                        System.out.println("Logging out...");
-                        loggedIn = false;
+                        handleLogout();
                         break;
                     default:
                         System.out.println("Invalid option. Please select 1-9.");
@@ -218,7 +225,7 @@ public class MenuDisplay {
         String firstName = scanner.nextLine().trim();
         System.out.print("Last Name: ");
         String lastName = scanner.nextLine().trim();
-        System.out.print("Date of Birth in YYYY-MM-DD");
+        System.out.print("Date of Birth in YYYY-MM-DD : ");
         String dateOfBirth = scanner.nextLine().trim();
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
@@ -229,8 +236,9 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        // orchestrator.SignupOrchestrar(pass all input values)
-        // System.out.println(message);
+        signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
+                    address,nationalId,password);
+        System.out.println("Customer Created Successfully");
     }
 
     private void handleOpenAccount() {
@@ -296,15 +304,41 @@ public class MenuDisplay {
 
     private void handleTransfer() {
         System.out.println("\n=== TRANSFER MONEY ===");
-        // TODO: Show transfer options (Savings to Savings, Savings to FD)
-        System.out.println("TODO: Implement transfer logic using appropriate Orchestrator");
+
+        List<Map<String, Object>> accounts =
+                accountsService.
+                        getAllAccountsForCustomer(session.getCustomerId());
+        int count = 1;
+        System.out.println("Select source Account");
+        for(Map<String ,Object> account : accounts) {
+            System.out.println(count++ + "Account Number: "
+                    + account.get("account_number") +
+                    "\nBalance" + account.get("balance"));
+        }
+        int option1 = scanner.nextInt();
+        Long sourceAccountId = (Long)accounts.get(option1-1).get("id");
+
+        count = 1;
+        System.out.println("Select destination Account");
+        for(Map<String ,Object> account : accounts) {
+            System.out.println(count++ + "Account Number: "
+                    + account.get("account_number") +
+                    "\nBalance" + account.get("balance"));
+        }
+        int option2 = scanner.nextInt();
+        Long destinationAccountId = (Long)accounts.get(option2-1).get("id") ;
+
+        System.out.println("Money you want to transfer");
+        BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
+        transferOrchestrator.transfer(session.getCustomerId(),
+                sourceAccountId,destinationAccountId, amountToBeTransferred);
     }
 
     private void handleViewAccounts() {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
         
-        List<Map<String, Object>> accounts = AccountService.getAllAccountsForCustomer(session.getCustomerId());
+        List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
 
         HashMap<String, BigDecimal> balances = new HashMap<>();
 
@@ -449,5 +483,10 @@ public class MenuDisplay {
      */
     public void showSuccess(String message) {
         System.out.println("SUCCESS: " + message);
+    }
+
+    public void handleLogout() {
+        Session.getInstance().logout();
+        System.out.println("Logout successful.");
     }
 }
