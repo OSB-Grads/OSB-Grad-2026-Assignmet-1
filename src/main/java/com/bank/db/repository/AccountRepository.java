@@ -14,7 +14,7 @@ public class AccountRepository {
         this.db = DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findAccountsById(Long id) {
+    public Map<String, Object> findAccountById(Long id) {
 
         try {
 
@@ -179,11 +179,21 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> gteAccountWithProductByCustomerId(Long id) {
+    public List<Map<String, Object>> getAccountsWithProductByCustomerId(Long id) {
         try {
             List<Map<String, Object>> rows = db.query(
-                    "SELECT * FROM accounts join products on accounts.product_id=products.id WHERE customer_id=?", id);
-            return rows.isEmpty() || rows == null ? null : rows;
+                    "SELECT " +
+                            "a.id, a.account_number, a.customer_id, a.product_id, " +
+                            "a.balance, a.status, a.opening_date, a.is_locked, " +
+                            "p.product_name, p.category " +
+                            "FROM accounts a " +
+                            "JOIN products p " +
+                            "ON a.product_id = p.id " +
+                            "WHERE a.customer_id = ?",
+                    id
+            );
+
+            return rows;
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("failed to return data", e);
