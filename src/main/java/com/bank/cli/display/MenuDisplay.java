@@ -1,19 +1,19 @@
 package com.bank.cli.display;
 
+import com.bank.customer.AccountsService;
 import com.bank.enums.Role;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import com.bank.customer.ProductService;
-import com.bank.dto.AccountDTO;
 import com.bank.dto.ProductDTO;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
+import com.bank.session.Session;
 
 /**
  * Handles all CLI menu display and user input.
@@ -23,10 +23,16 @@ public class MenuDisplay {
     private Scanner scanner;
     // private Principle ctx = Principle.getInstance();
     private final ProductService productService;
-    
+    private final AccountsService accountsService;
+    private final TransferOrchestrator transferOrchestrator;
+    private final Session session;
+
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
+        this.accountsService = new AccountsService();
+        this.transferOrchestrator = new TransferOrchestrator();
+        this.session = Session.getInstance();
     }
 
     /**
@@ -295,15 +301,41 @@ public class MenuDisplay {
 
     private void handleTransfer() {
         System.out.println("\n=== TRANSFER MONEY ===");
-        // TODO: Show transfer options (Savings to Savings, Savings to FD)
-        System.out.println("TODO: Implement transfer logic using appropriate Orchestrator");
+
+        List<Map<String, Object>> accounts =
+                accountsService.
+                        getAllAccountsForCustomer(session.getCustomerId());
+        int count = 1;
+        System.out.println("Select source Account");
+        for(Map<String ,Object> account : accounts) {
+            System.out.println(count++ + "Account Number: "
+                    + account.get("account_number") +
+                    "\nBalance" + account.get("balance"));
+        }
+        int option1 = scanner.nextInt();
+        Long sourceAccountId = (Long)accounts.get(option1-1).get("id");
+
+        count = 1;
+        System.out.println("Select destination Account");
+        for(Map<String ,Object> account : accounts) {
+            System.out.println(count++ + "Account Number: "
+                    + account.get("account_number") +
+                    "\nBalance" + account.get("balance"));
+        }
+        int option2 = scanner.nextInt();
+        Long destinationAccountId = (Long)accounts.get(option2-1).get("id") ;
+
+        System.out.println("Money you want to transfer");
+        BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
+        transferOrchestrator.transfer(session.getCustomerId(),
+                sourceAccountId,destinationAccountId, amountToBeTransferred);
     }
 
     private void handleViewAccounts() {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
         
-        List<Map<String, Object>> accounts = AccountService.getAllAccountsForCustomer(session.getCustomerId());
+        List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
 
         HashMap<String, BigDecimal> balances = new HashMap<>();
 
