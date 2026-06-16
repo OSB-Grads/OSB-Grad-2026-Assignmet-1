@@ -23,10 +23,14 @@ public class MenuDisplay {
     private Scanner scanner;
     // private Principle ctx = Principle.getInstance();
     private final ProductService productService;
+    private final Session session;
+    private final SignupOrchestrator signupOrchestrator;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
+        this.session = Session.getInstance();
+        this.signupOrchestrator = new SignupOrchestrator();
     }
 
     /**
@@ -228,8 +232,9 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        // orchestrator.SignupOrchestrar(pass all input values)
-        // System.out.println(message);
+        signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
+                    address,nationalId,password);
+        System.out.println("Customer Created Successfully");
     }
 
     private void handleOpenAccount() {

@@ -27,14 +27,14 @@ public class LogRepository {
     public Long create(Map<String, Object> logFields)
             throws SQLException {
         String sql = "INSERT INTO logs " +
-                "(user_id, action, details, type) " + "VALUES (?, ?, ?, ?)";
+                "(customer_id, action, details, status) " + "VALUES (?, ?, ?, ?)";
 
         List<Map<String, Object>> result = db.query(
                 sql,
-                logFields.get("user_id"),
+                logFields.get("customer_id"),
                 logFields.get("action"),
                 logFields.get("details"),
-                logFields.get("type")
+                logFields.get("status")
         );
         return (Long) result.get(0).get("generated_key");
     }
@@ -46,12 +46,12 @@ public class LogRepository {
         return db.query(sql);
     }
 
-    public List<Map<String, Object>> findByUserId(Long userId)
+    public List<Map<String, Object>> findByUserId(Long customerId)
             throws SQLException {
         String sql = "SELECT * FROM logs " +
-                "WHERE user_id = ? " +
+                "WHERE customer_id = ? " +
                 "ORDER BY created_at DESC";
-        return db.query(sql, userId);
+        return db.query(sql, customerId);
     }
 
     public List<Map<String, Object>> findByAction(String action)

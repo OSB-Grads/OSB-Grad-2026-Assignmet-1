@@ -30,12 +30,10 @@ public class CustomerDTO {
     public CustomerDTO() {}
 
     /** Constructor with all fields. */
-    public CustomerDTO(Long id, String username, String role, String firstName, String lastName,
+    public CustomerDTO(Long id, String firstName, String lastName,
                        String dateOfBirth, String email, String phone, String address,
                        String nationalId, String createdAt, String updatedAt) {
         this.id = id;
-        this.username = username;
-        this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -55,21 +53,6 @@ public class CustomerDTO {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -146,9 +129,7 @@ public class CustomerDTO {
     @Override
     public String toString() {
         return "CustomerDTO{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role='" + role + '\'' +
+                "id=" + id +'\''+
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth='" + dateOfBirth + '\'' +

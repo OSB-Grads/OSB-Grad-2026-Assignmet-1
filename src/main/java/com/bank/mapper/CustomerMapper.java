@@ -30,8 +30,6 @@ public class CustomerMapper {
         }
         CustomerDTO dto = new CustomerDTO();
         dto.setId(((Number) row.get("id")).longValue());
-        dto.setUsername((String) row.get("username"));
-        dto.setRole((String) row.get("role"));
         dto.setFirstName((String) row.get("first_name"));
         dto.setLastName((String) row.get("last_name"));
         dto.setDateOfBirth((String) row.get("date_of_birth"));
@@ -52,8 +50,6 @@ public class CustomerMapper {
     public static Map<String, Object> toRow(CustomerDTO dto) {
         Map<String ,Object> row = new HashMap<>();
         row.put("id", dto.getId());
-        row.put("username", dto.getUsername());
-        row.put("role", dto.getRole());
         row.put("first_name", dto.getFirstName());
         row.put("last_name", dto.getLastName());
         row.put("date_of_birth", dto.getDateOfBirth());

@@ -8,7 +8,7 @@ public class LogDTO {
     private Long userId;
     private String action;
     private String details;
-    private LogType type;
+    private LogType status;
     private String createdAt;
 
     public LogDTO() {
@@ -19,14 +19,14 @@ public class LogDTO {
             Long userId,
             String action,
             String details,
-            LogType type,
+            LogType status,
             String createdAt) {
 
         this.id = id;
         this.userId = userId;
         this.action = action;
         this.details = details;
-        this.type = type;
+        this.status = status;
         this.createdAt = createdAt;
     }
 
@@ -62,12 +62,12 @@ public class LogDTO {
         this.details = details;
     }
 
-    public LogType getType() {
-        return type;
+    public LogType getStatus() {
+        return status;
     }
 
-    public void setType(LogType type) {
-        this.type = type;
+    public void setStatus(LogType type) {
+        this.status = type;
     }
 
     public String getCreatedAt() {
@@ -85,7 +85,7 @@ public class LogDTO {
                 ", userId=" + userId +
                 ", action='" + action + '\'' +
                 ", details='" + details + '\'' +
-                ", type=" + type +
+                ", status=" + status +
                 ", createdAt='" + createdAt + '\'' +
                 '}';
     }

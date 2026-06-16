@@ -2,32 +2,30 @@ package com.bank.orchestrator;
 
 import com.bank.customer.CustomerService;
 import com.bank.db.DatabaseManager;
-import com.bank.dto.AuthUserDTO;
-import com.bank.dto.CustomerDTO;
-import com.bank.dto.SignupDTO;
-import com.bank.enums.Role;
-import com.bank.exception.DatabaseOperationException;
-import com.bank.exception.UserCreationException;
+import com.bank.exception.UserAlreadyExistsException;
 import com.bank.exception.UserCreationFailedException;
+import com.bank.service.AuthService;
+
+import java.sql.SQLException;
 
 public class SignupOrchestrator {
 
-    private final AuthService authservice;
+    private final AuthService authService;
     private final CustomerService customerService;
     private final DatabaseManager db;
 
     public SignupOrchestrator() {
         this.customerService = new CustomerService();
-        this.authservice = new AuthService();
-        this.db = new DatabaseManager();
+        this.authService = new AuthService();
+        this.db = DatabaseManager.getInstance();
     }
 
     public void signup(String username, String firstName, String lastName, String dateOfBirth, String email,
             String phone,
-            String address, String nationalId, String password) throws UserCreationFailedException, UserAlreadyExistsException {
+            String address, String nationalId, String password) throws UserCreationFailedException, UserAlreadyExistsException, SQLException {
                 db.startTransaction();
-                Long customerId= AuthService.signup(username,password);
-                CustomerService.createCustomer(customerId,firstName,lastName,dateOfBirth,email,phone,address,nationalId);
+                Long customerId= authService.signup(username,password);
+                customerService.createCustomer(customerId,firstName,lastName,dateOfBirth,email,phone,address,nationalId);
                 db.endTransaction();
         }
     }

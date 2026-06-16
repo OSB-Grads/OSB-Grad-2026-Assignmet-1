@@ -18,7 +18,7 @@ public class AccountsService {
     }
     public List<Map<String,Object>> getAllAccountsForCustomer(Long customerId) {
         List<Map<String ,Object>> rows = accountRepository.
-                getAccountWithProductByCustomerId(customerId);
+                getAccountsWithProductByCustomerId(customerId);
         if(rows == null || rows.isEmpty()) {
             return null;
         }

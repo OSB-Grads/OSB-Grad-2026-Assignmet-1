@@ -15,12 +15,12 @@ public class LoggerService {
         this.logRepository = new LogRepository();
     }
 
-    public void log(Long customerId,String action, String details, LogType type) {
+    public void log(Long customerId,String action, String details, LogType status) {
         Map<String, Object> logFields = new HashMap<>();
         logFields.put("user_id", customerId);
         logFields.put("action", action);
         logFields.put("details",details);
-        logFields.put("type", type.name());
+        logFields.put("status", status.name());
 
         try {
             logRepository.create(logFields);
