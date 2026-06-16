@@ -50,11 +50,27 @@ public class InboxService {
         Long inboxMessageId = inboxRepository.insert(inboxRow);
         return inboxMessageId;
     }
-    public void deleteById(Long id){
-        try {
-           inboxRepository.deleteById(id);
-        } catch (Exception e) {
-             throw new RuntimeException("Unable to delete");
-        }
+   public void deleteById(Long id) {
+    try {
+        inboxRepository.deleteById(id);
+
+        loggerService.log(
+                null,
+                "DELETE INBOX MESSAGE",
+                "Deleted inbox message with ID: " + id,
+                LogType.SUCCESS
+        );
+
+    } catch (Exception e) {
+
+        loggerService.log(
+                null,
+                "DELETE INBOX MESSAGE",
+                "Failed to delete inbox message with ID: " + id + ". Error: " + e.getMessage(),
+                LogType.ERROR
+        );
+
+        throw new RuntimeException("Unable to delete");
     }
+}
 }
