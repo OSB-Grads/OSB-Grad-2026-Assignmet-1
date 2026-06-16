@@ -2,8 +2,15 @@ package com.bank.customer;
 
 import com.bank.db.repository.CustomerRepository;
 import com.bank.dto.CustomerDTO;
+import com.bank.enums.log.LogType;
 import com.bank.mapper.CustomerMapper;
 import com.bank.utils.ValidationUtils;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+private final LoggerService loggerService;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,9 +31,11 @@ import java.util.Map;
 public class CustomerService {
 
     private final CustomerRepository repository;
+    private final LoggerService loggerService;
 
     public CustomerService() {
         this.repository = new CustomerRepository();
+        this.loggerService = new LoggerService();
     }
 
     /**
@@ -71,6 +80,8 @@ public class CustomerService {
      * Update the caller's own profile (email, phone, address).
      * @return the updated customer
      */
+
+
     public Map<String, Object> updateProfile(
             Long id,
             String firstName,
@@ -79,24 +90,34 @@ public class CustomerService {
             String phone,
             String nationalId
     ) throws SQLException {
-        // get the customer from the repo
-        Map<String, Object> customer = repository.findById(id);
-        //base case:
-        if (customer == null) {
-            throw new RuntimeException(
-                    "Customer not found with id: " + id
-            );
-        }
 
+        Map<String, Object> customer = repository.findById(id);
+
+        if (customer == null) {throw new RuntimeException("Customer not found with id: " + id);}
         if (firstName != null) {customer.put("first_name", firstName);}
         if (lastName != null) {customer.put("last_name", lastName);}
         if (email != null) {customer.put("email", email);}
         if (phone != null) {customer.put("phone", phone);}
         if (nationalId != null) {customer.put("national_id", nationalId);}
-        // updated information gets updated in repo
-        repository.update(id, customer);
-        // return the updated customer
-        return repository.findById(id);
+
+        try { // here we are updating the user, in the try block
+            repository.update(id, customer);
+            loggerService.log(
+                    id,
+                    "UPDATE_PROFILE",
+                    "Customer profile updated successfully",
+                    LogType.SUCCESS
+            );
+            return repository.findById(id);
+        } catch (SQLException e) {
+            loggerService.log(
+                    id,
+                    "UPDATE_PROFILE",
+                    "Failed to update customer profile: " + e.getMessage(),
+                    LogType.FAILURE
+            );
+            throw e;
+        }
     }
 
     /**
