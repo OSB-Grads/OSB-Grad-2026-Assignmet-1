@@ -43,7 +43,7 @@ public class AuthService {
                     LogType.FAILURE
             );
 
-            throw new RuntimeException("Passwor is  empty");
+            throw new RuntimeException("Password is  empty");
         }
 
         Map<String, Object> userInfo = repository.findByUsername(username);
