@@ -328,7 +328,8 @@ public class MenuDisplay {
 
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = sc.nextBigDecimal();
-        transferOrchestrator.transfer(sourceAccount,destinationAccount, amountToBeTransferred);
+        transferOrchestrator.transfer(Session.getInstance().getCustomerId(),
+                sourceAccount,destinationAccount, amountToBeTransferred);
     }
 
     private void handleViewAccounts() {
