@@ -6,22 +6,19 @@ import java.time.LocalDateTime;
 public class TransactionDTO {
 
     private Long id;
-    private String transactionId;
-    private String accountNumber;
-    private String dstAccountNumber;
+    private Long fromAccountId;
+    private Long toAccountId;
     private Long customerId;
     private String transactionType;
     private BigDecimal amount;
     private String status;
-    private BigDecimal balance;
-    private LocalDateTime transactionDate;
+    private String description;
+    private LocalDateTime createdAt;
 
-    public LocalDateTime getTransactionDate() {
-        return transactionDate;
-    }
+    public LocalDateTime getCreatedAt() {return createdAt;}
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
-        this.transactionDate = transactionDate;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -32,28 +29,12 @@ public class TransactionDTO {
         this.id = id;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public Long getToAccountId() {
+        return toAccountId;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public String getDstAccountNumber() {
-        return dstAccountNumber;
-    }
-
-    public void setDstAccountNumber(String dstAccountNumber) {
-        this.dstAccountNumber = dstAccountNumber;
+    public void setToAccountId(Long toAccountId) {
+        this.toAccountId = toAccountId;
     }
 
     public Long getCustomerId() {
@@ -88,11 +69,11 @@ public class TransactionDTO {
         this.status = status;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
-    }
+    public String getDescription() {return description;}
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
+    public void setDescription(String description) {this.description = description;}
+
+    public Long getFromAccountId() {return fromAccountId;}
+
+    public void setFromAccountId(Long fromAccountId) {this.fromAccountId = fromAccountId;}
 }
