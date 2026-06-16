@@ -2,8 +2,13 @@ package com.bank.customer;
 
 import com.bank.db.repository.CustomerRepository;
 import com.bank.dto.CustomerDTO;
+import com.bank.mapper.CustomerMapper;
+import com.bank.utils.ValidationUtils;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import com.bank.enums.log.LogType;
 
 /**
  * Business logic for customer profiles.
@@ -20,9 +25,11 @@ import java.util.List;
 public class CustomerService {
 
     private final CustomerRepository repository;
+    private final LoggerService loggerService;
 
     public CustomerService() {
         this.repository = new CustomerRepository();
+        this.loggerService=new LoggerService();
     }
 
     /**
@@ -34,9 +41,40 @@ public class CustomerService {
      *
      * @return the created customer
      */
-    public CustomerDTO createCustomer(String username, String rawPassword, CustomerDTO profile) {
-        // TODO: validate -> hash password -> repository.insert(...) -> return mapped DTO.
-        throw new UnsupportedOperationException("TODO: implement createCustomer");
+    public void createCustomer(Long customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
+
+        try{
+            ValidationUtils.validateCustomer(firstName,lastName,dateOfBirth,email,phone,address,nationalId);
+
+            CustomerDTO profile = new CustomerDTO();
+            profile.setId(customerId);
+            profile.setFirstName(firstName);
+            profile.setLastName(lastName);
+            profile.setDateOfBirth(dateOfBirth);
+            profile.setEmail(email);
+            profile.setPhone(phone);
+            profile.setAddress(address);
+            profile.setNationalId(nationalId);
+
+            Map<String, Object> row = CustomerMapper.toRow(profile);
+
+            repository.insert(row);
+            loggerService.log(
+                    customerId,
+                    "CUSTOMER",
+                    "Customer profile created successfully",
+                    LogType.SUCCESS
+            );
+        }
+        catch (RuntimeException e) {
+            loggerService.log(
+                    customerId,
+                    "CUSTOMER",
+                    "Customer profile creation failed",
+                    LogType.FAILURE
+            );
+            throw e;
+        }
     }
 
     /**

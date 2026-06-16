@@ -74,10 +74,11 @@ public class CustomerRepository {
             List<Map<String, Object>> results =
                     db.query(
                             "INSERT INTO customers " +
-                                    "(username, role, first_name, last_name, " +
+                                    "(id ,username, role, first_name, last_name, " +
                                     "date_of_birth, email, phone, address, national_id) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    "VALUES (? ,?, ?, ?, ?, ?, ?, ?, ?, ?)",
 
+                            customerFields.get("id"),
                             customerFields.get("username"),
                             customerFields.get("role"),
                             customerFields.get("first_name"),

@@ -18,7 +18,7 @@ public class AccountMapper {
 
         dto.setId((Long) row.get("id"));
 
-        dto.setAccountNumber((String) row.get("account_number"));
+        dto.setAccountNumber((Long) row.get("account_number"));
 
         dto.setCustomerId((Long) row.get("customer_id"));
 
