@@ -302,7 +302,6 @@ public class MenuDisplay {
 
     private void handleTransfer() {
         System.out.println("\n=== TRANSFER MONEY ===");
-        Scanner sc = new Scanner(System.in);
 
         List<Map<String, Object>> accounts =
                 accountsService.
@@ -314,7 +313,7 @@ public class MenuDisplay {
                     + account.get("account_number") +
                     "\nBalance" + account.get("balance"));
         }
-        int option1 = sc.nextInt();
+        int option1 = scanner.nextInt();
         Long sourceAccountId = (Long)accounts.get(option1-1).get("id");
 
         count = 1;
@@ -324,11 +323,11 @@ public class MenuDisplay {
                     + account.get("account_number") +
                     "\nBalance" + account.get("balance"));
         }
-        int option2 = sc.nextInt();
+        int option2 = scanner.nextInt();
         Long destinationAccountId = (Long)accounts.get(option2-1).get("id") ;
 
         System.out.println("Money you want to transfer");
-        BigDecimal amountToBeTransferred = sc.nextBigDecimal();
+        BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
         transferOrchestrator.transfer(session.getCustomerId(),
                 sourceAccountId,destinationAccountId, amountToBeTransferred);
     }
