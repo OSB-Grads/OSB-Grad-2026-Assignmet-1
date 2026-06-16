@@ -25,13 +25,14 @@ public class MenuDisplay {
     private final ProductService productService;
     private final AccountsService accountsService;
     private final TransferOrchestrator transferOrchestrator;
+    private final Session session;
 
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
         this.accountsService = new AccountsService();
         this.transferOrchestrator = new TransferOrchestrator();
-
+        this.session = Session.getInstance();
     }
 
     /**
@@ -305,7 +306,7 @@ public class MenuDisplay {
 
         List<Map<String, Object>> accounts =
                 accountsService.
-                        getAllAccountsForCustomer(Session.getInstance().getCustomerId());
+                        getAllAccountsForCustomer(session.getCustomerId());
         int count = 1;
         System.out.println("Select source Account");
         for(Map<String ,Object> account : accounts) {
@@ -314,7 +315,7 @@ public class MenuDisplay {
                     "\nBalance" + account.get("balance"));
         }
         int option1 = sc.nextInt();
-        Long sourceAccount = (Long)accounts.get(option1-1).get("account_number");
+        Long sourceAccountId = (Long)accounts.get(option1-1).get("id");
 
         count = 1;
         System.out.println("Select destination Account");
@@ -324,19 +325,19 @@ public class MenuDisplay {
                     "\nBalance" + account.get("balance"));
         }
         int option2 = sc.nextInt();
-        Long destinationAccount = (Long)accounts.get(option2-1).get("account_number") ;
+        Long destinationAccountId = (Long)accounts.get(option2-1).get("id") ;
 
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = sc.nextBigDecimal();
-        transferOrchestrator.transfer(Session.getInstance().getCustomerId(),
-                sourceAccount,destinationAccount, amountToBeTransferred);
+        transferOrchestrator.transfer(session.getCustomerId(),
+                sourceAccountId,destinationAccountId, amountToBeTransferred);
     }
 
     private void handleViewAccounts() {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
         
-        List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(Session.getInstance().getCustomerId());
+        List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
 
         HashMap<String, BigDecimal> balances = new HashMap<>();
 
