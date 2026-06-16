@@ -30,7 +30,7 @@ public class AccountsService {
         return rows;
     }
 
-     public Long CreateAccount(Long customerId,Long productId ) {
+     public Long createAccount(Long customerId,Long productId ) {
         try{
             AccountDTO accountdto=new AccountDTO(null, null, customerId, productId, null, null, null, false);
             Map<String,Object> accountRow = AccountMapper.toRow(accountdto);
