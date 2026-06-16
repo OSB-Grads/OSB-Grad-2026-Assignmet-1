@@ -35,4 +35,11 @@ public class InboxService {
         Long inboxMessageId = inboxRepository.insert(inboxRow);
         return inboxMessageId;
     }
+    public void deleteById(Long id){
+        try {
+           inboxRepository.deleteById(id);
+        } catch (Exception e) {
+             throw new RuntimeException("Unable to delete");
+        }
+    }
 }

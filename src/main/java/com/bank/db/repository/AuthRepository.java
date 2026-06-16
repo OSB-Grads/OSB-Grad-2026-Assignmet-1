@@ -44,7 +44,7 @@ public class AuthRepository {
         try {
 
             String sql =
-                    "SELECT * FROM auth_users WHERE username = ?";
+                    "SELECT * FROM auth WHERE username = ?";
 
             List<Map<String, Object>> results =
                     db.query(sql, username);
@@ -62,22 +62,31 @@ public class AuthRepository {
         }
     }
 
-    public Long insert(Map<String, Object> authFields) throws SQLException {
+    public Long insert(Map<String, Object> authFields) {
 
-        String sql =
-                "INSERT INTO auth_users " +
-                        "(username, password_hash, customer_id, role) " +
-                        "VALUES (?, ?, ?, ?)";
+        try {
 
-        List<Map<String, Object>> authRow =
-                db.query(
-                        sql,
-                        authFields.get("username"),
-                        authFields.get("password_hash"),
-                        authFields.get("customer_id"),
-                        authFields.get("role")
-                );
+            String sql =
+                    "INSERT INTO auth " +
+                            "(username, password_hash, role) " +
+                            "VALUES (?, ?, ?)";
 
-        return (Long) authRow.get(0).get("id");
+            List<Map<String, Object>> authRow =
+                    db.query(
+                            sql,
+                            authFields.get("username"),
+                            authFields.get("password_hash"),
+                            //authFields.get("customer_id"),
+                            authFields.get("role")
+                    );
+
+            return (Long) authRow.get(0).get("id");
+
+            // here we are returning the id
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(
+                    "Failed to create auth user", e);
+        }
     }
 }

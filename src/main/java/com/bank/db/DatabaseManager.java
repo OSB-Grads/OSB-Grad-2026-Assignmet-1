@@ -138,18 +138,14 @@ public class DatabaseManager {
     private void createTables() {
         String[] createTableQueries = {
             // Customers table — profile data only, no credentials
-                "CREATE TABLE IF NOT EXISTS customers (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "first_name VARCHAR(50) NOT NULL, " +
-                        "last_name VARCHAR(50) NOT NULL, " +
-                        "date_of_birth DATE NOT NULL, " +
-                        "email VARCHAR(100) UNIQUE, " +
-                        "phone VARCHAR(20), " +
-                        "address TEXT, " +
-                        "national_id VARCHAR(50) UNIQUE, " +
-                        "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                        "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                        ")",
+            "CREATE TABLE IF NOT EXISTS customers (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "full_name VARCHAR(100) NOT NULL, " +
+            "email VARCHAR(100), " +
+            "phone VARCHAR(20), " +
+            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+            "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+            ")",
 
             // Auth table — login credentials and authorisation role.
             // One auth record per customer (customer_id UNIQUE).
@@ -157,15 +153,15 @@ public class DatabaseManager {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "username VARCHAR(50) UNIQUE NOT NULL, " +
             "password_hash VARCHAR(255) NOT NULL, " +
-            "customer_id INTEGER NOT NULL UNIQUE, " +
+            //"customer_id INTEGER NOT NULL UNIQUE, " +
             "role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER' CHECK (role IN ('CUSTOMER', 'ADMIN')), " +
-            "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
+            //"FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
             
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "account_number VARCHAR(20) UNIQUE NOT NULL, " +
+            "account_number INTEGER UNIQUE NOT NULL AUTOINCREMENT, " +
             "customer_id INTEGER NOT NULL, " +
             "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
@@ -174,7 +170,6 @@ public class DatabaseManager {
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
-            "FOREIGN KEY (product_id) REFERENCES products(id)"+
             ")",
             
             // Transactions table
@@ -199,7 +194,8 @@ public class DatabaseManager {
             "customer_id INTEGER, " +
             "action VARCHAR(100) NOT NULL, " +
             "details TEXT, " +
-            "type VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
+            "ip_address VARCHAR(45), " +
+            "status VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
@@ -216,6 +212,8 @@ public class DatabaseManager {
             // transaction_id  — the business transaction (ledger identity)
             "CREATE TABLE IF NOT EXISTS inbox (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "correlation_id VARCHAR(64) NOT NULL, " +
+            "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
             "message_type VARCHAR(40) NOT NULL, " +
             "payload TEXT NOT NULL, " +
