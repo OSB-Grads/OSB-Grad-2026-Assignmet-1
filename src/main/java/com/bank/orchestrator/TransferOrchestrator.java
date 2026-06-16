@@ -18,11 +18,10 @@ public class TransferOrchestrator {
         this.db = DatabaseManager.getInstance();
     }
 
-    public void transfer(Long customerId,Long sourceAccountNumber, Long destinationAccountNumber,BigDecimal amount) throws InsufficientFundsException,AccountLockedException,SameAccountTransferException,NegativeAmountException {
+    public void transfer(Long customerId,Long sourceAccountId, Long destinationAccountId,BigDecimal amount) throws InsufficientFundsException,AccountLockedException,SameAccountTransferException,NegativeAmountException {
                 db.startTransaction();
-                transferService.transferFunds(sourceAccountNumber,destinationAccountNumber,amount);
-                transactionservice.insertTransaction(customerId,sourceAccountNumber,destinationAccountNumber,amount);
+                transferService.transferFunds(sourceAccountId,destinationAccountId,amount);
+                transactionservice.insertTransaction(customerId,sourceAccountId,destinationAccountId,amount);
                 db.endTransaction();
-
         }
     }
