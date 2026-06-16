@@ -113,8 +113,7 @@ public class MenuDisplay {
                         handleUpdateProfile();
                         break;
                     case 9:
-                        System.out.println("Logging out...");
-                        loggedIn = false;
+                        handleLogout();
                         break;
                     default:
                         System.out.println("Invalid option. Please select 1-9.");
@@ -449,5 +448,10 @@ public class MenuDisplay {
      */
     public void showSuccess(String message) {
         System.out.println("SUCCESS: " + message);
+    }
+
+    public void handleLogout() {
+        Session.getInstance().logout();
+        System.out.println("Logout successful.");
     }
 }
