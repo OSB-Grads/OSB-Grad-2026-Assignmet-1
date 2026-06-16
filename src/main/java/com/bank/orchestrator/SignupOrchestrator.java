@@ -8,7 +8,7 @@ import com.bank.dto.CustomerDTO;
 import com.bank.enums.Role;
 import com.bank.exception.DatabaseOperationException;
 import com.bank.exception.UserCreationException;
-import com.bank.exception.UserCreationFailedException;
+import com.bank.exception.UserCreationException;
 
 public class SignupOrchestrator {
 
@@ -24,7 +24,7 @@ public class SignupOrchestrator {
 
     public void signup(String username, String firstName, String lastName, String dateOfBirth, String email,
             String phone,
-            String address, String nationalId, String password) throws UserCreationFailedException, UserAlreadyExistsException {
+            String address, String nationalId, String password) throws UserCreationException {
                 db.startTransaction();
                 Long customerId= authservice.signup(username,password);
                 CustomerService.createCustomer(customerId,firstName,lastName,dateOfBirth,email,phone,address,nationalId);
