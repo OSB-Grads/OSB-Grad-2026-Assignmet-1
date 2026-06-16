@@ -18,10 +18,9 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
 
-    public ProductService(ProductRepository productRepository,
-                          AccountRepository accountRepository) {
-        this.productRepository = productRepository;
-        this.accountRepository = accountRepository;
+    public ProductService(){
+        this.productRepository = new ProductRepository();
+        this.accountRepository = new AccountRepository();
     }
 
     public List<ProductDTO> listProductsByCategory(String category) throws SQLException {
