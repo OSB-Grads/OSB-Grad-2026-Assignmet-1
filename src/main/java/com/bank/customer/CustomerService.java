@@ -71,9 +71,32 @@ public class CustomerService {
      * Update the caller's own profile (email, phone, address).
      * @return the updated customer
      */
-    public CustomerDTO updateProfile(Long id, CustomerDTO changes) {
-        // TODO: validate -> repository.update(...) -> return refreshed DTO.
-        throw new UnsupportedOperationException("TODO: implement updateProfile");
+    public Map<String, Object> updateProfile(
+            Long id,
+            String firstName,
+            String lastName,
+            String email,
+            String phone,
+            String nationalId
+    ) throws SQLException {
+        // get the customer from the repo
+        Map<String, Object> customer = repository.findById(id);
+        //base case:
+        if (customer == null) {
+            throw new RuntimeException(
+                    "Customer not found with id: " + id
+            );
+        }
+
+        if (firstName != null) {customer.put("first_name", firstName);}
+        if (lastName != null) {customer.put("last_name", lastName);}
+        if (email != null) {customer.put("email", email);}
+        if (phone != null) {customer.put("phone", phone);}
+        if (nationalId != null) {customer.put("national_id", nationalId);}
+        // updated information gets updated in repo
+        repository.update(id, customer);
+        // return the updated customer
+        return repository.findById(id);
     }
 
     /**
