@@ -63,16 +63,15 @@ public List<Map<String, Object>> findByCustomerId(Long customerId) {
                     db.query(
                             "INSERT INTO transactions " +
                                     "(customer_id, from_account_id, to_account_id, " +
-                                    "transaction_type, amount, description, status, updated_at) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                                    "transaction_type, amount, description, status) " +
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                     transactionFields.get("customer_id"),
                                     transactionFields.get("from_account_id"),
                                     transactionFields.get("to_account_id"),
                                     transactionFields.get("transaction_type"),
                                     transactionFields.get("amount"),
                                     transactionFields.get("description"),
-                                    transactionFields.get("status"),
-                                    transactionFields.get("updated_At"));
+                                    transactionFields.get("status"));
 
             Object generatedKey =
                     result.get(0).get("generated_key");
@@ -94,6 +93,7 @@ public List<Map<String, Object>> findByCustomerId(Long customerId) {
             List<Map<String, Object>> result =
                     db.query("UPDATE transactions " +
                                     "SET status = ? " +
+                                    "updated_at = CURRENT_TIMESTAMP," +
                                     "WHERE id = ?",
                                     changedFields.get("status"), id);
 
