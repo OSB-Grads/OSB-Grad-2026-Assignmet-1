@@ -14,6 +14,7 @@ public class TransactionDTO {
     private String status;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public LocalDateTime getCreatedAt() {return createdAt;}
 
@@ -76,4 +77,12 @@ public class TransactionDTO {
     public Long getFromAccountId() {return fromAccountId;}
 
     public void setFromAccountId(Long fromAccountId) {this.fromAccountId = fromAccountId;}
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

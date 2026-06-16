@@ -14,7 +14,6 @@ public class TransactionMapper {
         }
 
         TransactionDTO dto = new TransactionDTO();
-
         dto.setId((Long) row.get("id"));
         dto.setCustomerId((Long) row.get("customer_id"));
         dto.setFromAccountId((Long) row.get("from_account_id"));
