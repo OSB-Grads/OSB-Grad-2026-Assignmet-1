@@ -21,18 +21,20 @@ import com.bank.session.Session;
  */
 public class MenuDisplay {
     private Scanner scanner;
-    // private Principle ctx = Principle.getInstance();
     private final ProductService productService;
-    private final AccountsService accountsService;
-    private final TransferOrchestrator transferOrchestrator;
     private final Session session;
-
+    private final SignupOrchestrator signupOrchestrator;
+    private final TransferOrchestrator transferOrchestrator;
+    private final AccountsService accountsService;
+    private final Session session;
+    
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
+        this.session = Session.getInstance();
+        this.signupOrchestrator = new SignupOrchestrator();
         this.accountsService = new AccountsService();
         this.transferOrchestrator = new TransferOrchestrator();
-        this.session = Session.getInstance();
     }
 
     /**
@@ -223,7 +225,7 @@ public class MenuDisplay {
         String firstName = scanner.nextLine().trim();
         System.out.print("Last Name: ");
         String lastName = scanner.nextLine().trim();
-        System.out.print("Date of Birth in YYYY-MM-DD");
+        System.out.print("Date of Birth in YYYY-MM-DD : ");
         String dateOfBirth = scanner.nextLine().trim();
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
@@ -234,8 +236,9 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        // orchestrator.SignupOrchestrar(pass all input values)
-        // System.out.println(message);
+        signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
+                    address,nationalId,password);
+        System.out.println("Customer Created Successfully");
     }
 
     private void handleOpenAccount() {

@@ -24,8 +24,8 @@ public class LogMapper {
         dto.setAction((String) row.get("action"));
         dto.setDetails((String) row.get("details"));
 
-        String typeStr = (String) row.get("type");
-        dto.setType(typeStr != null ? LogType.valueOf(typeStr) : null);
+        String typeStr = (String) row.get("status");
+        dto.setStatus(typeStr != null ? LogType.valueOf(typeStr) : null);
 
         dto.setCreatedAt(row.get("created_at") != null
                 ? row.get("created_at").toString()
@@ -42,7 +42,7 @@ public class LogMapper {
         row.put("user_id", dto.getUserId());
         row.put("action", dto.getAction());
         row.put("details", dto.getDetails());
-        row.put("type", dto.getType() != null ? dto.getType().name() : null);
+        row.put("type", dto.getStatus() != null ? dto.getStatus().name() : null);
         row.put("created_at", dto.getCreatedAt());
 
         return row;
