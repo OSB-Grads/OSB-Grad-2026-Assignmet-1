@@ -1,12 +1,18 @@
 package com.bank.orchestrator;
 
 import com.bank.customer.CustomerService;
+import com.bank.service.AuthService;
 import com.bank.db.DatabaseManager;
 import com.bank.exception.UserAlreadyExistsException;
 import com.bank.exception.UserCreationFailedException;
 import com.bank.service.AuthService;
 
 import java.sql.SQLException;
+import com.bank.dto.AuthUserDTO;
+import com.bank.dto.CustomerDTO;
+import com.bank.enums.Role;
+import com.bank.exception.DatabaseOperationException;
+import com.bank.exception.UserCreationException;
 
 public class SignupOrchestrator {
 
