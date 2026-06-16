@@ -1,6 +1,7 @@
 package com.bank.customer;
 import com.bank.db.repository.InboxRepository;
 import com.bank.dto.InboxDTO;
+import com.bank.enums.log.LogType;
 import com.bank.exception.DatabaseOperationException;
 import com.bank.mapper.InboxMapper;
 import java.util.Map;
@@ -9,17 +10,31 @@ import java.sql.SQLException;
 public class InboxService {
 
     private final InboxRepository inboxRepository;
+    private final LoggerService loggerService;
 
     public InboxService() {
         this.inboxRepository = new InboxRepository();
+        this.loggerService = new LoggerService();
     }
 
     public InboxDTO getTopMessage() {
         try{
             Map<String, Object> messageList = inboxRepository.findFirst();
+            loggerService.log(
+                    null,
+                    "FETCH TOP MESSAGE",
+                    "Fetched top message",
+                    LogType.SUCCESS
+            );
             return InboxMapper.toDTO(messageList);
         } catch (Exception e) {
-            throw new DatabaseOperationException("Failed to get the message",e);
+            loggerService.log(
+                    null,
+                    "FETCH TOP MESSAGE",
+                    "Failed to fetch top message",
+                    LogType.ERROR
+            );
+            throw e;
         }
     }
 
