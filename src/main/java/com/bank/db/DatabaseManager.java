@@ -165,7 +165,7 @@ public class DatabaseManager {
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "account_number INTEGER GENERATED ALWAYS AS (id) STORED, " +
+            "account_number INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "customer_id INTEGER NOT NULL, " +
             "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
@@ -200,7 +200,7 @@ public class DatabaseManager {
             "action VARCHAR(100) NOT NULL, " +
             "details TEXT, " +
             "ip_address VARCHAR(45), " +
-            "type VARCHAR(20) DEFAULT 'SUCCESS' CHECK (type IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
+            "status VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",

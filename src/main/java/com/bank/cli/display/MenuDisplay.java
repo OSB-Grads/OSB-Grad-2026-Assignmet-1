@@ -221,7 +221,7 @@ public class MenuDisplay {
         String firstName = scanner.nextLine().trim();
         System.out.print("Last Name: ");
         String lastName = scanner.nextLine().trim();
-        System.out.print("Date of Birth in YYYY-MM-DD");
+        System.out.print("Date of Birth in YYYY-MM-DD : ");
         String dateOfBirth = scanner.nextLine().trim();
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
