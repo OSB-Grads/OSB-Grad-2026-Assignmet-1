@@ -4,6 +4,7 @@ import com.bank.customer.LoggerService;
 import com.bank.db.repository.TransactionRepository;
 import com.bank.dto.TransactionDTO;
 import com.bank.enums.log.LogType;
+import com.bank.exception.DatabaseOperationException;
 import com.bank.exception.TransactionFailedException;
 import com.bank.mapper.TransactionMapper;
 
@@ -146,7 +147,7 @@ public class TransactionService {
 
             return transactions;
 
-        } catch (RuntimeException e) {
+        } catch (DatabaseOperationException e) {
             loggerService.log(
                     customerId,
                     "LIST_CUSTOMER_TRANSACTIONS",
