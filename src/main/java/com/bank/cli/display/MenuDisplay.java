@@ -201,8 +201,6 @@ public class MenuDisplay {
 
         session.login((Long.parseLong(res.get("authId").toString())), (Role)res.get("role"));
         if (session.getRole() == Role.ADMIN) {
-            System.out.println(session.getRole());
-            System.out.println(session.getCustomerId());
             showAdminMenu();
         } else {
              System.out.println(session.getRole());
@@ -543,7 +541,5 @@ catch (NegativeAmountException e) {
     public void handleLogout() {
         Session.getInstance().logout();
         System.out.println("Logout successful.");
-         System.out.println(session.getRole());
-            System.out.println(session.getCustomerId());
     }
 }
