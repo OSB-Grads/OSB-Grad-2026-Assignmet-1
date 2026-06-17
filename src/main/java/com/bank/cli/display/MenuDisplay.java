@@ -1,6 +1,7 @@
 package com.bank.cli.display;
 
 import com.bank.customer.AccountsService;
+import com.bank.dto.AccountDTO;
 import com.bank.enums.Role;
 
 import java.sql.SQLException;
@@ -12,22 +13,26 @@ import java.util.Scanner;
 
 import com.bank.customer.ProductService;
 import com.bank.dto.ProductDTO;
+import com.bank.exception.*;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
+import com.bank.orchestrator.SignupOrchestrator;
+import com.bank.orchestrator.TransferOrchestrator;
 import com.bank.session.Session;
+
+import javax.security.auth.login.AccountLockedException;
 
 /**
  * Handles all CLI menu display and user input.
  * This class is responsible for showing menus and collecting user choices.
  */
 public class MenuDisplay {
-    private Scanner scanner;
+    private final Scanner scanner;
     private final ProductService productService;
     private final Session session;
     private final SignupOrchestrator signupOrchestrator;
     private final TransferOrchestrator transferOrchestrator;
     private final AccountsService accountsService;
-    private final Session session;
-    
+
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
@@ -67,7 +72,7 @@ public class MenuDisplay {
                     default:
                         System.out.println("Invalid option. Please select 1, 2, or 3.");
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | SQLException | UserCreationFailedException | UserAlreadyExistsException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
@@ -126,7 +131,8 @@ public class MenuDisplay {
                     default:
                         System.out.println("Invalid option. Please select 1-9.");
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | NegativeAmountException | AccountLockedException |
+                     SameAccountTransferException | InsufficientFundsException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
@@ -200,7 +206,7 @@ public class MenuDisplay {
 
     }
 
-    private void handleCreateProfile() {
+    private void handleCreateProfile() throws SQLException, UserCreationFailedException, UserAlreadyExistsException {
 
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
         System.out.print("Username: ");
@@ -252,8 +258,8 @@ public class MenuDisplay {
           
             List<ProductDTO> productList;
             int i;
-            int productChoice;
-            Long Acc;
+            int productChoice = 0;
+            AccountDTO Acc;
             String category;
     try{
            switch(ch){
@@ -268,7 +274,7 @@ public class MenuDisplay {
             break;
             default:
               System.out.println("Invalid choice");
-            break;
+            return;
            }
            
              i=0;
@@ -276,11 +282,15 @@ public class MenuDisplay {
                 System.out.println(i +"."+ PrintProducts.getProductName());
                 i++;
              }
-              System.out.println("select a product");
-              productChoice=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(session.getCustomerId,productList.get(productChoice-1).getId());
-              System.out.println("Account Number is: " + Acc);
-        }
+
+        AccountOpeningOrchestrator orchestrator = new AccountOpeningOrchestrator();
+        Acc = orchestrator.openAccount(
+                session.getCustomerId(),
+                productList.get(productChoice - 1).getId()
+        );
+        System.out.println("Account Number is: " + Acc);
+
+    }
         
         catch(SQLException e){
                System.out.println("unable to fetch the products");
@@ -302,7 +312,7 @@ public class MenuDisplay {
         System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
     }
 
-    private void handleTransfer() {
+    private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException, InsufficientFundsException {
         System.out.println("\n=== TRANSFER MONEY ===");
 
         List<Map<String, Object>> accounts =
