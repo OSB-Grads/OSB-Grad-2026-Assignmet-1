@@ -18,7 +18,7 @@ public final class TransactionValidationUtils {
     }
 
     public static void validateAccountIds(Long fromAccountId, Long toAccountId) {
-        if (fromAccountId == null || toAccountId == null ||) {
+        if (fromAccountId == null || toAccountId == null ) {
             throw new InvalidAccountException("Account IDs must not be null or empty");
         }
         if (fromAccountId<=0||toAccountId<=0){

@@ -9,7 +9,15 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import com.bank.orchestrator.SignupOrchestrator;
+import com.bank.orchestrator.TransferOrchestrator;
+import javax.security.auth.login.AccountLockedException;
 
+import com.bank.exception.InsufficientFundsException;
+import com.bank.exception.NegativeAmountException;
+import com.bank.exception.SameAccountTransferException;
+import com.bank.exception.UserAlreadyExistsException;
+import com.bank.exception.UserCreationFailedException;
 import com.bank.customer.ProductService;
 import com.bank.dto.ProductDTO;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
@@ -26,7 +34,6 @@ public class MenuDisplay {
     private final SignupOrchestrator signupOrchestrator;
     private final TransferOrchestrator transferOrchestrator;
     private final AccountsService accountsService;
-    private final Session session;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -188,7 +195,7 @@ public class MenuDisplay {
         String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-
+        session.login(1L, Role.CUSTOMER);
         // TODO: Call AuthService to validate credentials
 
         if (session.getRole() == Role.ADMIN) {
@@ -236,8 +243,12 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
-                    address,nationalId,password);
+        try {
+            signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
+                        address,nationalId,password);
+        } catch (UserCreationFailedException | UserAlreadyExistsException | SQLException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println("Customer Created Successfully");
     }
 
@@ -250,7 +261,7 @@ public class MenuDisplay {
            
            int ch=scanner.nextInt();
           
-            List<ProductDTO> productList;
+            List<ProductDTO> productList=null;
             int i;
             int productChoice;
             Long Acc;
@@ -261,7 +272,7 @@ public class MenuDisplay {
                productList = productService.listProductsByCategory("Savings");
             break;
             case 2:
-               productList = productService.listProductsByCategory("Fixed Deposit");
+               productList = productService.listProductsByCategory("Fixed Deposits");
             break;
             case 3:
                productList = productService.listProductsByCategory("Limited Access");
@@ -271,15 +282,15 @@ public class MenuDisplay {
             break;
            }
            
-             i=0;
+             i=1;
              for(ProductDTO PrintProducts: productList){
                 System.out.println(i +"."+ PrintProducts.getProductName());
                 i++;
              }
               System.out.println("select a product");
               productChoice=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(session.getCustomerId,productList.get(productChoice-1).getId());
-              System.out.println("Account Number is: " + Acc);
+              Long accNo= accountsService.createAccount(session.getCustomerId(),productList.get(productChoice-1).getId());
+              System.out.println("Account Created Suceesfully. Your Account Number is:"+accNo);
         }
         
         catch(SQLException e){
@@ -330,8 +341,14 @@ public class MenuDisplay {
 
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
-        transferOrchestrator.transfer(session.getCustomerId(),
-                sourceAccountId,destinationAccountId, amountToBeTransferred);
+        try {
+            transferOrchestrator.transfer(session.getCustomerId(),
+                    sourceAccountId,destinationAccountId, amountToBeTransferred);
+        } catch (AccountLockedException | InsufficientFundsException | SQLException | SameAccountTransferException
+                | NegativeAmountException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private void handleViewAccounts() {
@@ -350,24 +367,23 @@ public class MenuDisplay {
         for (Map<String, Object> account : accounts) {
 
             String category = (String) account.get("category");
-            BigDecimal balance = (BigDecimal) account.get("balance");
+            BigDecimal balance =BigDecimal.valueOf(((Number) account.get("balance")).doubleValue());
 
             balances.put("Total Balance",balances.get("Total Balance").add(balance));
             balances.put(category,balances.getOrDefault(category, BigDecimal.ZERO).add(balance));
         }
 
         System.out.println("Total Balance: $" + balances.get("Total Balance"));
-
+        char ch='A';
         if (balances.get("Savings").compareTo(BigDecimal.ZERO) > 0) {
-
-            System.out.println("\nA) Savings Accounts $" + balances.get("Savings"));
+            System.out.println("\n"+ch+") Savings Accounts $" + balances.get("Savings"));
             int count = 1;
             for (Map<String, Object> account : accounts) {
 
                 if ("Savings".equals(account.get("category"))) {
 
                     System.out.println(count + ") Product Name: "+ account.get("product_name"));
-                    System.out.println("   Account Number: "+ account.get("account_number"));
+                    System.out.println("   Account Number: "+ account.get("id"));
                     System.out.println("   Balance: $"+ account.get("balance"));
                     count++;
                 }
@@ -375,15 +391,15 @@ public class MenuDisplay {
         }
 
         if (balances.get("Limited Access").compareTo(BigDecimal.ZERO) > 0) {
-
-            System.out.println("\nB) Limited Access Accounts $"+ balances.get("Limited Access"));
+            ch++;
+            System.out.println("\n"+ch+") Limited Access Accounts $"+ balances.get("Limited Access"));
 
             int count = 1;
             for (Map<String, Object> account : accounts) {
                 if ("Limited Access".equals(account.get("category"))) {
 
                     System.out.println(count + ") Product Name: "+ account.get("product_name"));
-                    System.out.println("   Account Number: "+ account.get("account_number"));
+                    System.out.println("   Account Number: "+ account.get("id"));
                     System.out.println("   Balance: $"+ account.get("balance"));
                     count++;
                 }
@@ -391,15 +407,15 @@ public class MenuDisplay {
         }
 
         if (balances.get("Fixed Deposits").compareTo(BigDecimal.ZERO) > 0) {
-
-            System.out.println("\nC) Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
+            ch++;
+            System.out.println("\n"+ch+") Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
             int count = 1;
 
             for (Map<String, Object> account : accounts) {
                 if ("Fixed Deposits".equals(account.get("category"))) {
                     
                     System.out.println(count + ") Product Name: "+ account.get("product_name"));
-                    System.out.println("   Account Number: "+ account.get("account_number"));
+                    System.out.println("   Account Number: "+ account.get("id"));
                     System.out.println("   Balance: $"+ account.get("balance"));
                     count++;
                 }
