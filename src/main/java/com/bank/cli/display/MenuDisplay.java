@@ -1,7 +1,13 @@
 package com.bank.cli.display;
 
 import com.bank.customer.AccountsService;
+import com.bank.customer.AuthService;
 import com.bank.enums.Role;
+import com.bank.exception.InsufficientFundsException;
+import com.bank.exception.NegativeAmountException;
+import com.bank.exception.SameAccountTransferException;
+import com.bank.exception.UserAlreadyExistsException;
+import com.bank.exception.UserCreationFailedException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -10,10 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import javax.security.auth.login.AccountLockedException;
+
 import com.bank.customer.ProductService;
 import com.bank.dto.ProductDTO;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
 import com.bank.session.Session;
+import com.bank.orchestrator.SignupOrchestrator;
+import com.bank.orchestrator.TransferOrchestrator;
 
 /**
  * Handles all CLI menu display and user input.
@@ -26,7 +36,7 @@ public class MenuDisplay {
     private final SignupOrchestrator signupOrchestrator;
     private final TransferOrchestrator transferOrchestrator;
     private final AccountsService accountsService;
-    private final Session session;
+    private final AuthService authService;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -35,12 +45,13 @@ public class MenuDisplay {
         this.signupOrchestrator = new SignupOrchestrator();
         this.accountsService = new AccountsService();
         this.transferOrchestrator = new TransferOrchestrator();
+        this.authService=new AuthService();
     }
 
     /**
      * Display the main menu and handle user navigation.
      */
-    public void showMainMenu() {
+    public void showMainMenu() throws SQLException {
         boolean running = true;
 
         while (running) {
@@ -75,11 +86,10 @@ public class MenuDisplay {
 
     /**
      * Display the customer menu after a CUSTOMER logs in.
+     * @throws SQLException 
      */
-    public void showCustomerMenu() {
-        boolean loggedIn = true;
-
-        while (loggedIn) {
+    public void showCustomerMenu() throws SQLException {
+        while (session.getCustomerId() != null) {
             System.out.println("\n=== CUSTOMER MENU ===");
             System.out.println("1. Open Bank Account");
             System.out.println("2. View Accounts & Balances");
@@ -136,9 +146,9 @@ public class MenuDisplay {
      * Display the admin menu after an ADMIN logs in.
      */
     public void showAdminMenu() {
-        boolean loggedIn = true;
+      
 
-        while (loggedIn) {
+        while (session.getCustomerId() != null) {
             System.out.println("\n=== ADMIN MENU ===");
             System.out.println("1. Manage Products");
             System.out.println("2. View Inbox Messages");
@@ -168,8 +178,7 @@ public class MenuDisplay {
                         handleViewLogs();
                         break;
                     case 6:
-                        System.out.println("Logging out...");
-                        loggedIn = false;
+                        handleLogout();
                         break;
                     default:
                         System.out.println("Invalid option. Please select 1-6.");
@@ -182,18 +191,22 @@ public class MenuDisplay {
 
     // TODO: Implement these methods by calling appropriate services/orchestrators
 
-    private void handleLogin() {
+    private void handleLogin() throws SQLException {
         System.out.println("\n=== LOGIN ===");
         System.out.print("Username: ");
         String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
+         Map<String,Object> res= authService.login(username,password);
 
-        // TODO: Call AuthService to validate credentials
-
+        session.login((Long.parseLong(res.get("authId").toString())), (Role)res.get("role"));
         if (session.getRole() == Role.ADMIN) {
+            System.out.println(session.getRole());
+            System.out.println(session.getCustomerId());
             showAdminMenu();
         } else {
+             System.out.println(session.getRole());
+            System.out.println(session.getCustomerId());
             showCustomerMenu();
         }
         System.out.println("TODO: Implement login logic using AuthService");
@@ -236,8 +249,30 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
-                    address,nationalId,password);
+        try {
+    signupOrchestrator.signup(
+            username,
+            firstName,
+            lastName,
+            dateOfBirth,
+            email,
+            phone,
+            address,
+            nationalId,
+            password
+    );
+
+    System.out.println("Customer Created Successfully");
+
+} catch (UserAlreadyExistsException e) {
+    System.out.println(e.getMessage());
+
+} catch (UserCreationFailedException e) {
+    System.out.println(e.getMessage());
+
+} catch (SQLException e) {
+    System.out.println(e.getMessage());
+}
         System.out.println("Customer Created Successfully");
     }
 
@@ -250,7 +285,7 @@ public class MenuDisplay {
            
            int ch=scanner.nextInt();
           
-            List<ProductDTO> productList;
+            List<ProductDTO> productList=null;
             int i;
             int productChoice;
             Long Acc;
@@ -278,7 +313,7 @@ public class MenuDisplay {
              }
               System.out.println("select a product");
               productChoice=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(session.getCustomerId,productList.get(productChoice-1).getId());
+               Acc= accountsService.createAccount(session.getCustomerId(),productList.get(productChoice-1).getId());
               System.out.println("Account Number is: " + Acc);
         }
         
@@ -302,7 +337,7 @@ public class MenuDisplay {
         System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
     }
 
-    private void handleTransfer() {
+    private void handleTransfer() throws SQLException {
         System.out.println("\n=== TRANSFER MONEY ===");
 
         List<Map<String, Object>> accounts =
@@ -330,8 +365,28 @@ public class MenuDisplay {
 
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
-        transferOrchestrator.transfer(session.getCustomerId(),
-                sourceAccountId,destinationAccountId, amountToBeTransferred);
+       
+              try {
+                transferOrchestrator.transfer(
+                   session.getCustomerId(),
+                       sourceAccountId,
+                         destinationAccountId,
+                           amountToBeTransferred);
+            
+            System.out.println("Transfer successful");
+          }
+                 catch (AccountLockedException e) {
+             System.out.println("Account is locked");
+}
+catch (InsufficientFundsException e) {
+    System.out.println("Insufficient funds");
+}
+catch (SameAccountTransferException e) {
+    System.out.println("Source and destination account cannot be the same");
+}
+catch (NegativeAmountException e) {
+    System.out.println("Amount must be greater than zero");
+}
     }
 
     private void handleViewAccounts() {
@@ -488,5 +543,7 @@ public class MenuDisplay {
     public void handleLogout() {
         Session.getInstance().logout();
         System.out.println("Logout successful.");
+         System.out.println(session.getRole());
+            System.out.println(session.getCustomerId());
     }
 }

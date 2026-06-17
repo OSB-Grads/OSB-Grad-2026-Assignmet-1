@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProductService {
 
@@ -26,16 +27,6 @@ public class ProductService {
         this.productRepository = new ProductRepository();
         this.accountRepository = new AccountRepository();
         this.loggerService = new LoggerService();
-    }
-
-    public List<ProductDTO> listProductsByCategory(String category) throws SQLException {
-
-        List<Map<String, Object>> allProducts =
-                productRepository.findAllByProductCategory(category);
-
-        return allProducts.stream()
-                .map(ProductMapper::toDTO)
-                .toList();
     }
 
     public List<AccountDTO> getAllAccountsForProductCategory(String category)
@@ -65,7 +56,7 @@ public class ProductService {
 
      public List<ProductDTO> listProductsByCategory(String category) throws SQLException {
          try{
-             List<Map<String,Object>> allProducts = repository.findAllByProductCategory(category);
+             List<Map<String,Object>> allProducts = this.productRepository.findAllByProductCategory(category);
 
              List<ProductDTO> listOfProducts = allProducts.stream()
                      .map(ProductMapper::toDTO)
