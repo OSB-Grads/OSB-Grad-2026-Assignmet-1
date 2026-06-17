@@ -65,7 +65,7 @@ public class DatabaseManagerTest {
      * returning the generated customer id.
      */
     private Long createTestCustomer(String username, String fullName, String email, String phone) throws SQLException {
-        String customerSql = "INSERT INTO customers (full_name, email, phone) " +
+        String customerSql = "INSERT INTO customers (first_name, email, phone) " +
                             "VALUES ('" + fullName + "', '" + email + "', '" + phone + "')";
         List<Map<String, Object>> customerResult = dbManager.query(customerSql);
         Long customerId = (Long) customerResult.get(0).get("generated_key");

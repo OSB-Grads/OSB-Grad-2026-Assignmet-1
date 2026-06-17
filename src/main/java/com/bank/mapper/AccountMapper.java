@@ -30,8 +30,7 @@ public class AccountMapper {
             dto.setStatus(AccountStatus.valueOf(row.get("status").toString()));
         }
 
-        dto.setOpeningDate((String) row.get("opening_date"));
-
+        dto.setOpeningDate(String.valueOf(row.get("created_at")));
         dto.setIsLocked((boolean) row.get("is_locked"));
 
         return dto;

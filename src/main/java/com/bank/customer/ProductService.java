@@ -66,7 +66,7 @@ public class ProductService {
 
      public List<ProductDTO> listProductsByCategory(String category) throws SQLException {
          try{
-             List<Map<String,Object>> allProducts = ProductRepository.findAllByProductCategory(category);
+             List<Map<String,Object>> allProducts = productRepository.findAllByProductCategory(category);
 
              List<ProductDTO> listOfProducts = allProducts.stream()
                      .map(ProductMapper::toDTO)

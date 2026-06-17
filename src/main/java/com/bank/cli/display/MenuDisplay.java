@@ -134,6 +134,8 @@ public class MenuDisplay {
             } catch (NumberFormatException | NegativeAmountException | AccountLockedException |
                      SameAccountTransferException | InsufficientFundsException e) {
                 System.out.println("Invalid input. Please enter a number.");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -286,7 +288,7 @@ public class MenuDisplay {
         AccountOpeningOrchestrator orchestrator = new AccountOpeningOrchestrator();
         Acc = orchestrator.openAccount(
                 session.getCustomerId(),
-                productList.get(productChoice - 1).getId()
+                productList.get(productChoice).getId()
         );
         System.out.println("Account Number is: " + Acc);
 
@@ -312,7 +314,7 @@ public class MenuDisplay {
         System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
     }
 
-    private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException, InsufficientFundsException {
+    private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException, InsufficientFundsException, SQLException {
         System.out.println("\n=== TRANSFER MONEY ===");
 
         List<Map<String, Object>> accounts =
