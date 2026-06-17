@@ -413,7 +413,7 @@ public class MenuDisplay {
 
     private void handleViewTransactionHistory() {
         System.out.println("\n=== TRANSACTION HISTORY ===\n");
-        List<TransactionDTO> transactions = transactionService.listCustomerTransactions(1L);
+        List<TransactionDTO> transactions = transactionService.listCustomerTransactions(session.getCustomerId());
         System.out.printf(
                 "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
                 "TRANSACTION ID", "FROM ACCOUNT", "TO ACCOUNT", "TYPE", "AMOUNT", "STATUS", "CREATED AT"
