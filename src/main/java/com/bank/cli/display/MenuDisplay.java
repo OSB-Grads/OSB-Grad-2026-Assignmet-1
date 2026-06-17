@@ -12,8 +12,13 @@ import java.util.Scanner;
 
 import com.bank.customer.ProductService;
 import com.bank.dto.ProductDTO;
+import com.bank.exception.*;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
+import com.bank.orchestrator.SignupOrchestrator;
+import com.bank.orchestrator.TransferOrchestrator;
 import com.bank.session.Session;
+
+import javax.security.auth.login.AccountLockedException;
 
 /**
  * Handles all CLI menu display and user input.
@@ -26,8 +31,7 @@ public class MenuDisplay {
     private final SignupOrchestrator signupOrchestrator;
     private final TransferOrchestrator transferOrchestrator;
     private final AccountsService accountsService;
-    private final Session session;
-    
+
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
@@ -67,7 +71,7 @@ public class MenuDisplay {
                     default:
                         System.out.println("Invalid option. Please select 1, 2, or 3.");
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | SQLException | UserCreationFailedException | UserAlreadyExistsException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
@@ -126,7 +130,8 @@ public class MenuDisplay {
                     default:
                         System.out.println("Invalid option. Please select 1-9.");
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | AccountLockedException | InsufficientFundsException |
+                     NegativeAmountException | SameAccountTransferException | SQLException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
@@ -191,16 +196,18 @@ public class MenuDisplay {
 
         // TODO: Call AuthService to validate credentials
 
-        if (session.getRole() == Role.ADMIN) {
-            showAdminMenu();
-        } else {
-            showCustomerMenu();
-        }
+//        if (session.getRole() == Role.ADMIN) {
+//            showAdminMenu();
+//        } else {
+//            showCustomerMenu();
+//        }
+        session.login(1L, Role.CUSTOMER);
+        showCustomerMenu();
         System.out.println("TODO: Implement login logic using AuthService");
 
     }
 
-    private void handleCreateProfile() {
+    private void handleCreateProfile() throws SQLException, UserCreationFailedException, UserAlreadyExistsException {
 
         System.out.println("\n=== CREATE CUSTOMER PROFILE ===");
         System.out.print("Username: ");
@@ -268,17 +275,18 @@ public class MenuDisplay {
             break;
             default:
               System.out.println("Invalid choice");
-            break;
+            return;
            }
            
-             i=0;
+             i=1;
              for(ProductDTO PrintProducts: productList){
                 System.out.println(i +"."+ PrintProducts.getProductName());
                 i++;
              }
               System.out.println("select a product");
               productChoice=scanner.nextInt();
-               Acc= AccountOpeningOrchestrator.openAccount(session.getCustomerId,productList.get(productChoice-1).getId());
+
+              Acc= accountsService.createAccount(session.getCustomerId(),productList.get(productChoice-1).getId());
               System.out.println("Account Number is: " + Acc);
         }
         
@@ -302,7 +310,7 @@ public class MenuDisplay {
         System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
     }
 
-    private void handleTransfer() {
+    private void handleTransfer() throws AccountLockedException, InsufficientFundsException, NegativeAmountException, SameAccountTransferException, SQLException {
         System.out.println("\n=== TRANSFER MONEY ===");
 
         List<Map<String, Object>> accounts =
@@ -337,9 +345,9 @@ public class MenuDisplay {
     private void handleViewAccounts() {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
-        
+        System.out.println(session.getCustomerId());
         List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
-
+        System.out.println(accounts);
         HashMap<String, BigDecimal> balances = new HashMap<>();
 
         balances.put("Total Balance", BigDecimal.ZERO);
@@ -350,7 +358,8 @@ public class MenuDisplay {
         for (Map<String, Object> account : accounts) {
 
             String category = (String) account.get("category");
-            BigDecimal balance = (BigDecimal) account.get("balance");
+            BigDecimal balance =
+                    BigDecimal.valueOf(((Number) account.get("balance")).doubleValue());
 
             balances.put("Total Balance",balances.get("Total Balance").add(balance));
             balances.put(category,balances.getOrDefault(category, BigDecimal.ZERO).add(balance));

@@ -184,7 +184,7 @@ public class AccountRepository {
             List<Map<String, Object>> rows = db.query(
                     "SELECT " +
                             "a.id, a.account_number, a.customer_id, a.product_id, " +
-                            "a.balance, a.status, a.opening_date, a.is_locked, " +
+                            "a.balance, a.status, a.created_at, a.is_locked, " +
                             "p.product_name, p.category " +
                             "FROM accounts a " +
                             "JOIN products p " +

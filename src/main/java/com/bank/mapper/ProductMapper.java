@@ -11,13 +11,17 @@ public class ProductMapper {
     public static ProductDTO toDTO(Map<String,Object> row){
          ProductDTO dto = new ProductDTO();
 
-         dto.setId((Long) row.get("id"));
+         dto.setId(((Number) row.get("id")).longValue());
          dto.setProductName((String) row.get("product_name"));
          dto.setProductCategory((String) row.get("category"));
-         dto.setInterestRate((BigDecimal) row.get("interest_rate"));
-         dto.setMinOperatingBalance((BigDecimal) row.get("min_operating_balance"));
-         dto.setTermMonths((Long) row.get("term_months"));
-
+         dto.setInterestRate(
+                BigDecimal.valueOf(((Number) row.get("interest_rate")).doubleValue())
+         );
+         dto.setMinOperatingBalance(
+                BigDecimal.valueOf(((Number) row.get("min_operating_balance")).doubleValue())
+         );
+         Object termMonths = row.get("term_months");
+         dto.setTermMonths(termMonths == null ? null : ((Number) termMonths).longValue());
          return dto;
     }
 
