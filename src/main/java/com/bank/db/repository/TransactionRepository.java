@@ -58,7 +58,7 @@ public class TransactionRepository {
         try {
             String sql = "SELECT * FROM transactions WHERE from_account_id = ? OR to_account_id = ?" +
                     "ORDER BY created_at DESC";
-            List<Map<String, Object>> rows = db.query(sql);
+            List<Map<String, Object>> rows = db.query(sql, accountId, accountId);
             return rows.isEmpty() ? null : rows;
         } catch (SQLException e) {
             throw new DatabaseOperationException(
