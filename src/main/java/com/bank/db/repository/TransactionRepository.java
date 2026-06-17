@@ -34,26 +34,39 @@ public class TransactionRepository {
             );
         }
     }
-public List<Map<String, Object>> findByCustomerId(Long customerId) {
+    public List<Map<String, Object>> findByCustomerId(Long customerId) {
 
-    try {
+        try {
 
-        List<Map<String, Object>> rows =
+            List<Map<String, Object>> rows =
                 db.query(
                         "SELECT * FROM transactions WHERE customer_id = ?",
                         customerId
                 );
 
-        return rows.isEmpty() ? null : rows;
+            return rows.isEmpty() ? null : rows;
 
-    } catch (SQLException e) {
+        } catch (SQLException e) {
 
-        throw new DatabaseOperationException(
-                "Failed to retrieve transactions for customer: " + customerId,
-                e
-        );
+            throw new DatabaseOperationException(
+                    "Failed to retrieve transactions for customer: " + customerId,
+                    e
+            );
+        }
     }
-}
+    public List<Map<String, Object>> findByAccountId(Long accountId) {
+        try {
+            String sql = "SELECT * FROM transactions WHERE from_account_id = ? OR to_account_id = ?" +
+                    "ORDER BY created_at DESC";
+            List<Map<String, Object>> rows = db.query(sql);
+            return rows.isEmpty() ? null : rows;
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(
+                    "Failed to retrieve transactions for account: " + accountId,
+                    e
+            );
+        }
+    }
 
     public Long insert(Map<String, Object> transactionFields) {
 
