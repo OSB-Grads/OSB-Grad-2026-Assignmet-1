@@ -64,7 +64,7 @@ public List<Map<String, Object>> findByCustomerId(Long customerId) {
                             "INSERT INTO transactions " +
                                     "(customer_id, from_account_id, to_account_id, " +
                                     "transaction_type, amount, description, status) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
                                     transactionFields.get("customer_id"),
                                     transactionFields.get("from_account_id"),
                                     transactionFields.get("to_account_id"),

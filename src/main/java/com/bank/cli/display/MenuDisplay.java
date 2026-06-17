@@ -255,13 +255,13 @@ public class MenuDisplay {
 
     private void handleOpenAccount() {
         System.out.println("\n=== OPEN BANK ACCOUNT ===");
-        
+
            System.out.println("1. Savings");
            System.out.println("2. Fixed Deposit");
            System.out.println("3. Limited Access");
-           
+
            int ch=scanner.nextInt();
-          
+
             List<ProductDTO> productList;
             int i;
             int productChoice = 0;
@@ -282,7 +282,7 @@ public class MenuDisplay {
               System.out.println("Invalid choice");
             return;
            }
-           
+
              i=0;
              for(ProductDTO PrintProducts: productList){
                 System.out.println(i +"."+ PrintProducts.getProductName());
@@ -297,15 +297,15 @@ public class MenuDisplay {
         System.out.println("Account Number is: " + Acc);
 
     }
-        
+
         catch(SQLException e){
                System.out.println("unable to fetch the products");
         }
-    
+
         // System.out.println("TODO: Implement account opening using AccountOpeningOrchestrator");
     }
 
-    
+
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");
         // TODO: Show user's accounts, get account selection and amount
@@ -326,30 +326,37 @@ public class MenuDisplay {
         int count = 1;
         System.out.println("Select source Account");
         for(Map<String ,Object> account : accounts) {
-            System.out.println(count++ + "Account Number: " + account.get("account_number") + "\nBalance" + account.get("balance"));
+            System.out.println(count++ + ". Account Number: " + account.get("account_number") + " | Balance: " + account.get("balance"));
         }
         int option1 = scanner.nextInt();
+        scanner.nextLine();
         Long sourceAccountId = ((Number) accounts.get(option1 - 1).get("id")).longValue();
 
         count = 1;
         System.out.println("Select destination Account");
         for(Map<String ,Object> account : accounts) {
-            System.out.println(count++ + "Account Number: "
-                    + account.get("account_number") +
-                    "\nBalance" + account.get("balance"));
+            System.out.println(count++ + ". Account Number: " + account.get("account_number") + " | Balance: " + account.get("balance"));
+
         }
         int option2 = scanner.nextInt();
+        scanner.nextLine();
         Long destinationAccountId = ((Number) accounts.get(option2 - 1).get("id")).longValue();
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
-        transferOrchestrator.transfer(session.getCustomerId(),
-                sourceAccountId,destinationAccountId, amountToBeTransferred);
+        scanner.nextLine();
+        transferOrchestrator.transfer(session.getCustomerId(), sourceAccountId,destinationAccountId, amountToBeTransferred);
+        accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
+        System.out.println("\n Transfer successful! Updated balances:");
+        for (Map<String, Object> account : accounts) {
+            System.out.println("Account Number: " + account.get("account_number") +
+                    " | Balance: " + account.get("balance"));
+        }
     }
 
     private void handleViewAccounts() {
 
         System.out.println("\n=== YOUR ACCOUNTS ===");
-        
+
         List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
 
         HashMap<String, BigDecimal> balances = new HashMap<>();
@@ -409,7 +416,7 @@ public class MenuDisplay {
 
             for (Map<String, Object> account : accounts) {
                 if ("Fixed Deposits".equals(account.get("category"))) {
-                    
+
                     System.out.println(count + ") Product Name: "+ account.get("product_name"));
                     System.out.println("   Account Number: "+ account.get("account_number"));
                     System.out.println("   Balance: $"+ account.get("balance"));

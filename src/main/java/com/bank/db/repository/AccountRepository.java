@@ -108,15 +108,15 @@ public class AccountRepository {
 
         try {
             List<Map<String, Object>> result = db.query(
-                    "UPDATE accounts SET account_number = ?,customer_id = ?,product_id = ?, balance = ?,status = ?,opening_date = ?,is_locked = ? WHERE id = ?",
+                    "UPDATE accounts SET account_number = ?, customer_id = ?, product_id = ?, balance = ?, status = ?, is_locked = ? WHERE id = ?",
                     changedFields.get("account_number"),
                     changedFields.get("customer_id"),
                     changedFields.get("product_id"),
                     changedFields.get("balance"),
                     changedFields.get("status"),
-                    changedFields.get("opening_date"),
-                    changedFields.get("is_locked"),
-                    id);
+                    changedFields.get("is_locked"),   
+                    id
+            );
 
             return ((Number) result.get(0).get("affected_rows")).intValue();
 

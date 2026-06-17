@@ -16,22 +16,14 @@ public class AccountMapper {
 
         AccountDTO dto = new AccountDTO();
 
-        dto.setId((Long) row.get("id"));
-
-        dto.setAccountNumber((Long) row.get("account_number"));
-
-        dto.setCustomerId((Long) row.get("customer_id"));
-
-        dto.setProductId((Long) row.get("product_id"));
-
-        dto.setBalance((BigDecimal) row.get("balance"));
-
-        if (row.get("status") != null) {
-            dto.setStatus(AccountStatus.valueOf(row.get("status").toString()));
-        }
-
+        dto.setId(((Number) row.get("id")).longValue());
+        dto.setAccountNumber(((Number) row.get("account_number")).longValue());
+        dto.setCustomerId(((Number) row.get("customer_id")).longValue());
+        dto.setProductId(((Number) row.get("product_id")).longValue());
+        dto.setBalance(row.get("balance") != null ? BigDecimal.valueOf(((Number) row.get("balance")).doubleValue()) : null);
+        if (row.get("status") != null) {dto.setStatus(AccountStatus.valueOf(row.get("status").toString()));}
         dto.setOpeningDate(String.valueOf(row.get("created_at")));
-        dto.setIsLocked((boolean) row.get("is_locked"));
+        dto.setIsLocked(row.get("is_locked") != null && ((Number) row.get("is_locked")).intValue() == 1);
 
         return dto;
     }

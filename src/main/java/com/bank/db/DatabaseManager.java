@@ -169,7 +169,6 @@ public class DatabaseManager {
             "customer_id INTEGER NOT NULL, " +
             "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
-            "is_locked BOOLEAN DEFAULT FALSE, " +
             "status VARCHAR(20) NOT NULL CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
@@ -357,13 +356,15 @@ public class DatabaseManager {
      * @throws SQLException if the commit fails
      */
     public void endTransaction() throws SQLException {
-        try {
-            connection.commit();
-        } finally {
-            connection.setAutoCommit(true);
+
+        if (!connection.getAutoCommit()) {   // ✅ critical check
+            try {
+                connection.commit();
+            } finally {
+                connection.setAutoCommit(true);
+            }
         }
     }
-
     /**
      * Abort the current transaction &mdash; undoing every change made since
      * {@link #startTransaction()} &mdash; then return to auto-commit mode.
@@ -371,12 +372,16 @@ public class DatabaseManager {
      * @throws SQLException if the rollback fails
      */
     public void rollbackTransaction() throws SQLException {
-        try {
-            connection.rollback();
-        } finally {
-            connection.setAutoCommit(true);
+
+            if (!connection.getAutoCommit()) {
+                try {
+                    connection.rollback();
+                } finally {
+                    connection.setAutoCommit(true);
+                }
+            }
+
         }
-    }
 
     /**
      * Close database connection
