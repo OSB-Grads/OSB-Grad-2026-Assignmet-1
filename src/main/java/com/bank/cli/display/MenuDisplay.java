@@ -290,7 +290,6 @@ public class MenuDisplay {
              }
              System.out.println("select a product");
              productChoice=scanner.nextInt();
-        System.out.println("product choice"+productChoice);
              scanner.nextLine();
               
               Long accNo= accountsService.createAccount(session.getCustomerId(),productList.get(productChoice-1).getId());
