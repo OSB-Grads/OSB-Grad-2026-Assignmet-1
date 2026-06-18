@@ -203,8 +203,7 @@ public class MenuDisplay {
         if (session.getRole() == Role.ADMIN) {
             showAdminMenu();
         } else {
-             System.out.println(session.getRole());
-            System.out.println(session.getCustomerId());
+             
             showCustomerMenu();
         }
         System.out.println("TODO: Implement login logic using AuthService");
@@ -247,7 +246,6 @@ public class MenuDisplay {
         System.out.print("National ID: ");
         String nationalId = scanner.nextLine().trim();
 
-        try {
     signupOrchestrator.signup(
             username,
             firstName,
@@ -261,18 +259,7 @@ public class MenuDisplay {
     );
 
     System.out.println("Customer Created Successfully");
-
-} catch (UserAlreadyExistsException e) {
-    System.out.println(e.getMessage());
-
-} catch (UserCreationFailedException e) {
-    System.out.println(e.getMessage());
-
-} catch (SQLException e) {
-    System.out.println(e.getMessage());
-}
-        System.out.println("Customer Created Successfully");
-    }
+    
 
     private void handleOpenAccount() {
         System.out.println("\n=== OPEN BANK ACCOUNT ===");
@@ -364,7 +351,6 @@ public class MenuDisplay {
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
        
-              try {
                 transferOrchestrator.transfer(
                    session.getCustomerId(),
                        sourceAccountId,
@@ -372,19 +358,6 @@ public class MenuDisplay {
                            amountToBeTransferred);
             
             System.out.println("Transfer successful");
-          }
-                 catch (AccountLockedException e) {
-             System.out.println("Account is locked");
-}
-catch (InsufficientFundsException e) {
-    System.out.println("Insufficient funds");
-}
-catch (SameAccountTransferException e) {
-    System.out.println("Source and destination account cannot be the same");
-}
-catch (NegativeAmountException e) {
-    System.out.println("Amount must be greater than zero");
-}
     }
 
     private void handleViewAccounts() {
