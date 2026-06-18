@@ -5,7 +5,7 @@ import com.bank.service.AuthService;
 import com.bank.db.DatabaseManager;
 import com.bank.exception.UserAlreadyExistsException;
 import com.bank.exception.UserCreationFailedException;
-import com.bank.service.AuthService;
+
 
 import java.sql.SQLException;
 import com.bank.dto.AuthUserDTO;
