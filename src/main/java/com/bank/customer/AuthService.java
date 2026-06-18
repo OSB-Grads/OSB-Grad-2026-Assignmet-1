@@ -4,6 +4,7 @@ import com.bank.db.repository.AuthRepository;
 import com.bank.dto.AuthUserDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.AuthMapper;
+import com.bank.session.Session;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -13,10 +14,12 @@ public class AuthService {
 
     private final AuthRepository repository;
     private final LoggerService loggerService;
+    private final Session session;
 
     public AuthService() {
         this.repository = new AuthRepository();
         this.loggerService = new LoggerService();
+        this.session = Session.getInstance();
     }
 
     public Map<String, Object> login(String username, String password)
@@ -25,7 +28,7 @@ public class AuthService {
         if (username == null || username.trim().isEmpty()) {
 
             loggerService.log(
-                    null,
+                    session.getCustomerId(),
                     "LOGIN",
                     "Username is empty",
                     LogType.FAILURE
@@ -37,7 +40,7 @@ public class AuthService {
         if (password == null || password.trim().isEmpty()) {
 
             loggerService.log(
-                    null,
+                    session.getCustomerId(),
                     "LOGIN",
                     "Password is empty",
                     LogType.FAILURE
@@ -51,7 +54,7 @@ public class AuthService {
         if (userInfo == null || userInfo.isEmpty()) {
 
             loggerService.log(
-                    null,
+                    session.getCustomerId(),
                     "LOGIN",
                     "User not found",
                     LogType.FAILURE
@@ -69,7 +72,7 @@ public class AuthService {
             result.put("role", dto.getRole());
 
             loggerService.log(
-                    dto.getId(),
+                   session.getCustomerId(),
                     "LOGIN",
                     "User logged in successfully",
                     LogType.SUCCESS
@@ -80,7 +83,7 @@ public class AuthService {
         } else {
 
             loggerService.log(
-                    dto.getId(),
+                    session.getCustomerId(),
                     "LOGIN",
                     "Invalid password",
                     LogType.FAILURE

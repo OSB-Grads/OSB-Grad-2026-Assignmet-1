@@ -8,6 +8,7 @@ import com.bank.mapper.AccountMapper;
 import com.bank.enums.log.LogType;
 import com.bank.exception.ProductsNotFoundForCategoryException;
 import com.bank.mapper.ProductMapper;
+import com.bank.session.Session;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,12 +22,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
     private final LoggerService loggerService;
+    private final Session session;
 
 
     public ProductService(){
         this.productRepository = new ProductRepository();
         this.accountRepository = new AccountRepository();
         this.loggerService = new LoggerService();
+        this.session = Session.getInstance();
     }
 
     public List<AccountDTO> getAllAccountsForProductCategory(String category)
@@ -61,15 +64,15 @@ public class ProductService {
              List<ProductDTO> listOfProducts = allProducts.stream()
                      .map(ProductMapper::toDTO)
                      .collect(Collectors.toList());
-             loggerService.log(null,"PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category successfull", LogType.SUCCESS);
+             loggerService.log(session.getCustomerId(),"PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category successfull", LogType.SUCCESS);
              return listOfProducts;
          }catch (ProductsNotFoundForCategoryException e)
          {
-             loggerService.log(null,"PRODUCT_LIST_BY_CATEGORY","No products found for this category",LogType.ERROR);
+             loggerService.log(session.getCustomerId(),"PRODUCT_LIST_BY_CATEGORY","No products found for this category",LogType.ERROR);
              throw e;
          }catch(RuntimeException e)
          {
-             loggerService.log(null,"PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category is not succesfull",LogType.FAILURE);
+             loggerService.log(session.getCustomerId(),"PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category is not succesfull",LogType.FAILURE);
              throw e;
          }
      }

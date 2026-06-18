@@ -17,7 +17,7 @@ public class LoggerService {
 
     public void log(Long customerId,String action, String details, LogType status) {
         Map<String, Object> logFields = new HashMap<>();
-        logFields.put("user_id", customerId);
+        logFields.put("customer_id", customerId);
         logFields.put("action", action);
         logFields.put("details",details);
         logFields.put("status", status.name());

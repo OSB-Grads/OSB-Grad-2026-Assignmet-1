@@ -16,18 +16,19 @@ public class AccountMapper {
 
         AccountDTO dto = new AccountDTO();
 
+        dto.setId(((Integer) row.get("id")).longValue());
 
-        dto.setCustomerId((Long) row.get("customer_id"));
+        dto.setCustomerId(((Integer) row.get("customer_id")).longValue());
 
-        dto.setProductId((Long) row.get("product_id"));
+        dto.setProductId(((Integer) row.get("product_id")).longValue());
 
-        dto.setBalance((BigDecimal) row.get("balance"));
+        dto.setBalance(new BigDecimal(row.get("balance").toString()));
 
         if (row.get("status") != null) {
             dto.setStatus(AccountStatus.valueOf(row.get("status").toString()));
         }
 
-        dto.setIsLocked((boolean) row.get("is_locked"));
+        dto.setIsLocked(((Integer) row.get("is_locked")) == 1);
 
         return dto;
     }

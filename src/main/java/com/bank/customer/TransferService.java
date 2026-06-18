@@ -50,7 +50,7 @@ public class TransferService {
         BigDecimal updatedDestBalance = destAccountDto.getBalance().add(amount);
         destAccountDto.setBalance(updatedDestBalance);
 
-        System.out.println("Source new balance = " + srcAccountDto.getBalance());
+        System.out.println("\nSource new balance = " + srcAccountDto.getBalance());
         System.out.println("Destination new balance = " + destAccountDto.getBalance());
 
         Map<String,Object> srcMap = AccountMapper.toRow(srcAccountDto);

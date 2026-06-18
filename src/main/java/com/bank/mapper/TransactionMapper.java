@@ -3,6 +3,7 @@ package com.bank.mapper;
 import com.bank.dto.TransactionDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class TransactionMapper {
         dto.setAmount(new BigDecimal(row.get("amount").toString()));
         dto.setDescription((String) row.get("description"));
         dto.setStatus((String) row.get("status"));
+        dto.setCreatedAt(LocalDateTime.parse(((String) row.get("created_at")).replace(" ", "T")));
 
         return dto;
     }
@@ -39,6 +41,7 @@ public class TransactionMapper {
         row.put("amount", dto.getAmount());
         row.put("description", dto.getDescription());
         row.put("status", dto.getStatus());
+        row.put("created_at",dto.getCreatedAt());
 
         return row;
     }

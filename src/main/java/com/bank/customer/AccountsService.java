@@ -7,6 +7,7 @@ import com.bank.enums.AccountStatus;
 import com.bank.dto.AccountDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.AccountMapper;
+import com.bank.session.Session;
 import com.bank.customer.LoggerService;
 
 import java.math.BigDecimal;
@@ -21,10 +22,12 @@ import com.bank.exception.DatabaseOperationException;
 public class AccountsService {
     private final AccountRepository accountRepository;
     private final LoggerService loggerService;
+    private final Session session;
 
     public AccountsService() {
         this.accountRepository = new AccountRepository();
         this.loggerService = new LoggerService();
+        this.session = Session.getInstance();
     }
     public List<Map<String,Object>> getAllAccountsForCustomer(Long customerId) {
         try {
@@ -32,7 +35,7 @@ public class AccountsService {
                     getAccountsWithProductByCustomerId(customerId);
             if(rows == null || rows.isEmpty()) {
                 loggerService.log(
-                        customerId,
+                        session.getCustomerId(),
                         "FETCH_ALL_ACCOUNTS",
                         "No Accounts found for customer: " + customerId,
                         LogType.ERROR
@@ -47,7 +50,7 @@ public class AccountsService {
             return rows;
         } catch (DatabaseOperationException e) {
             loggerService.log(
-                    customerId,
+                    session.getCustomerId(),
                     "FETCH_ALL_ACCOUNTS",
                     "Failed to fetch all accounts for customer: " + customerId +
                     ". Reason" + e.getMessage(),
@@ -56,7 +59,7 @@ public class AccountsService {
             throw e;
         } catch (Exception e) {
             loggerService.log(
-                    customerId,
+                    session.getCustomerId(),
                     "FETCH_ALL_ACCOUNTS",
                     "Failed to fetch all accounts for customer: " + customerId +
                             ". Reason" + e.getMessage(),
@@ -71,7 +74,7 @@ public class AccountsService {
             AccountDTO accountdto=new AccountDTO( null, customerId, productId, BigDecimal.ZERO, AccountStatus.ACTIVE, false);
             Map<String,Object> accountRow = AccountMapper.toRow(accountdto);
             Long accountNumber=accountRepository.insert(accountRow);
-            loggerService.log(customerId,
+            loggerService.log(session.getCustomerId(),
                     "CREATE_ACCOUNT",
                     "Created Account for the product "+productId,
                     LogType.SUCCESS
@@ -80,7 +83,7 @@ public class AccountsService {
         }
         catch(DatabaseOperationException e){
                        loggerService.log(
-                    customerId,
+                    session.getCustomerId(),
                     "CREATE_ACCOUNT",
                     "Failed to Create Account",
                     LogType.FAILURE
@@ -88,7 +91,7 @@ public class AccountsService {
             throw new DatabaseOperationException("Failed to Create Account");
         }catch(Exception e){
                        loggerService.log(
-                    customerId,
+                    session.getCustomerId(),
                     "CREATE_ACCOUNT",
                     "Failed to do Create Account Operation. Reason:"+e.getMessage(),
                     LogType.FAILURE

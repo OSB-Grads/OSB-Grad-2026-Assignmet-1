@@ -20,7 +20,7 @@ public class AuthMapper {
         dto.setId(((Number) row.get("id")).longValue());
         dto.setUsername((String) row.get("username"));
         dto.setPasswordHash((String) row.get("password_hash"));
-        dto.setCustomerId((Long) row.get("customer_id") == null
+        dto.setCustomerId((Number) row.get("customer_id") == null
                 ? null
                 : ((Number) row.get("customer_id")).longValue());
 
