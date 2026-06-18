@@ -195,9 +195,8 @@ public class MenuDisplay {
         String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-        session.login(1L, Role.CUSTOMER);
-        // TODO: Call AuthService to validate credentials
-
+        session.login(session.getCustomerId(), Role.CUSTOMER);
+        
         if (session.getRole() == Role.ADMIN) {
             showAdminMenu();
         } else {
@@ -258,8 +257,10 @@ public class MenuDisplay {
            System.out.println("1. Savings");
            System.out.println("2. Fixed Deposit");
            System.out.println("3. Limited Access");
+           System.out.println("Select a Product Category");
            
            int ch=scanner.nextInt();
+           System.out.println();
           
             List<ProductDTO> productList=null;
             int i;
@@ -287,8 +288,11 @@ public class MenuDisplay {
                 System.out.println(i +"."+ PrintProducts.getProductName());
                 i++;
              }
-              System.out.println("select a product");
-              productChoice=scanner.nextInt();
+             System.out.println("select a product");
+             productChoice=scanner.nextInt();
+        System.out.println("product choice"+productChoice);
+             scanner.nextLine();
+              
               Long accNo= accountsService.createAccount(session.getCustomerId(),productList.get(productChoice-1).getId());
               System.out.println("Account Created Suceesfully. Your Account Number is:"+accNo);
         }
@@ -296,8 +300,6 @@ public class MenuDisplay {
         catch(SQLException e){
                System.out.println("unable to fetch the products");
         }
-    
-        // System.out.println("TODO: Implement account opening using AccountOpeningOrchestrator");
     }
 
     
@@ -378,6 +380,7 @@ public class MenuDisplay {
         if (balances.get("Savings").compareTo(BigDecimal.ZERO) > 0) {
             System.out.println("\n"+ch+") Savings Accounts $" + balances.get("Savings"));
             int count = 1;
+            ch++;
             for (Map<String, Object> account : accounts) {
 
                 if ("Savings".equals(account.get("category"))) {
@@ -391,9 +394,8 @@ public class MenuDisplay {
         }
 
         if (balances.get("Limited Access").compareTo(BigDecimal.ZERO) > 0) {
-            ch++;
             System.out.println("\n"+ch+") Limited Access Accounts $"+ balances.get("Limited Access"));
-
+            ch++;
             int count = 1;
             for (Map<String, Object> account : accounts) {
                 if ("Limited Access".equals(account.get("category"))) {
@@ -407,8 +409,8 @@ public class MenuDisplay {
         }
 
         if (balances.get("Fixed Deposits").compareTo(BigDecimal.ZERO) > 0) {
-            ch++;
             System.out.println("\n"+ch+") Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
+            ch++;
             int count = 1;
 
             for (Map<String, Object> account : accounts) {
