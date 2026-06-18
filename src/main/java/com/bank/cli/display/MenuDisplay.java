@@ -191,26 +191,41 @@ public class MenuDisplay {
 
     // TODO: Implement these methods by calling appropriate services/orchestrators
 
-    private void handleLogin() throws SQLException {
-        System.out.println("\n=== LOGIN ===");
-        System.out.print("Username: ");
-        String username = scanner.nextLine().trim();
-        System.out.print("Password: ");
-        String password = scanner.nextLine().trim();
-        AuthService authService = new AuthService();
-        // TODO: Call AuthService to validate credentials
-        Map<String, Object> res =
-                authService.login(username, password);
-        session.login((Long.parseLong(res.get("customerId").toString())), (Role)res.get("role"));
+    private void handleLogin() {
+        try {
+            System.out.println("\n=== LOGIN ===");
 
-        if (session.getRole() == Role.ADMIN) {
-            showAdminMenu();
-        } else {
-            showCustomerMenu();
+            System.out.print("Username: ");
+            String username = scanner.nextLine().trim();
+
+            System.out.print("Password: ");
+            String password = scanner.nextLine().trim();
+
+            AuthService authService = new AuthService();
+
+            Map<String, Object> res = authService.login(username, password);
+
+            if (res != null && res.containsKey("customerId") && res.containsKey("role")) {
+                long customerId = Long.parseLong(res.get("customerId").toString());
+                Role role = (Role) res.get("role");
+
+                session.login(customerId, role);
+
+                if (session.getRole() == Role.ADMIN) {
+                    showAdminMenu();
+                } else {
+                    showCustomerMenu();
+                }
+            } else {
+                System.out.println("Login failed: Invalid credentials.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Database error during login.");
+            e.printStackTrace();
         }
-        System.out.println("TODO: Implement login logic using AuthService");
-
     }
+
 
     private void handleCreateProfile() throws SQLException, UserCreationFailedException, UserAlreadyExistsException {
 

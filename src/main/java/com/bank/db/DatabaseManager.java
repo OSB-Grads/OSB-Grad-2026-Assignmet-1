@@ -357,7 +357,7 @@ public class DatabaseManager {
      */
     public void endTransaction() throws SQLException {
 
-        if (!connection.getAutoCommit()) {   // ✅ critical check
+        if (!connection.getAutoCommit()) {
             try {
                 connection.commit();
             } finally {
