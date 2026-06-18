@@ -3,10 +3,13 @@ import com.bank.db.repository.AccountRepository;
 import com.bank.enums.log.LogType;
 import com.bank.exception.DatabaseOperationException;
 
+import com.bank.enums.AccountStatus;
 import com.bank.dto.AccountDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.AccountMapper;
 import com.bank.customer.LoggerService;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +68,7 @@ public class AccountsService {
 
      public Long createAccount(Long customerId,Long productId ) {
         try{
-            AccountDTO accountdto=new AccountDTO(null, null, customerId, productId, null, null, null, false);
+            AccountDTO accountdto=new AccountDTO( null, customerId, productId, BigDecimal.ZERO, AccountStatus.ACTIVE, false);
             Map<String,Object> accountRow = AccountMapper.toRow(accountdto);
             Long accountNumber=accountRepository.insert(accountRow);
             loggerService.log(customerId,

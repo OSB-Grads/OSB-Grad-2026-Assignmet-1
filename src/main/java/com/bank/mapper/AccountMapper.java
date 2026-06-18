@@ -16,9 +16,6 @@ public class AccountMapper {
 
         AccountDTO dto = new AccountDTO();
 
-        dto.setId((Long) row.get("id"));
-
-        dto.setAccountNumber((Long) row.get("account_number"));
 
         dto.setCustomerId((Long) row.get("customer_id"));
 
@@ -29,8 +26,6 @@ public class AccountMapper {
         if (row.get("status") != null) {
             dto.setStatus(AccountStatus.valueOf(row.get("status").toString()));
         }
-
-        dto.setOpeningDate((String) row.get("opening_date"));
 
         dto.setIsLocked((boolean) row.get("is_locked"));
 
@@ -43,8 +38,6 @@ public class AccountMapper {
 
         row.put("id", dto.getId());
 
-        row.put("account_number", dto.getAccountNumber());
-
         row.put("customer_id", dto.getCustomerId());
 
         row.put("product_id", dto.getProductId());
@@ -55,8 +48,6 @@ public class AccountMapper {
             row.put("status", dto.getStatus().toString());
 
         }
-
-        row.put("opening_date", dto.getOpeningDate());
 
         row.put("is_locked", dto.getIsLocked());
 

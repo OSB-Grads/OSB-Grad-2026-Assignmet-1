@@ -8,7 +8,6 @@ public class Session {
 
     private Long customerId;
     private Role role;
-
     private Session() {
     }
 

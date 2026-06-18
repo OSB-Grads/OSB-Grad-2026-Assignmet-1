@@ -1,6 +1,5 @@
 package com.bank.orchestrator;
 
-import com.bank.customer.CustomerService;
 import com.bank.customer.TransferService;
 import com.bank.db.DatabaseManager;
 import com.bank.exception.InsufficientFundsException;
@@ -21,32 +20,41 @@ public class TransferOrchestrator {
 
     public TransferOrchestrator() {
         this.transferService = new TransferService();
-        this.transactionservice=new TransactionService();
+        this.transactionservice = new TransactionService();
         this.db = DatabaseManager.getInstance();
     }
 
-    public void transfer(Long customerId,Long sourceAccountId, Long destinationAccountId,BigDecimal amount) throws InsufficientFundsException,AccountLockedException,SameAccountTransferException,NegativeAmountException, SQLException {
-                try {
-    db.startTransaction();
+    public void transfer(Long customerId,
+                         Long sourceAccountId,
+                         Long destinationAccountId,
+                         BigDecimal amount)
+            throws InsufficientFundsException,
+            AccountLockedException,
+            SameAccountTransferException,
+            NegativeAmountException,
+            SQLException {
 
-    transferService.transferFunds(
-        sourceAccountId,
-        destinationAccountId,
-        amount
-    );
+        try {
+            db.startTransaction();
 
-    transactionservice.insertTransaction(
-        customerId,
-        sourceAccountId,
-        destinationAccountId,
-        amount
-    );
+            transferService.transferFunds(
+                    sourceAccountId,
+                    destinationAccountId,
+                    amount
+            );
 
-    db.endTransaction();
+            transactionservice.insertTransaction(
+                    customerId,
+                    sourceAccountId,
+                    destinationAccountId,
+                    amount
+            );
 
-} catch (SQLException e) {
-    db.rollbackTransaction();
-    throw new RuntimeException(e);
-}
+            db.endTransaction();
+
+        } catch (Exception e) {
+            db.rollbackTransaction();
+            throw e;
         }
     }
+}
