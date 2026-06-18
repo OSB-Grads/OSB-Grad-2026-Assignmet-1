@@ -2,6 +2,7 @@ package com.bank.mapper;
 
 import com.bank.dto.TransactionDTO;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,12 +15,12 @@ public class TransactionMapper {
         }
 
         TransactionDTO dto = new TransactionDTO();
-        dto.setId((Long) row.get("id"));
-        dto.setCustomerId((Long) row.get("customer_id"));
-        dto.setFromAccountId((Long) row.get("from_account_id"));
-        dto.setToAccountId((Long) row.get("to_account_id"));
+        dto.setId(((Integer) row.get("id")).longValue());
+        dto.setCustomerId(((Integer) row.get("customer_id")).longValue());
+        dto.setFromAccountId(((Integer) row.get("from_account_id")).longValue());
+        dto.setToAccountId(((Integer) row.get("to_account_id")).longValue());
         dto.setTransactionType((String) row.get("transaction_type"));
-        dto.setAmount((java.math.BigDecimal) row.get("amount"));
+        dto.setAmount(new BigDecimal(row.get("amount").toString()));
         dto.setDescription((String) row.get("description"));
         dto.setStatus((String) row.get("status"));
 

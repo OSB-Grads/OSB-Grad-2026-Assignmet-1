@@ -1,6 +1,7 @@
 package com.bank.cli.display;
 
 import com.bank.customer.AccountsService;
+import com.bank.dto.TransactionDTO;
 import com.bank.enums.Role;
 
 import java.sql.SQLException;
@@ -21,6 +22,7 @@ import com.bank.exception.UserCreationFailedException;
 import com.bank.customer.ProductService;
 import com.bank.dto.ProductDTO;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
+import com.bank.service.TransactionService;
 import com.bank.session.Session;
 
 /**
@@ -34,6 +36,7 @@ public class MenuDisplay {
     private final SignupOrchestrator signupOrchestrator;
     private final TransferOrchestrator transferOrchestrator;
     private final AccountsService accountsService;
+    private final TransactionService transactionService;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -42,6 +45,7 @@ public class MenuDisplay {
         this.signupOrchestrator = new SignupOrchestrator();
         this.accountsService = new AccountsService();
         this.transferOrchestrator = new TransferOrchestrator();
+        this.transactionService = new TransactionService();
     }
 
     /**
@@ -425,10 +429,28 @@ public class MenuDisplay {
     }
 
     private void handleViewTransactionHistory() {
-        System.out.println("\n=== TRANSACTION HISTORY ===");
-        // TODO: Show user's accounts, let them select one, then show transaction
-        // history
-        System.out.println("TODO: Implement transaction history using TransactionService");
+        System.out.println("\n=== TRANSACTION HISTORY ===\n");
+        List<TransactionDTO> transactions = transactionService.listCustomerTransactions(session.getCustomerId());
+        System.out.printf(
+                "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                "TRANSACTION ID", "FROM ACCOUNT", "TO ACCOUNT", "TYPE", "AMOUNT", "STATUS", "CREATED AT"
+        );
+        System.out.println("-----------------------------------------------------------------------------------------------------------------");
+
+
+        for (TransactionDTO transaction : transactions) {
+            System.out.printf(
+                    "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                    transaction.getId(),
+                    transaction.getFromAccountId() == null ? "-" : transaction.getFromAccountId(),
+                    transaction.getToAccountId() == null ? "-" : transaction.getToAccountId(),
+                    transaction.getTransactionType(),
+                    transaction.getAmount(),
+                    transaction.getStatus(),
+                    transaction.getCreatedAt()
+            );
+        }
+        System.out.println("-----------------------------------------------------------------------------------------------------------------");
     }
 
     private void handleRequestLoan() {
