@@ -177,21 +177,21 @@ public class DatabaseManager {
             
             // Transactions table
             "CREATE TABLE IF NOT EXISTS transactions (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +"customer_id INTEGER NOT NULL, " +
             "from_account_id INTEGER, " +
             "to_account_id INTEGER, " +
-            "customer_id INTEGER NOT NULL," +
             "transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER')), " +
             "amount DECIMAL(15,2) NOT NULL, " +
             "description TEXT, " +
             "status VARCHAR(20) DEFAULT 'COMPLETED' CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
-            "FOREIGN KEY (from_account_id) REFERENCES accounts(id) " +
+            "FOREIGN KEY (from_account_id) REFERENCES accounts(id), " +
             "FOREIGN KEY (to_account_id) REFERENCES accounts(id)" +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
-            
+
             // Logs table — customer_id is the acting customer (nullable: e.g.
             // failed logins where no customer was identified)
             "CREATE TABLE IF NOT EXISTS logs (" +
@@ -357,13 +357,15 @@ public class DatabaseManager {
      * @throws SQLException if the commit fails
      */
     public void endTransaction() throws SQLException {
-        try {
-            connection.commit();
-        } finally {
-            connection.setAutoCommit(true);
+
+        if (!connection.getAutoCommit()) {
+            try {
+                connection.commit();
+            } finally {
+                connection.setAutoCommit(true);
+            }
         }
     }
-
     /**
      * Abort the current transaction &mdash; undoing every change made since
      * {@link #startTransaction()} &mdash; then return to auto-commit mode.
@@ -371,12 +373,16 @@ public class DatabaseManager {
      * @throws SQLException if the rollback fails
      */
     public void rollbackTransaction() throws SQLException {
-        try {
-            connection.rollback();
-        } finally {
-            connection.setAutoCommit(true);
+
+            if (!connection.getAutoCommit()) {
+                try {
+                    connection.rollback();
+                } finally {
+                    connection.setAutoCommit(true);
+                }
+            }
+
         }
-    }
 
     /**
      * Close database connection

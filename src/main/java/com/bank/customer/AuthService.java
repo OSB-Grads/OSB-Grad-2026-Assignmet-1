@@ -65,7 +65,7 @@ public class AuthService {
         if (password.equals(dto.getPasswordHash())) {
 
             Map<String, Object> result = new HashMap<>();
-            result.put("authId", dto.getId());
+            result.put("customerId", 1L);
             result.put("role", dto.getRole());
 
             loggerService.log(

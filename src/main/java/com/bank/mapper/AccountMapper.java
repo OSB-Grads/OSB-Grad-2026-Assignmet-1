@@ -16,8 +16,6 @@ public class AccountMapper {
 
         AccountDTO dto = new AccountDTO();
 
-        dto.setId((Long) row.get("id"));
-
 
         dto.setCustomerId((Long) row.get("customer_id"));
 

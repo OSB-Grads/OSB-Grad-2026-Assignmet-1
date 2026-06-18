@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import com.bank.enums.log.LogType;
-
-// private final LoggerService loggerService;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
