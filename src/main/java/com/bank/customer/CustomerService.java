@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import com.bank.enums.log.LogType;
-
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;

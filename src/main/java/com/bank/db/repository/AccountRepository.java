@@ -30,20 +30,8 @@ public class AccountRepository {
         }
     }
 
-    public Map<String, Object> findProductByAccountNumber(String accountNumber) {
-
-        try {
-
-            List<Map<String, Object>> row = db.query(
-                    "SELECT * FROM accounts WHERE account_number = ?",
-                    accountNumber);
-
-            return row.isEmpty() || row == null ? null : row.get(0);
-
-        } catch (SQLException e) {
-
-            throw new DatabaseOperationException("Failed to retrieve account with account number: " + accountNumber, e);
-        }
+    public Map<String,Object> findProductByAccountNumber(String accountNumber){
+        return this.findAccountById(Long.parseLong(accountNumber));
     }
 
     public List<Map<String, Object>> findAccountsByCustomerId(Long customerId) {
@@ -85,16 +73,13 @@ public class AccountRepository {
 
         try {
             List<Map<String, Object>> rows = db.query(
-                    " INSERT INTO accounts(account_number, customer_id,product_id,balance,status,opening_date,is_locked) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    accountFields.get("account_number"),
+                    " INSERT INTO accounts( customer_id,product_id,balance,status,is_locked) VALUES (?, ?, ?, ?, ?)",
                     accountFields.get("customer_id"),
                     accountFields.get("product_id"),
                     accountFields.get("balance"),
                     accountFields.get("status"),
-                    accountFields.get("opening_date"),
                     accountFields.get("is_locked"));
-
-            return (Long) rows.get(0).get("id");
+                return ((Number) rows.get(0).get("generated_key")).longValue();
 
         } catch (SQLException e) {
 
@@ -108,16 +93,13 @@ public class AccountRepository {
 
         try {
             List<Map<String, Object>> result = db.query(
-                    "UPDATE accounts SET account_number = ?, customer_id = ?, product_id = ?, balance = ?, status = ?, is_locked = ? WHERE id = ?",
-                    changedFields.get("account_number"),
+                    "UPDATE accounts SET customer_id = ?,product_id = ?, balance = ?,status = ?,is_locked = ? WHERE id = ?",
                     changedFields.get("customer_id"),
                     changedFields.get("product_id"),
                     changedFields.get("balance"),
                     changedFields.get("status"),
-                    changedFields.get("is_locked"),   
-                    id
-            );
-
+                    changedFields.get("is_locked"),
+                    id);
             return ((Number) result.get(0).get("affected_rows")).intValue();
 
         } catch (SQLException e) {
@@ -183,8 +165,8 @@ public class AccountRepository {
         try {
             List<Map<String, Object>> rows = db.query(
                     "SELECT " +
-                            "a.id, a.account_number, a.customer_id, a.product_id, " +
-                            "a.balance, a.status, a.created_at AS opening_date, a.is_locked, " +
+                            "a.id, a.customer_id, a.product_id, " +
+                            "a.balance, a.status, a.is_locked, " +
                             "p.product_name, p.category " +
                             "FROM accounts a " +
                             "JOIN products p " +

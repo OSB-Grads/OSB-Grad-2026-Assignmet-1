@@ -165,11 +165,11 @@ public class DatabaseManager {
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "account_number INTEGER UNIQUE NOT NULL, " +
             "customer_id INTEGER NOT NULL, " +
             "product_id INTEGER NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
-            "status VARCHAR(20) NOT NULL CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
+            "is_locked BOOLEAN DEFAULT FALSE, " +
+            "status VARCHAR(20) NOT NULL  DEFAULT 'ACTIVE' CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
@@ -189,6 +189,7 @@ public class DatabaseManager {
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
             "FOREIGN KEY (from_account_id) REFERENCES accounts(id), " +
             "FOREIGN KEY (to_account_id) REFERENCES accounts(id)" +
+            "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
 
             // Logs table — customer_id is the acting customer (nullable: e.g.

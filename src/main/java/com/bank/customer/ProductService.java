@@ -29,16 +29,6 @@ public class ProductService {
         this.loggerService = new LoggerService();
     }
 
-    /*public List<ProductDTO> listProductsByCategory(String category) throws SQLException {
-
-        List<Map<String, Object>> allProducts =
-                productRepository.findAllByProductCategory(category);
-
-        return allProducts.stream()
-                .map(ProductMapper::toDTO)
-                .toList();
-    }*/
-
     public List<AccountDTO> getAllAccountsForProductCategory(String category)
             throws SQLException {
 
