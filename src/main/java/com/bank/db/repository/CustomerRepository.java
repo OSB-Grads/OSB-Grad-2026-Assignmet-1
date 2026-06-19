@@ -114,7 +114,7 @@ public class CustomerRepository {
         try {
             List<Map<String, Object>> results =
                     db.query(
-                            "UPDATE customers " +
+                            "UPDATE customers SET " +
                                     "first_name = ?, " +
                                     "last_name = ?, " +
                                     "date_of_birth = ?, " +

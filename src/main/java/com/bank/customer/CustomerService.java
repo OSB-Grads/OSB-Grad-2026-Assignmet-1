@@ -89,27 +89,53 @@ public class CustomerService {
      * Update the caller's own profile (email, phone, address).
      * @return the updated customer
      */
-
-
     public Map<String, Object> updateProfile(
             Long id,
             String firstName,
             String lastName,
             String email,
             String phone,
-            String nationalId
+            String address
     ) throws SQLException {
+
+        if (id == null) {
+            throw new IllegalArgumentException("Customer ID cannot be null");
+        }
 
         Map<String, Object> customer = repository.findById(id);
 
-        if (customer == null) {throw new RuntimeException("Customer not found with id: " + id);}
-        if (firstName != null) {customer.put("first_name", firstName);}
-        if (lastName != null) {customer.put("last_name", lastName);}
-        if (email != null) {customer.put("email", email);}
-        if (phone != null) {customer.put("phone", phone);}
-        if (nationalId != null) {customer.put("national_id", nationalId);}
+        System.out.println(customer);
 
-        try { // here we are updating the user, in the try block
+        if (customer == null) {
+            throw new RuntimeException("Customer not found with id: " + id);
+        }
+
+        if (firstName != null) {
+            ValidationUtils.validateName(firstName, "First Name");
+            customer.put("first_name", firstName.trim());
+        }
+
+        if (lastName != null) {
+            ValidationUtils.validateName(lastName, "Last Name");
+            customer.put("last_name", lastName.trim());
+        }
+
+        if (email != null) {
+            ValidationUtils.validateEmail(email);
+            customer.put("email", email.trim());
+        }
+
+        if (phone != null) {
+            ValidationUtils.validatePhone(phone);
+            customer.put("phone", phone.trim());
+        }
+
+        if (address != null) {
+            ValidationUtils.validateAddress(address);
+            customer.put("address", address.trim());
+        }
+
+        try {
             repository.update(id, customer);
             loggerService.log(
                     "UPDATE_PROFILE",
