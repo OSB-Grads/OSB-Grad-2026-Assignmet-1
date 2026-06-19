@@ -9,3 +9,9 @@ INSERT into PRODUCTS VALUES (008 , "FD3", "Fixed Deposits" , 3.50, 7000, 24);
 INSERT into PRODUCTS VALUES (009 , "LA3", "Limited Access" , 2.00, 5000, null);
 INSERT into PRODUCTS VALUES (010 , "SA3", "Savings" , 6.00, 4500, null);
 INSERT into PRODUCTS VALUES (011 , "FD4", "Fixed Deposits" , 4.00, 2500, 60);
+
+INSERT INTO customers (id, first_name, last_name, date_of_birth, email, phone, address, national_id)
+VALUES (0,"Akash","Ch","2000-11-24","Akash@x.com","1234567890","ABC","123456712345");
+
+INSERT INTO auth (id, username, password_hash, role)
+VALUES (0,"Admin","Admin@123","ADMIN");

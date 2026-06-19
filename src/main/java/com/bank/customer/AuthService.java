@@ -68,11 +68,11 @@ public class AuthService {
         if (password.equals(dto.getPasswordHash())) {
 
             Map<String, Object> result = new HashMap<>();
-            result.put("customerId", 1L);
+            result.put("customerId", dto.getId());
             result.put("role", dto.getRole());
 
             loggerService.log(
-                   session.getCustomerId(),
+                    dto.getId(),
                     "LOGIN",
                     "User logged in successfully",
                     LogType.SUCCESS
@@ -83,7 +83,7 @@ public class AuthService {
         } else {
 
             loggerService.log(
-                    session.getCustomerId(),
+                    dto.getId(),
                     "LOGIN",
                     "Invalid password",
                     LogType.FAILURE

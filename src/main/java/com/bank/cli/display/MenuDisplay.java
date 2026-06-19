@@ -221,9 +221,14 @@ public class MenuDisplay {
 
         session.login((Long.parseLong(res.get("customerId").toString())), (Role)res.get("role"));
         if (session.getRole() == Role.ADMIN) {
+            System.out.println("\n\n--------------------------------------------------");
+            System.out.println("Welcome "+username);
+            System.out.println("--------------------------------------------------");
             showAdminMenu();
         } else {
-             
+            System.out.println("\n\n--------------------------------------------------");
+            System.out.println("Welcome "+username);
+            System.out.println("--------------------------------------------------");
             showCustomerMenu();
         }
 
