@@ -538,7 +538,7 @@ public class MenuDisplay {
     }
 
     public void handleLogout() {
-        Session.getInstance().logout();
+        session.logout();
         System.out.println("Logout successful.");
     }
 }

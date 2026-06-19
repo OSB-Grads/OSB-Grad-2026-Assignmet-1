@@ -14,19 +14,16 @@ public class InboxService {
 
     private final InboxRepository inboxRepository;
     private final LoggerService loggerService;
-    private final Session session;
 
     public InboxService() {
         this.inboxRepository = new InboxRepository();
         this.loggerService = new LoggerService();
-        this.session = Session.getInstance();
     }
 
     public InboxDTO getTopMessage() {
         try{
             Map<String, Object> messageList = inboxRepository.findFirst();
             loggerService.log(
-                    session.getCustomerId(),
                     "FETCH TOP MESSAGE",
                     "Fetched top message",
                     LogType.SUCCESS
@@ -34,7 +31,6 @@ public class InboxService {
             return InboxMapper.toDTO(messageList);
         } catch (Exception e) {
             loggerService.log(
-                    session.getCustomerId(),
                     "FETCH TOP MESSAGE",
                     "Failed to fetch top message",
                     LogType.ERROR
@@ -54,10 +50,10 @@ public class InboxService {
                     payload,status,reason,null,null);
             Map<String,Object> inboxRow = InboxMapper.toRow(inboxMessageDto);
             Long inboxMessageId = inboxRepository.insert(inboxRow);
-            loggerService.log(session.getCustomerId(),"INBOX","Inbox Message for Queue created Succesfully",LogType.SUCCESS);
+            loggerService.log("INBOX","Inbox Message for Queue created Succesfully",LogType.SUCCESS);
             return inboxMessageId;
         }catch(RuntimeException e){
-            loggerService.log(session.getCustomerId(),"INBOX","Inbox Message for Queue could not be created", LogType.FAILURE);
+            loggerService.log("INBOX","Inbox Message for Queue could not be created", LogType.FAILURE);
             throw e;
         }
     }
@@ -66,7 +62,6 @@ public class InboxService {
         inboxRepository.deleteById(id);
 
         loggerService.log(
-                session.getCustomerId(),
                 "DELETE INBOX MESSAGE",
                 "Deleted inbox message with ID: " + id,
                 LogType.SUCCESS
@@ -75,7 +70,6 @@ public class InboxService {
     } catch (Exception e) {
 
         loggerService.log(
-                session.getCustomerId(),
                 "DELETE INBOX MESSAGE",
                 "Failed to delete inbox message with ID: " + id + ". Error: " + e.getMessage(),
                 LogType.ERROR

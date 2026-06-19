@@ -20,13 +20,10 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final LoggerService loggerService;
-    private final Session session;
 
     public TransactionService() {
         this.transactionRepository = new TransactionRepository();
         this.loggerService = new LoggerService();
-            this.session = Session.getInstance();
-
     }
 
     public void insertTransaction(
@@ -57,7 +54,6 @@ public class TransactionService {
             }
 
             loggerService.log(
-                    session.getCustomerId(),
                     "TRANSFER",
                     "Transfer transaction created successfully",
                     LogType.SUCCESS
@@ -66,7 +62,6 @@ public class TransactionService {
         } catch (Exception e) {
 
             loggerService.log(
-                    session.getCustomerId(),
                     "TRANSFER",
                     "Transfer transaction creation failed: "
                             + e.getMessage(),
@@ -87,7 +82,7 @@ public class TransactionService {
 
             if(rows==null)
             {
-                loggerService.log(session.getCustomerId(),"LIST_ACCOUNT_TRANSACTIONS","No Transactions found for this account id : " + accountId,LogType.ERROR);
+                loggerService.log("LIST_ACCOUNT_TRANSACTIONS","No Transactions found for this account id : " + accountId,LogType.ERROR);
                 return Collections.emptyList();
             }
 
@@ -97,7 +92,6 @@ public class TransactionService {
                             .collect(Collectors.toList());
 
             loggerService.log(
-                    session.getCustomerId(),
                     "LIST_ACCOUNT_TRANSACTIONS",
                     "Account transactions retrieved successfully for account id: " + accountId,
                     LogType.SUCCESS
@@ -107,7 +101,6 @@ public class TransactionService {
 
         } catch (RuntimeException e) {
             loggerService.log(
-                    session.getCustomerId(),
                     "LIST_ACCOUNT_TRANSACTIONS",
                     "Failed to retrieve transactions for account id: " + accountId,
                     LogType.FAILURE
@@ -128,7 +121,6 @@ public class TransactionService {
 
             if (rows == null) {
                 loggerService.log(
-                        session.getCustomerId(),
                         "LIST_CUSTOMER_TRANSACTIONS",
                         "No transactions found for customer id: " + customerId,
                         LogType.ERROR
@@ -143,7 +135,6 @@ public class TransactionService {
                             .collect(Collectors.toList());
 
             loggerService.log(
-                    session.getCustomerId(),
                     "LIST_CUSTOMER_TRANSACTIONS",
                     "Customer transactions retrieved successfully for customer id: " + customerId,
                     LogType.SUCCESS
@@ -153,7 +144,6 @@ public class TransactionService {
 
         } catch (DatabaseOperationException e) {
             loggerService.log(
-                    session.getCustomerId(),
                     "LIST_CUSTOMER_TRANSACTIONS",
                     "Failed to retrieve transactions for customer id: " + customerId,
                     LogType.FAILURE

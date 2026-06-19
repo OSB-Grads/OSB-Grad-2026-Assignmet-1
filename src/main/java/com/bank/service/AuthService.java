@@ -13,12 +13,10 @@ import com.bank.utils.ValidationUtils;
 public class AuthService {
     private final AuthRepository authRepository;
     private final LoggerService loggerService;
-    private final Session session;
 
     public AuthService() {
         this.authRepository = new AuthRepository();
         this.loggerService = new LoggerService();
-            this.session = Session.getInstance();
 
     }
 
@@ -32,7 +30,6 @@ public class AuthService {
             Long id = authRepository.insert(row);
 
             loggerService.log(
-                    session.getCustomerId(),
                     "SIGNUP",
                     "Customer account created for username: " + username,
                     LogType.SUCCESS
@@ -41,7 +38,6 @@ public class AuthService {
 
         } catch (UserCreationException e) {
             loggerService.log(
-                    session.getCustomerId(),
                     "SIGNUP",
                     "Customer signup rejected for username: " + username,
 
@@ -49,7 +45,6 @@ public class AuthService {
             throw e;
         } catch (DatabaseOperationException e) {
             loggerService.log(
-                    session.getCustomerId(),
                     "SIGNUP",
                     "Database error during signup for username: " + username,
                     LogType.ERROR);

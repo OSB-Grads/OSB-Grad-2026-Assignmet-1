@@ -14,12 +14,10 @@ public class AuthService {
 
     private final AuthRepository repository;
     private final LoggerService loggerService;
-    private final Session session;
 
     public AuthService() {
         this.repository = new AuthRepository();
         this.loggerService = new LoggerService();
-        this.session = Session.getInstance();
     }
 
     public Map<String, Object> login(String username, String password)
@@ -28,7 +26,6 @@ public class AuthService {
         if (username == null || username.trim().isEmpty()) {
 
             loggerService.log(
-                    session.getCustomerId(),
                     "LOGIN",
                     "Username is empty",
                     LogType.FAILURE
@@ -40,7 +37,6 @@ public class AuthService {
         if (password == null || password.trim().isEmpty()) {
 
             loggerService.log(
-                    session.getCustomerId(),
                     "LOGIN",
                     "Password is empty",
                     LogType.FAILURE
@@ -54,7 +50,6 @@ public class AuthService {
         if (userInfo == null || userInfo.isEmpty()) {
 
             loggerService.log(
-                    session.getCustomerId(),
                     "LOGIN",
                     "User not found",
                     LogType.FAILURE
@@ -64,7 +59,6 @@ public class AuthService {
         }
 
         AuthUserDTO dto = AuthMapper.toDTO(userInfo);
-
         if (password.equals(dto.getPasswordHash())) {
 
             Map<String, Object> result = new HashMap<>();
@@ -72,7 +66,6 @@ public class AuthService {
             result.put("role", dto.getRole());
 
             loggerService.log(
-                    dto.getId(),
                     "LOGIN",
                     "User logged in successfully",
                     LogType.SUCCESS
@@ -83,7 +76,6 @@ public class AuthService {
         } else {
 
             loggerService.log(
-                    dto.getId(),
                     "LOGIN",
                     "Invalid password",
                     LogType.FAILURE

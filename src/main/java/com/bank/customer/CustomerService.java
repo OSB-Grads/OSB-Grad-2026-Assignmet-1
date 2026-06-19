@@ -27,12 +27,10 @@ public class CustomerService {
 
     private final CustomerRepository repository;
     private final LoggerService loggerService;
-    private final Session session;
 
     public CustomerService() {
         this.repository = new CustomerRepository();
         this.loggerService=new LoggerService();
-        this.session = Session.getInstance();
     }
 
     /**
@@ -63,7 +61,6 @@ public class CustomerService {
 
             repository.insert(row);
             loggerService.log(
-                    customerId,
                     "CUSTOMER",
                     "Customer profile created successfully",
                     LogType.SUCCESS
@@ -71,7 +68,6 @@ public class CustomerService {
         }
         catch (RuntimeException e) {
             loggerService.log(
-                    customerId,
                     "CUSTOMER",
                     "Customer profile creation failed",
                     LogType.FAILURE
@@ -116,7 +112,6 @@ public class CustomerService {
         try { // here we are updating the user, in the try block
             repository.update(id, customer);
             loggerService.log(
-                    session.getCustomerId(),
                     "UPDATE_PROFILE",
                     "Customer profile updated successfully",
                     LogType.SUCCESS
@@ -124,7 +119,6 @@ public class CustomerService {
             return repository.findById(id);
         } catch (SQLException e) {
             loggerService.log(
-                    session.getCustomerId(),
                     "UPDATE_PROFILE",
                     "Failed to update customer profile: " + e.getMessage(),
                     LogType.FAILURE

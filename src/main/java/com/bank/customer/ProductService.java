@@ -22,14 +22,12 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
     private final LoggerService loggerService;
-    private final Session session;
 
 
     public ProductService(){
         this.productRepository = new ProductRepository();
         this.accountRepository = new AccountRepository();
         this.loggerService = new LoggerService();
-        this.session = Session.getInstance();
     }
 
     public List<AccountDTO> getAllAccountsForProductCategory(String category)
@@ -64,15 +62,15 @@ public class ProductService {
              List<ProductDTO> listOfProducts = allProducts.stream()
                      .map(ProductMapper::toDTO)
                      .collect(Collectors.toList());
-             loggerService.log(session.getCustomerId(),"PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category successfull", LogType.SUCCESS);
+             loggerService.log("PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category successfull", LogType.SUCCESS);
              return listOfProducts;
          }catch (ProductsNotFoundForCategoryException e)
          {
-             loggerService.log(session.getCustomerId(),"PRODUCT_LIST_BY_CATEGORY","No products found for this category",LogType.ERROR);
+             loggerService.log("PRODUCT_LIST_BY_CATEGORY","No products found for this category",LogType.ERROR);
              throw e;
          }catch(RuntimeException e)
          {
-             loggerService.log(session.getCustomerId(),"PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category is not succesfull",LogType.FAILURE);
+             loggerService.log("PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category is not succesfull",LogType.FAILURE);
              throw e;
          }
      }
