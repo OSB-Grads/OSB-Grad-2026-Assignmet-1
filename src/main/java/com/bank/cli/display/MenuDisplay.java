@@ -219,11 +219,16 @@ public class MenuDisplay {
         String password = scanner.nextLine().trim();
          Map<String,Object> res= authService.login(username,password);
 
-        session.login((Long.parseLong(res.get("authId").toString())), (Role)res.get("role"));
+        session.login((Long.parseLong(res.get("customerId").toString())), (Role)res.get("role"));
         if (session.getRole() == Role.ADMIN) {
+            System.out.println("\n\n--------------------------------------------------");
+            System.out.println("Welcome "+username);
+            System.out.println("--------------------------------------------------");
             showAdminMenu();
         } else {
-             
+            System.out.println("\n\n--------------------------------------------------");
+            System.out.println("Welcome "+username);
+            System.out.println("--------------------------------------------------");
             showCustomerMenu();
         }
 
@@ -346,7 +351,7 @@ public class MenuDisplay {
         int count = 1;
         System.out.println("Select source Account");
         for(Map<String ,Object> account : accounts) {
-            System.out.println(count++ + ". Account Number: " + account.get("account_number") + " | Balance: " + account.get("balance"));
+            System.out.println(count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
         }
         int option1 = scanner.nextInt();
         scanner.nextLine();
@@ -355,7 +360,7 @@ public class MenuDisplay {
         count = 1;
         System.out.println("Select destination Account");
         for(Map<String ,Object> account : accounts) {
-            System.out.println(count++ + ". Account Number: " + account.get("account_number") + " | Balance: " + account.get("balance"));
+            System.out.println(count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
 
         }
         int option2 = scanner.nextInt();
@@ -368,7 +373,7 @@ public class MenuDisplay {
         accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
         System.out.println("\n Transfer successful! Updated balances:");
         for (Map<String, Object> account : accounts) {
-            System.out.println("Account Number: " + account.get("account_number") +
+            System.out.println("Account Number: " + account.get("id") +
                     " | Balance: " + account.get("balance"));
         }
     }
@@ -397,7 +402,6 @@ public class MenuDisplay {
 
         System.out.println("Total Balance: $" + balances.get("Total Balance"));
         char ch='A';
-        if (balances.get("Savings").compareTo(BigDecimal.ZERO) > 0) {
             System.out.println("\n"+ch+") Savings Accounts $" + balances.get("Savings"));
             int count = 1;
             ch++;
@@ -411,12 +415,9 @@ public class MenuDisplay {
                     count++;
                 }
             }
-        }
-
-        if (balances.get("Limited Access").compareTo(BigDecimal.ZERO) > 0) {
+        
             System.out.println("\n"+ch+") Limited Access Accounts $"+ balances.get("Limited Access"));
             ch++;
-            int count = 1;
             for (Map<String, Object> account : accounts) {
                 if ("Limited Access".equals(account.get("category"))) {
 
@@ -426,12 +427,8 @@ public class MenuDisplay {
                     count++;
                 }
             }
-        }
-
-        if (balances.get("Fixed Deposits").compareTo(BigDecimal.ZERO) > 0) {
-            System.out.println("\n"+ch+") Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
+             System.out.println("\n"+ch+") Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
             ch++;
-            int count = 1;
 
             for (Map<String, Object> account : accounts) {
                 if ("Fixed Deposits".equals(account.get("category"))) {
@@ -443,8 +440,7 @@ public class MenuDisplay {
                 }
             }
         }
-    }
-
+   
     private void handleViewTransactionHistory() {
         System.out.println("\n=== TRANSACTION HISTORY ===\n");
         List<TransactionDTO> transactions = transactionService.listCustomerTransactions(session.getCustomerId());
@@ -452,7 +448,7 @@ public class MenuDisplay {
                 "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
                 "TRANSACTION ID", "FROM ACCOUNT", "TO ACCOUNT", "TYPE", "AMOUNT", "STATUS", "CREATED AT"
         );
-        System.out.println("-----------------------------------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------");
 
 
         for (TransactionDTO transaction : transactions) {
@@ -467,7 +463,7 @@ public class MenuDisplay {
                     transaction.getCreatedAt()
             );
         }
-        System.out.println("-----------------------------------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------");
     }
 
     private void handleRequestLoan() {
@@ -542,7 +538,7 @@ public class MenuDisplay {
     }
 
     public void handleLogout() {
-        Session.getInstance().logout();
+        session.logout();
         System.out.println("Logout successful.");
     }
 }

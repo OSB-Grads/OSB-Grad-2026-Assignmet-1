@@ -4,6 +4,7 @@ import com.bank.db.repository.AuthRepository;
 import com.bank.dto.AuthUserDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.AuthMapper;
+import com.bank.session.Session;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -25,7 +26,6 @@ public class AuthService {
         if (username == null || username.trim().isEmpty()) {
 
             loggerService.log(
-                    null,
                     "LOGIN",
                     "Username is empty",
                     LogType.FAILURE
@@ -37,7 +37,6 @@ public class AuthService {
         if (password == null || password.trim().isEmpty()) {
 
             loggerService.log(
-                    null,
                     "LOGIN",
                     "Password is empty",
                     LogType.FAILURE
@@ -51,7 +50,6 @@ public class AuthService {
         if (userInfo == null || userInfo.isEmpty()) {
 
             loggerService.log(
-                    null,
                     "LOGIN",
                     "User not found",
                     LogType.FAILURE
@@ -61,15 +59,13 @@ public class AuthService {
         }
 
         AuthUserDTO dto = AuthMapper.toDTO(userInfo);
-
         if (password.equals(dto.getPasswordHash())) {
 
             Map<String, Object> result = new HashMap<>();
-            result.put("customerId", 1L);
+            result.put("customerId", dto.getId());
             result.put("role", dto.getRole());
 
             loggerService.log(
-                    dto.getId(),
                     "LOGIN",
                     "User logged in successfully",
                     LogType.SUCCESS
@@ -80,7 +76,6 @@ public class AuthService {
         } else {
 
             loggerService.log(
-                    dto.getId(),
                     "LOGIN",
                     "Invalid password",
                     LogType.FAILURE

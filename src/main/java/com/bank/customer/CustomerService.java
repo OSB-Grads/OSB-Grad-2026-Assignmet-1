@@ -5,6 +5,7 @@ import com.bank.dto.CustomerDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.CustomerMapper;
 import com.bank.utils.ValidationUtils;
+import com.bank.session.Session;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -60,7 +61,6 @@ public class CustomerService {
 
             repository.insert(row);
             loggerService.log(
-                    customerId,
                     "CUSTOMER",
                     "Customer profile created successfully",
                     LogType.SUCCESS
@@ -68,7 +68,6 @@ public class CustomerService {
         }
         catch (RuntimeException e) {
             loggerService.log(
-                    customerId,
                     "CUSTOMER",
                     "Customer profile creation failed",
                     LogType.FAILURE
@@ -113,7 +112,6 @@ public class CustomerService {
         try { // here we are updating the user, in the try block
             repository.update(id, customer);
             loggerService.log(
-                    id,
                     "UPDATE_PROFILE",
                     "Customer profile updated successfully",
                     LogType.SUCCESS
@@ -121,7 +119,6 @@ public class CustomerService {
             return repository.findById(id);
         } catch (SQLException e) {
             loggerService.log(
-                    id,
                     "UPDATE_PROFILE",
                     "Failed to update customer profile: " + e.getMessage(),
                     LogType.FAILURE
