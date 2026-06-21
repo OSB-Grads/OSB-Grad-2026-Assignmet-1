@@ -80,10 +80,25 @@ public class InboxService {
     }
 }
     public List<InboxDTO> getAllDepositsMessages() {
-        return inboxRepository.findAllDepositsMessages()
-                .stream()
-                .map(InboxMapper::toDTO)
-                .toList();
+        try {
+            List<InboxDTO> messages = inboxRepository.findAllDepositsMessages()
+                    .stream()
+                    .map(InboxMapper::toDTO)
+                    .toList();
+            loggerService.log(
+                    "FETCH DEPOSIT MESSAGES",
+                    "Fetched all deposit messages successfully",
+                    LogType.SUCCESS
+            );
+            return messages;
+        } catch (Exception e) {
+            loggerService.log(
+                    "FETCH DEPOSIT MESSAGES",
+                    "Failed to fetch all deposit messages. " + e.getMessage(),
+                    LogType.ERROR
+            );
+            throw e;
+        }
     }
 
 }
