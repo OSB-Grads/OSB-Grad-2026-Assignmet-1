@@ -73,7 +73,8 @@ public class AccountRepository {
 
         try {
             List<Map<String, Object>> rows = db.query(
-                    " INSERT INTO accounts( customer_id,product_id,balance,status,is_locked) VALUES (?, ?, ?, ?, ?)",
+                    " INSERT INTO accounts(  account_number,customer_id,product_id,balance,status,is_locked) VALUES (?,?, ?, ?, ?, ?)",
+                    accountFields.get("account_number"),
                     accountFields.get("customer_id"),
                     accountFields.get("product_id"),
                     accountFields.get("balance"),
