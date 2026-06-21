@@ -6,6 +6,7 @@ import com.bank.exception.DatabaseOperationException;
 import com.bank.mapper.InboxMapper;
 import com.bank.session.Session;
 
+import java.util.List;
 import java.util.Map;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -78,4 +79,11 @@ public class InboxService {
         throw new RuntimeException("Unable to delete");
     }
 }
+    public List<InboxDTO> getAllDepositsMessages() {
+        return inboxRepository.findAllDepositsMessages()
+                .stream()
+                .map(InboxMapper::toDTO)
+                .toList();
+    }
+
 }
