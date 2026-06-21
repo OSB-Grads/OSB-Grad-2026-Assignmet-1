@@ -11,6 +11,7 @@ import com.bank.exception.SameAccountTransferException;
 import com.bank.exception.UserAlreadyExistsException;
 import com.bank.exception.UserCreationFailedException;
 
+
 import java.sql.SQLException;
 import java.util.List;
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
 import com.bank.service.TransactionService;
 import com.bank.session.Session;
+import com.bank.utils.UuidGeneratorUtil;
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
 
@@ -70,13 +72,13 @@ public class MenuDisplay {
      */
     public void showMainMenu() throws SQLException {
         boolean running = true;
-
         while (running) {
             System.out.println("\n=== MAIN MENU ===");
             System.out.println("1. Login");
             System.out.println("2. Create Customer Profile");
             System.out.println("3. Exit");
             System.out.print("Please select an option (1-3): ");
+          
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
