@@ -165,7 +165,7 @@ public class DatabaseManager {
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
             "id VARCHAR(36) PRIMARY KEY, " +
-            "account_number VRACHAR(14) UNIQUE NOT NULL,"+
+            "account_number VARCHAR(14) UNIQUE NOT NULL,"+
             "customer_id VARCHAR(36) UNIQUE NOT NULL, " +
             "product_id VARCHAR(36) UNIQUE NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
