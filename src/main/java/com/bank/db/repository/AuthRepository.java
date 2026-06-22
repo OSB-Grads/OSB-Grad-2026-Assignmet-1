@@ -3,7 +3,6 @@ package com.bank.db.repository;
 import com.bank.db.DatabaseManager;
 import com.bank.exception.DatabaseOperationException;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ public class AuthRepository {
         this.db = DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findById(BigDecimal id) {
+    public Map<String, Object> findById(String id) {
 
         try {
 
@@ -68,15 +67,15 @@ public class AuthRepository {
 
             String sql =
                     "INSERT INTO auth " +
-                            "(username, password_hash, role) " +
-                            "VALUES (?, ?, ?)";
+                            "(id, username, password_hash, role) " +
+                            "VALUES (?, ?, ?, ?)";
 
             List<Map<String, Object>> authRow =
                     db.query(
                             sql,
+                            authFields.get("id"),
                             authFields.get("username"),
                             authFields.get("password_hash"),
-                            //authFields.get("customer_id"),
                             authFields.get("role")
                     );
 

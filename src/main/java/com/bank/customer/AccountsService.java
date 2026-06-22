@@ -70,7 +70,7 @@ public class AccountsService {
             String accountNumber = AccountNumberGenerator.generate();
             Map<String,Object> accountRow = AccountMapper.toRow(accountdto);
             accountRow.put("account_number", accountNumber);
-            Long accountNumber=accountRepository.insert(accountRow);
+            Long accountNumber = accountRepository.insert(accountRow);
             loggerService.log(
                     "CREATE_ACCOUNT",
                     "Created Account for the product "+productId,

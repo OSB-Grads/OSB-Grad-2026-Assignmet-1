@@ -5,7 +5,6 @@ import com.bank.dto.CustomerDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.CustomerMapper;
 import com.bank.utils.ValidationUtils;
-import com.bank.session.Session;
 
 import java.sql.SQLException;
 import java.util.List;
