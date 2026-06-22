@@ -62,7 +62,7 @@ public class AuthRepository {
         }
     }
 
-    public Long insert(Map<String, Object> authFields) {
+    public String insert(Map<String, Object> authFields) {
 
         try {
 
@@ -80,7 +80,7 @@ public class AuthRepository {
                             authFields.get("role")
                     );
 
-            return (Long) authRow.get(0).get("id");
+            return (String) authRow.get(0).get("id");
 
             // here we are returning the id
 
