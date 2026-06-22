@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 import com.bank.enums.AccountStatus;
 
 public class AccountDTO {
-    private Long id;
-    private Long customerId; // the owning customer
-    private Long productId; // the product this account was opened under
+    private String id;
+    private String accountNumber;
+    private String customerId; // the owning customer
+    private String productId; // the product this account was opened under
     private BigDecimal balance; // money is always BigDecimal, never double
     private AccountStatus status; // e.g. ACTIVE, CLOSED, MATURED
     private boolean isLocked; // by Default False
@@ -16,9 +17,10 @@ public class AccountDTO {
     }
 
     /** Constructor with all fields. */
-    public AccountDTO(Long id,  Long customerId, Long productId,
+    public AccountDTO(String id, String accountNumber, String customerId, String productId,
             BigDecimal balance, AccountStatus status, boolean isLocked) {
         this.id = id;
+        this.accountNumber = accountNumber;
         this.customerId = customerId;
         this.productId = productId;
         this.balance = balance;
@@ -26,28 +28,35 @@ public class AccountDTO {
         this.isLocked = isLocked;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
 
-    public Long getCustomerId() {
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
-    public Long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -79,6 +88,7 @@ public class AccountDTO {
     public String toString() {
         return "AccountDTO{" +
                 "id=" + id +
+                "accountNumber="+accountNumber+'\''+
                 ", customerId=" + customerId + '\'' +
                 ", productId=" + productId + '\'' +
                 ", balance=" + balance + '\'' +

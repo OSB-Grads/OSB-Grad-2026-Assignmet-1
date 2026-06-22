@@ -14,7 +14,7 @@ public class InboxRepository {
         this.db=DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findById(Long id) {
+    public Map<String, Object> findById(String id) {
 
         try {
             List<Map<String, Object>> rows =
@@ -77,7 +77,7 @@ public class InboxRepository {
         }
     }
 
-    public int update(Long id,
+    public int update(String id,
                       Map<String, Object> changedFields) {
 
         try {
@@ -102,7 +102,7 @@ public class InboxRepository {
         }
     }
 
-    public  Map<String,Object> deleteById(Long id) {
+    public  Map<String,Object> deleteById(String id) {
 
         try {
             List<Map<String, Object>> rows =
@@ -136,6 +136,20 @@ public class InboxRepository {
         } catch (SQLException e) {
 
             throw new DatabaseOperationException("Failed to retrive inbox",e);
+        }
+    }
+    public List<Map<String,Object>> findAllDepositsMessages() {
+        try {
+            return  db.query(
+                    "SELECT * FROM inbox " +
+                            "WHERE message_type = ? " +
+                            "ORDER BY created_at ASC",
+                            "DEPOSITS"
+                    );
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to retrieve All deposits" +
+                    " messages from inbox",e);
         }
     }
 }

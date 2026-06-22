@@ -5,6 +5,7 @@ import com.bank.dto.AuthUserDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.AuthMapper;
 import com.bank.session.Session;
+import com.bank.utils.PasswordUtil;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class AuthService {
         }
 
         AuthUserDTO dto = AuthMapper.toDTO(userInfo);
-        if (password.equals(dto.getPasswordHash())) {
+        if (PasswordUtil.verifyPassword(password,dto.getPasswordHash())) {
 
             Map<String, Object> result = new HashMap<>();
             result.put("customerId", dto.getId());

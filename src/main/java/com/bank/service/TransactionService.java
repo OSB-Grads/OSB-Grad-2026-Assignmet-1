@@ -27,9 +27,11 @@ public class TransactionService {
     }
 
     public void insertTransaction(
-            long customerId,
-            long fromAccountId,
-            long toAccountId,
+            String customerId,
+            String fromAccountId,
+            String toAccountId,
+            String transactionType,
+            String description,
             BigDecimal amount) {
 
         try {
@@ -39,9 +41,9 @@ public class TransactionService {
             transactionFields.put("customer_id", customerId);
             transactionFields.put("from_account_id", fromAccountId);
             transactionFields.put("to_account_id", toAccountId);
-            transactionFields.put("transaction_type", "TRANSFER");
+            transactionFields.put("transaction_type", transactionType);
             transactionFields.put("amount", amount);
-            transactionFields.put("description", "Internal Transfer");
+            transactionFields.put("description", description);
             transactionFields.put("status", "COMPLETED");
 
             Long transactionId =
@@ -72,7 +74,7 @@ public class TransactionService {
                     "Failed to create transaction", e);
         }
     }
-    public List<TransactionDTO> listAccountTransactions(Long accountId) {
+    public List<TransactionDTO> listAccountTransactions(String accountId) {
         try {
             if (accountId == null) {
                 throw new IllegalArgumentException("Account ID cannot be null");
@@ -109,7 +111,7 @@ public class TransactionService {
         }
     }
 
-    public List<TransactionDTO> listCustomerTransactions(Long customerId) {
+    public List<TransactionDTO> listCustomerTransactions(String customerId) {
 
         try {
             if (customerId == null) {

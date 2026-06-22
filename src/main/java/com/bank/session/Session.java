@@ -6,7 +6,7 @@ public class Session {
 
     private static Session instance;
 
-    private Long customerId;
+    private String customerId;
     private Role role;
     private Session() {
     }
@@ -18,12 +18,12 @@ public class Session {
         return instance;
     }
 
-    public void login(Long customerId, Role role) {
+    public void login(String customerId, Role role) {
         this.customerId = customerId;
         this.role = role;
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 

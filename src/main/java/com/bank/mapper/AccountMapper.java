@@ -16,11 +16,13 @@ public class AccountMapper {
 
         AccountDTO dto = new AccountDTO();
 
-        dto.setId(((Integer) row.get("id")).longValue());
+        dto.setId((String) row.get("id"));
 
-        dto.setCustomerId(((Integer) row.get("customer_id")).longValue());
+        dto.setAccountNumber((String)row.get("account_number"));
 
-        dto.setProductId(((Integer) row.get("product_id")).longValue());
+        dto.setCustomerId((String) row.get("customer_id"));
+
+        dto.setProductId((String) row.get("product_id"));
 
         dto.setBalance(new BigDecimal(row.get("balance").toString()));
 
@@ -38,6 +40,8 @@ public class AccountMapper {
         Map<String, Object> row = new HashMap<>();
 
         row.put("id", dto.getId());
+
+        row.put("account_number", dto.getAccountNumber());
 
         row.put("customer_id", dto.getCustomerId());
 

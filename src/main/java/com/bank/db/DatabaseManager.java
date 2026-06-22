@@ -139,7 +139,7 @@ public class DatabaseManager {
         String[] createTableQueries = {
             // Customers table — profile data only, no credentials
             "CREATE TABLE IF NOT EXISTS customers (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "first_name VARCHAR(100) NOT NULL, " +
             "last_name VARCHAR(100) NOT NULL, " +
             "date_of_birth DATE NOT NULL,"+
@@ -154,7 +154,7 @@ public class DatabaseManager {
             // Auth table — login credentials and authorisation role.
             // One auth record per customer (customer_id UNIQUE).
             "CREATE TABLE IF NOT EXISTS auth (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "username VARCHAR(50) UNIQUE NOT NULL, " +
             "password_hash VARCHAR(255) NOT NULL, " +
             //"customer_id INTEGER NOT NULL UNIQUE, " +
@@ -164,23 +164,25 @@ public class DatabaseManager {
             
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "customer_id INTEGER NOT NULL, " +
-            "product_id INTEGER NOT NULL,"+
+            "id VARCHAR(36) PRIMARY KEY, " +
+            "account_number VARCHAR(14) UNIQUE NOT NULL,"+
+            "customer_id VARCHAR(36) UNIQUE NOT NULL, " +
+            "product_id VARCHAR(36) UNIQUE NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
             "status VARCHAR(20) NOT NULL  DEFAULT 'ACTIVE' CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
+            "FOREIGN KEY (product_id) REFERENCES products(id)"+
             ")",
             
             // Transactions table
             "CREATE TABLE IF NOT EXISTS transactions (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            +"customer_id INTEGER NOT NULL, " +
-            "from_account_id INTEGER, " +
-            "to_account_id INTEGER, " +
+            "id VARCHAR(36) PRIMARY KEY , "
+            +"customer_id VARCHAR(36) NOT NULL, " +
+            "from_account_id VARCHAR(14), " +
+            "to_account_id VARCHAR(14), " +
             "transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER')), " +
             "amount DECIMAL(15,2) NOT NULL, " +
             "description TEXT, " +
@@ -216,7 +218,7 @@ public class DatabaseManager {
             //                   message fails to insert instead of applying twice
             // transaction_id  — the business transaction (ledger identity)
             "CREATE TABLE IF NOT EXISTS inbox (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "correlation_id VARCHAR(64) NOT NULL, " +
             "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
@@ -229,8 +231,8 @@ public class DatabaseManager {
             ")",
 
              "CREATE TABLE IF NOT EXISTS products (" +
-             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-             "product_name VARCHAR(64) NOT NULL UNIQUE, " +
+             "id VARCHAR(36) PRIMARY KEY, " +
+             "product_name VARCHAR(14) NOT NULL UNIQUE, " +
              "category VARCHAR(64) NOT NULL CHECK (category IN ('Savings', 'Limited Access','Fixed Deposits')), " +
              "interest_rate DECIMAL(4,2) NOT NULL, " +
              "min_operating_balance DECIMAL(15,2) NOT NULL , " +

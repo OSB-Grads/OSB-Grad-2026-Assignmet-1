@@ -1,6 +1,7 @@
 package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
+import com.bank.utils.UuidGeneratorUtil;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ProductRepository {
     }
 
 
-    public Map<String,Object> findByProductId(Long productId) throws SQLException
+    public Map<String,Object> findByProductId(String productId) throws SQLException
     {
         String sql = "SELECT * FROM products where id = ? ";
         List<Map<String,Object>> row = db.query(sql,productId);
@@ -26,16 +27,18 @@ public class ProductRepository {
         return row.get(0);
     }
 
-    public Long insert(Map<String,Object> productFields) throws SQLException
+    public String insert(Map<String,Object> productFields) throws SQLException
     {
-        String sql = "INSERT INTO products (product_name , category, interest_rate ,min_operating_balance , term_months) "+
-                "VALUES (?,?,?,?,?)";
-
-        List<Map<String,Object>> productRow = db.query(sql,productFields.get("product_name"),productFields.get("category"),
+        String productId = UuidGeneratorUtil.generateUuid();
+        productFields.put("id",productId);
+        String sql = "INSERT INTO products (id , product_name , category, interest_rate ,min_operating_balance , term_months) "+
+                "VALUES (?,?,?,?,?,?)";
+        List<Map<String,Object>> productRow = db.query(sql,productFields.get("id"),productFields.get("product_name"),productFields.get("category"),
                                                     productFields.get("interest_rate"),productFields.get("min_operating_balance"),
-                                                    productFields.get("termMonths"));
+                                                    productFields.get("term_months"));
 
-        return (Long) productRow.get(0).get("id");
+        return (String) productRow.get(0).get("id");
+        //return productId
     }
 
     public List<Map<String,Object>> findAllByProductCategory(String category) throws SQLException

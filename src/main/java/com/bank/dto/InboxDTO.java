@@ -1,9 +1,9 @@
 package com.bank.dto;
-
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class InboxDTO {
-    private Long id;
+    private String id;
     private String correlationId;
     private String messageType;
     private String payload;
@@ -16,7 +16,7 @@ public class InboxDTO {
 
     }
 
-    public InboxDTO(Long id,
+    public InboxDTO(String id,
                     String correlationId,
                     String messageType,
                     String payload,
@@ -35,10 +35,10 @@ public class InboxDTO {
         this.processedAt = processedAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getCorrelationId() {
@@ -53,7 +53,7 @@ public class InboxDTO {
     public void setMessageType(String messageType) {
         this.messageType = messageType;
     }
-    public String getPayload() {
+    public Map<String, Object> getPayload() {
         return payload;
     }
     public void setPayload(String payload) {

@@ -5,7 +5,6 @@ import com.bank.dto.CustomerDTO;
 import com.bank.enums.log.LogType;
 import com.bank.mapper.CustomerMapper;
 import com.bank.utils.ValidationUtils;
-import com.bank.session.Session;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -42,7 +41,7 @@ public class CustomerService {
      *
      * @return the created customer
      */
-    public void createCustomer(Long customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
+    public void createCustomer(String customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
 
         try{
             ValidationUtils.validateCustomer(firstName,lastName,dateOfBirth,email,phone,address,nationalId);

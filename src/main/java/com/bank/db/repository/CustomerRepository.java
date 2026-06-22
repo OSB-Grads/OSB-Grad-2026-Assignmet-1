@@ -49,7 +49,7 @@ public class CustomerRepository {
      * @param id the customer id
      * @return the raw row, or {@code null} if not found
      */
-    public Map<String, Object> findById(Long id) throws SQLException {
+    public Map<String, Object> findById(String  id) throws SQLException {
         try {
             List<Map<String, Object>> results =
                     db.query(
@@ -110,7 +110,7 @@ public class CustomerRepository {
      * Update an existing customer's mutable profile fields.
      * @return number of rows affected
      */
-    public int update(Long id, Map<String, Object> changedFields) throws SQLException {
+    public int update(String id, Map<String, Object> changedFields) throws SQLException {
         try {
             List<Map<String, Object>> results =
                     db.query(
