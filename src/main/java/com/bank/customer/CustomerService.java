@@ -88,34 +88,63 @@ public class CustomerService {
      * Update the caller's own profile (email, phone, address).
      * @return the updated customer
      */
-
-
-    public Map<String, Object> updateProfile(
-            String id,
+    public CustomerDTO updateProfile(
+            Long id,
             String firstName,
             String lastName,
             String email,
             String phone,
-            String nationalId
+            String address
     ) throws SQLException {
 
-        Map<String, Object> customer = repository.findById(id);
+        if (id == null) {
+            throw new IllegalArgumentException("Customer ID cannot be null");
+        }
 
-        if (customer == null) {throw new RuntimeException("Customer not found with id: " + id);}
-        if (firstName != null) {customer.put("first_name", firstName);}
-        if (lastName != null) {customer.put("last_name", lastName);}
-        if (email != null) {customer.put("email", email);}
-        if (phone != null) {customer.put("phone", phone);}
-        if (nationalId != null) {customer.put("national_id", nationalId);}
+        Map<String, Object> row = repository.findById(id);
 
-        try { // here we are updating the user, in the try block
-            repository.update(id, customer);
+        if (row == null) {
+            throw new RuntimeException("Customer not found with id: " + id);
+        }
+
+        CustomerDTO customer = CustomerMapper.toDTO(row);
+
+        if (firstName != null) {
+            ValidationUtils.validateName(firstName, "First Name");
+            customer.setFirstName(firstName.trim());
+        }
+
+        if (lastName != null) {
+            ValidationUtils.validateName(lastName, "Last Name");
+            customer.setLastName(lastName.trim());
+        }
+
+        if (email != null) {
+            ValidationUtils.validateEmail(email);
+            customer.setEmail(email.trim());
+        }
+
+        if (phone != null) {
+            ValidationUtils.validatePhone(phone);
+            customer.setPhone(phone.trim());
+        }
+
+        if (address != null) {
+            ValidationUtils.validateAddress(address);
+            customer.setAddress(address.trim());
+        }
+
+        try {
+            Map<String, Object> updatedRow = CustomerMapper.toRow(customer);
+            repository.update(id, updatedRow);
             loggerService.log(
                     "UPDATE_PROFILE",
                     "Customer profile updated successfully",
                     LogType.SUCCESS
             );
-            return repository.findById(id);
+
+            Map<String, Object> savedRow = repository.findById(id);
+            return CustomerMapper.toDTO(savedRow);
         } catch (SQLException e) {
             loggerService.log(
                     "UPDATE_PROFILE",

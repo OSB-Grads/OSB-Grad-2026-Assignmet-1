@@ -2,7 +2,9 @@ package com.bank.cli.display;
 
 import com.bank.customer.AccountsService;
 import com.bank.customer.AuthService;
+import com.bank.customer.CustomerService;
 import com.bank.dto.AccountDTO;
+import com.bank.dto.CustomerDTO;
 import com.bank.dto.TransactionDTO;
 import com.bank.enums.Role;
 import com.bank.exception.InsufficientFundsException;
@@ -18,6 +20,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.LinkedHashMap;
+import java.util.Arrays;
 
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
@@ -37,6 +41,7 @@ import com.bank.orchestrator.TransferOrchestrator;
 import com.bank.orchestrator.PaymentOrchestrator;
 import com.bank.service.TransactionService;
 import com.bank.session.Session;
+import com.bank.customer.CustomerService;
 import com.bank.utils.UuidGeneratorUtil;
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
@@ -56,6 +61,7 @@ public class MenuDisplay {
     private final AccountsService accountsService;
     private final AuthService authService;
     private final TransactionService transactionService;
+    private final CustomerService customerService;
     private final PaymentOrchestrator paymentOrchestrator;
     
 
@@ -68,6 +74,7 @@ public class MenuDisplay {
         this.transferOrchestrator = new TransferOrchestrator();
         this.authService = new AuthService();
         this.transactionService = new TransactionService();
+        this.customerService=new CustomerService();
         this.paymentOrchestrator=new PaymentOrchestrator();
     }
 
@@ -604,10 +611,103 @@ public class MenuDisplay {
 
     private void handleUpdateProfile() {
         System.out.println("\n=== UPDATE PROFILE ===");
-        // TODO: Allow customer to update contact information
-        System.out.println("TODO: Implement profile update using CustomerService");
-    }
+        try {
+            Long customerId = session.getCustomerId();
 
+            if (customerId == null) {
+                System.out.println("You must be logged in to update profile.");
+                return;
+            }
+            Map<Integer, String> options = new LinkedHashMap<>();
+            options.put(1, "First Name");
+            options.put(2, "Last Name");
+            options.put(3, "Email");
+            options.put(4, "Phone");
+            options.put(5, "Address");
+
+            System.out.println("Select what you want to update:");
+            for (Map.Entry<Integer, String> entry : options.entrySet()) {
+                System.out.println(entry.getKey() + ". " + entry.getValue());
+            }
+
+            System.out.print("Enter option numbers separated by comma, example 1,4,5: ");
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("No option selected.");
+                return;
+            }
+
+            int[] selectedOptions = Arrays.stream(input.split(","))
+                    .map(String::trim)
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+
+            String firstName = null;
+            String lastName = null;
+            String email = null;
+            String phone = null;
+            String address = null;
+
+            for (int option : selectedOptions) {
+                switch (option) {
+                    case 1:
+                        System.out.print("Enter new First Name: ");
+                        firstName = scanner.nextLine().trim();
+                        break;
+
+                    case 2:
+                        System.out.print("Enter new Last Name: ");
+                        lastName = scanner.nextLine().trim();
+                        break;
+
+                    case 3:
+                        System.out.print("Enter new Email: ");
+                        email = scanner.nextLine().trim();
+                        break;
+
+                    case 4:
+                        System.out.print("Enter new Phone: ");
+                        phone = scanner.nextLine().trim();
+                        break;
+
+                    case 5:
+                        System.out.print("Enter new Address: ");
+                        address = scanner.nextLine().trim();
+                        break;
+
+                    default:
+                        System.out.println("Invalid option ignored: " + option);
+                }
+            }
+            CustomerDTO updatedProfile =
+                    customerService.updateProfile(
+                            customerId,
+                            firstName,
+                            lastName,
+                            email,
+                            phone,
+                            address
+                    );
+
+            System.out.println("\nProfile updated successfully!");
+            System.out.println("--------------------------------");
+            System.out.println("First Name : " + updatedProfile.getFirstName());
+            System.out.println("Last Name  : " + updatedProfile.getLastName());
+            System.out.println("Email      : " + updatedProfile.getEmail());
+            System.out.println("Phone      : " + updatedProfile.getPhone());
+            System.out.println("Address    : " + updatedProfile.getAddress());
+            System.out.println("--------------------------------");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter numbers like 1,3,5.");
+        } catch (SQLException e) {
+            System.out.println("Database error while updating profile: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Failed to update profile: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     // --- Admin handlers (call services/orchestrators; no logic in the CLI) ---
 
     private void handleManageProducts() {
