@@ -143,7 +143,7 @@ public class InboxRepository {
             return  db.query(
                     "SELECT * FROM inbox " +
                             "WHERE message_type = ? " +
-                            "ORDER BY created_at DESC",
+                            "ORDER BY created_at ASC",
                             "DEPOSITS"
                     );
 
