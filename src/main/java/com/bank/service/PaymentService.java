@@ -32,10 +32,9 @@ public class PaymentService {
             }
 
             Map<String, Object> payload = inboxDTO.getPayload();
-           // Long accountId = ((Number) payload.get("accountId")).longValue();
             String accountNumber = payload.get("accountNumber").toString(); // getting the account_number
             BigDecimal amount = new BigDecimal(payload.get("amount").toString()); // getting the amount
-            Map<String, Object> account = accountRepository.findProductByAccountNumber(accountNumber);
+            Map<String, Object> account = accountRepository.findAccountByAccountNumber(accountNumber);
             if (account == null) {
 
                 loggerService.log(
@@ -51,8 +50,6 @@ public class PaymentService {
             BigDecimal currentBalance = (BigDecimal) account.get("balance");
             account.put("balance", currentBalance.add(amount)); // adding
             accountRepository.update(accountNumber, account); // updating
-           // accountRepository.update(accountId, account); // updating
-
 
             loggerService.log(
                     "DEPOSIT",
