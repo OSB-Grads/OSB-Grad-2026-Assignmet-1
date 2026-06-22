@@ -138,4 +138,18 @@ public class InboxRepository {
             throw new DatabaseOperationException("Failed to retrive inbox",e);
         }
     }
+    public List<Map<String,Object>> findAllDepositsMessages() {
+        try {
+            return  db.query(
+                    "SELECT * FROM inbox " +
+                            "WHERE message_type = ? " +
+                            "ORDER BY created_at ASC",
+                            "DEPOSITS"
+                    );
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to retrieve All deposits" +
+                    " messages from inbox",e);
+        }
+    }
 }
