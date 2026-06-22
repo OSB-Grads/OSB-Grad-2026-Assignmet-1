@@ -513,12 +513,16 @@ public class MenuDisplay {
             }
             break;
         }
-        System.out.println("Enter Minimun Operating Balance: ");
+        
+        System.out.println("Enter Minimum Operating Balance: ");
         BigDecimal minOperatingBalance = scanner.nextBigDecimal();
         System.out.println("Enter Interest Rate: ");
         BigDecimal interestRate = scanner.nextBigDecimal();
-        System.out.println("Enter Term Months: ");
-        Long termMonths = scanner.nextLong();
+        Long termMonths = -1L;
+        if ("Fixed Deposits".equals(category)) {
+            System.out.println("Enter Term Months: ");
+            termMonths = scanner.nextLong();
+        }
         scanner.nextLine();
         try {
             String productName = productService.createProduct(category, minOperatingBalance, interestRate, termMonths);
