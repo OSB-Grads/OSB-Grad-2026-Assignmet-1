@@ -27,7 +27,7 @@ public class AccountsService {
         this.accountRepository = new AccountRepository();
         this.loggerService = new LoggerService();
     }
-    public List<Map<String,Object>> getAllAccountsForCustomer(Long customerId) {
+    public List<Map<String,Object>> getAllAccountsForCustomer(String customerId) {
         try {
             List<Map<String ,Object>> rows = accountRepository.
                     getAccountsWithProductByCustomerId(customerId);
@@ -64,13 +64,12 @@ public class AccountsService {
         }
     }
 
-     public Long createAccount(Long customerId,Long productId ) {
+     public String createAccount(String customerId,String productId ) {
         try{
-            AccountDTO accountdto=new AccountDTO( null, customerId, productId, BigDecimal.ZERO, AccountStatus.ACTIVE, false);
-            String accountNumber = AccountNumberGenerator.generate();
+            String accountNumber=AccountNumberGenerator.generate();
+            AccountDTO accountdto=new AccountDTO( null, accountNumber,customerId, productId, BigDecimal.ZERO, AccountStatus.ACTIVE, false);
             Map<String,Object> accountRow = AccountMapper.toRow(accountdto);
-            accountRow.put("account_number", accountNumber);
-            Long accountNumber = accountRepository.insert(accountRow);
+            accountRepository.insert(accountRow);
             loggerService.log(
                     "CREATE_ACCOUNT",
                     "Created Account for the product "+productId,

@@ -164,15 +164,17 @@ public class DatabaseManager {
             
             // Accounts table
             "CREATE TABLE IF NOT EXISTS accounts (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "customer_id INTEGER NOT NULL, " +
-            "product_id INTEGER NOT NULL,"+
+            "id VARCHAR(36) PRIMARY KEY, " +
+            "account_number VARCHAR(14) UNIQUE NOT NULL,"+
+            "customer_id VARCHAR(36) UNIQUE NOT NULL, " +
+            "product_id VARCHAR(36) UNIQUE NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
             "status VARCHAR(20) NOT NULL  DEFAULT 'ACTIVE' CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
+            "FOREIGN KEY (product_id) REFERENCES products(id)"+
             ")",
             
             // Transactions table

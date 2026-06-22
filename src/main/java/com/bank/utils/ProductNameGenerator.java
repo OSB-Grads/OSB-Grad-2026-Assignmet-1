@@ -2,11 +2,11 @@ package com.bank.utils;
 
 import java.security.SecureRandom;
 
-public class ProductIdGenerator {
+public class ProductNameGenerator {
 
     private static final String CHARS ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static String productIdGenerate() {
+    public static String generateProductName() {
         SecureRandom secureRandom = new SecureRandom();
 
         StringBuilder sb = new StringBuilder("OSBP");
