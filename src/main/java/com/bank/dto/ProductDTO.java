@@ -3,7 +3,7 @@ package com.bank.dto;
 import java.math.BigDecimal;
 
 public class ProductDTO {
-    private Long id;
+    private String id;
     private String productName;
     private String productCategory;
     private BigDecimal interestRate;
@@ -14,7 +14,7 @@ public class ProductDTO {
 
     }
 
-    public ProductDTO(Long id , String productName , String productCategory ,
+    public ProductDTO(String id , String productName , String productCategory ,
                       BigDecimal interestRate, BigDecimal minOperatingBalance, Long termMonths){
         this.id = id;
         this.productName = productName;
@@ -24,11 +24,11 @@ public class ProductDTO {
         this.termMonths = termMonths;
     }
 
-    public Long getId(){
+    public String getId(){
         return this.id;
     }
 
-    public void setId(Long id)
+    public void setId(String id)
     {
         this.id = id;
     }

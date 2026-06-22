@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 
 public class TransactionDTO {
 
-    private Long id;
-    private Long fromAccountId;
-    private Long toAccountId;
-    private Long customerId;
+    private String id;
+    private String fromAccountId;
+    private String toAccountId;
+    private String customerId;
     private String transactionType;
     private BigDecimal amount;
     private String status;
@@ -22,27 +22,27 @@ public class TransactionDTO {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getToAccountId() {
+    public String getToAccountId() {
         return toAccountId;
     }
 
-    public void setToAccountId(Long toAccountId) {
+    public void setToAccountId(String toAccountId) {
         this.toAccountId = toAccountId;
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
@@ -74,9 +74,9 @@ public class TransactionDTO {
 
     public void setDescription(String description) {this.description = description;}
 
-    public Long getFromAccountId() {return fromAccountId;}
+    public String getFromAccountId() {return fromAccountId;}
 
-    public void setFromAccountId(Long fromAccountId) {this.fromAccountId = fromAccountId;}
+    public void setFromAccountId(String fromAccountId) {this.fromAccountId = fromAccountId;}
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;

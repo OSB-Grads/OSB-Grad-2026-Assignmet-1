@@ -41,7 +41,7 @@ public class CustomerService {
      *
      * @return the created customer
      */
-    public void createCustomer(String customerId, String firstName, String lastName, String dateOfBirth, String email, String phone, String address, String nationalId) throws SQLException {
+    public void createCustomer(String customerId,String firstName, String lastName, String dateOfBirth,String email,String phone, String address, String nationalId) throws SQLException {
 
         try{
             ValidationUtils.validateCustomer(firstName,lastName,dateOfBirth,email,phone,address,nationalId);
@@ -91,7 +91,7 @@ public class CustomerService {
 
 
     public Map<String, Object> updateProfile(
-            Long id,
+            String id,
             String firstName,
             String lastName,
             String email,

@@ -29,7 +29,7 @@ public class CustomerMapper {
             return null;
         }
         CustomerDTO dto = new CustomerDTO();
-        dto.setId(((Number) row.get("id")).longValue());
+        dto.setId((String) row.get("id"));
         dto.setFirstName((String) row.get("first_name"));
         dto.setLastName((String) row.get("last_name"));
         dto.setDateOfBirth((String) row.get("date_of_birth"));

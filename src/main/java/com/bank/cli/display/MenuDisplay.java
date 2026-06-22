@@ -409,7 +409,6 @@ public class MenuDisplay {
         for (Map<String, Object> account : accounts) {
 
             String category = (String) account.get("category");
-
             BigDecimal balance = BigDecimal.valueOf(((Number) account.get("balance")).doubleValue());
             balances.put("Total Balance", balances.get("Total Balance").add(balance));
             balances.put(category, balances.getOrDefault(category, BigDecimal.ZERO).add(balance));
@@ -613,8 +612,50 @@ public class MenuDisplay {
 
     private void handleManageProducts() {
         System.out.println("\n=== MANAGE PRODUCTS ===");
-        // TODO: create/list product categories and products via ProductService
-        System.out.println("TODO: Implement product management using ProductService");
+        System.out.println("PRODUCT CREATION");
+        String category;
+
+        while (true) {
+            System.out.println("Select the Category:");
+            System.out.println("1. Savings");
+            System.out.println("2. Fixed Deposits");
+            System.out.println("3. Limited Access");
+
+            int option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    category = "Savings";
+                    break;
+                case 2:
+                    category = "Fixed Deposits";
+                    break;
+                case 3:
+                    category = "Limited Access";
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    continue;
+            }
+            break;
+        }
+        
+        System.out.println("Enter Minimum Operating Balance: ");
+        BigDecimal minOperatingBalance = scanner.nextBigDecimal();
+        System.out.println("Enter Interest Rate: ");
+        BigDecimal interestRate = scanner.nextBigDecimal();
+        Long termMonths = -1L;
+        if ("Fixed Deposits".equals(category)) {
+            System.out.println("Enter Term Months: ");
+            termMonths = scanner.nextLong();
+        }
+        scanner.nextLine();
+        try {
+            String productName = productService.createProduct(category, minOperatingBalance, interestRate, termMonths);
+            System.out.println("Product Craeted Successfully. The Product Name is : " + productName);
+        } catch (Exception e) {
+            System.out.println("Failed to Create Product");
+        }
     }
 
     private void handleViewInbox() {

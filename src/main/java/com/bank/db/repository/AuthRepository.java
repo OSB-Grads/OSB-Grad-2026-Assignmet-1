@@ -79,7 +79,7 @@ public class AuthRepository {
                             authFields.get("role")
                     );
 
-            return (String) authFields.get("id");
+            return (String) authRow.get(0).get("id");
 
             // here we are returning the id
 

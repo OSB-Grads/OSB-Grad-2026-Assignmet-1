@@ -27,9 +27,9 @@ public class TransactionService {
     }
 
     public void insertTransaction(
-            long customerId,
-            long fromAccountId,
-            long toAccountId,
+            String customerId,
+            String fromAccountId,
+            String toAccountId,
             String transactionType,
             String description,
             BigDecimal amount) {
@@ -74,7 +74,7 @@ public class TransactionService {
                     "Failed to create transaction", e);
         }
     }
-    public List<TransactionDTO> listAccountTransactions(Long accountId) {
+    public List<TransactionDTO> listAccountTransactions(String accountId) {
         try {
             if (accountId == null) {
                 throw new IllegalArgumentException("Account ID cannot be null");
@@ -111,7 +111,7 @@ public class TransactionService {
         }
     }
 
-    public List<TransactionDTO> listCustomerTransactions(Long customerId) {
+    public List<TransactionDTO> listCustomerTransactions(String customerId) {
 
         try {
             if (customerId == null) {
