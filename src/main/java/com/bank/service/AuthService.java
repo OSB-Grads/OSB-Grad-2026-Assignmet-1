@@ -2,12 +2,12 @@ package com.bank.service;
 import java.util.HashMap;
 import java.util.Map;
 import com.bank.customer.LoggerService;
-
+import com.bank.utils.UuidGeneratorUtil;
 import com.bank.db.repository.AuthRepository;
+
 import com.bank.enums.log.LogType;
 import com.bank.exception.DatabaseOperationException;
 import com.bank.exception.UserCreationException;
-import com.bank.session.Session;
 import com.bank.utils.PasswordUtil;
 import com.bank.utils.ValidationUtils;
 
@@ -24,7 +24,10 @@ public class AuthService {
     public String signup(String username, String password) throws DatabaseOperationException, UserCreationException {
         try {
             ValidationUtils.validatePassword(password); // calls the utils folder method.
+
             Map<String, Object> row = new HashMap<>(); // row object for pushing into repo
+            row.put("id",UuidGeneratorUtil.generateUuid());
+            System.out.println("Generated UUID = " + row.get("id"));
             row.put("username", username);
             row.put("password_hash", PasswordUtil.hashPassword(password)); //password_hash is just a variable where I'm storing password.
             row.put("role", "CUSTOMER");
