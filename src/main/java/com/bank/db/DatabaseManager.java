@@ -216,7 +216,7 @@ public class DatabaseManager {
             //                   message fails to insert instead of applying twice
             // transaction_id  — the business transaction (ledger identity)
             "CREATE TABLE IF NOT EXISTS inbox (" +
-            "id VARCHAR(36) PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "correlation_id VARCHAR(64) NOT NULL, " +
             "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
