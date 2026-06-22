@@ -27,7 +27,7 @@ public class TransferService {
         this.loggerService = new LoggerService();
     }
 
-    public void transferFunds(Long sourceAccountNumber , Long destAccountNumber, BigDecimal amount) throws SQLException,InsufficientFundsException,AccountLockedException,SameAccountTransferException,NegativeAmountException
+    public void transferFunds(String sourceAccountNumber , String destAccountNumber, BigDecimal amount) throws SQLException,InsufficientFundsException,AccountLockedException,SameAccountTransferException,NegativeAmountException
     {
         AccountDTO srcAccountDto = AccountMapper.toDTO(repository.findAccountById(sourceAccountNumber));
         AccountDTO destAccountDto = AccountMapper.toDTO(repository.findAccountById(destAccountNumber));

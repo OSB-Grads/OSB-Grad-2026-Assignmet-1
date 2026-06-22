@@ -177,10 +177,10 @@ public class DatabaseManager {
             
             // Transactions table
             "CREATE TABLE IF NOT EXISTS transactions (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            +"customer_id INTEGER NOT NULL, " +
-            "from_account_id INTEGER, " +
-            "to_account_id INTEGER, " +
+            "id VARCHAR(36) PRIMARY KEY AUTOINCREMENT, "
+            +"customer_id VARCHAR(36) NOT NULL, " +
+            "from_account_id VARCHAR(14), " +
+            "to_account_id VARCHAR(14), " +
             "transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER')), " +
             "amount DECIMAL(15,2) NOT NULL, " +
             "description TEXT, " +
