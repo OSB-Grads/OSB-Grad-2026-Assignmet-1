@@ -14,7 +14,7 @@ public class InboxRepository {
         this.db=DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findById(Long id) {
+    public Map<String, Object> findById(String id) {
 
         try {
             List<Map<String, Object>> rows =
@@ -77,7 +77,7 @@ public class InboxRepository {
         }
     }
 
-    public int update(Long id,
+    public int update(String id,
                       Map<String, Object> changedFields) {
 
         try {
@@ -102,7 +102,7 @@ public class InboxRepository {
         }
     }
 
-    public  Map<String,Object> deleteById(Long id) {
+    public  Map<String,Object> deleteById(String id) {
 
         try {
             List<Map<String, Object>> rows =
