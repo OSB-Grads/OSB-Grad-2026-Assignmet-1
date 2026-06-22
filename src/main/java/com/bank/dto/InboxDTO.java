@@ -6,7 +6,7 @@ public class InboxDTO {
     private String id;
     private String correlationId;
     private String messageType;
-    private String payload;
+    private Map<String,Object> payload;
     private String status;
     private String reason;
     private LocalDateTime createdAt;
@@ -19,7 +19,7 @@ public class InboxDTO {
     public InboxDTO(String id,
                     String correlationId,
                     String messageType,
-                    String payload,
+                    Map<String,Object> payload,
                     String status,
                     String reason,
                     LocalDateTime createdAt,
@@ -56,7 +56,7 @@ public class InboxDTO {
     public Map<String, Object> getPayload() {
         return payload;
     }
-    public void setPayload(String payload) {
+    public void setPayload(Map<String,Object> payload) {
         this.payload = payload;
     }
     public String getStatus() {
