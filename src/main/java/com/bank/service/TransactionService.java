@@ -30,6 +30,8 @@ public class TransactionService {
             long customerId,
             long fromAccountId,
             long toAccountId,
+            String transactionType,
+            String description,
             BigDecimal amount) {
 
         try {
@@ -39,9 +41,9 @@ public class TransactionService {
             transactionFields.put("customer_id", customerId);
             transactionFields.put("from_account_id", fromAccountId);
             transactionFields.put("to_account_id", toAccountId);
-            transactionFields.put("transaction_type", "TRANSFER");
+            transactionFields.put("transaction_type", transactionType);
             transactionFields.put("amount", amount);
-            transactionFields.put("description", "Internal Transfer");
+            transactionFields.put("description", description);
             transactionFields.put("status", "COMPLETED");
 
             Long transactionId =

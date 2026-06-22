@@ -26,16 +26,19 @@ public class ProductRepository {
         return row.get(0);
     }
 
-    public Long insert(Map<String,Object> productFields) throws SQLException
+    public String insert(Map<String,Object> productFields) throws SQLException
     {
-        String sql = "INSERT INTO products (product_name , category, interest_rate ,min_operating_balance , term_months) "+
-                "VALUES (?,?,?,?,?)";
-
-        List<Map<String,Object>> productRow = db.query(sql,productFields.get("product_name"),productFields.get("category"),
+        //Util function to generate UUID for product table ID
+        //String productId = UUIDGeneration.generateUUID function
+        //productFields.put("id",productId);
+        String sql = "INSERT INTO products (id , product_name , category, interest_rate ,min_operating_balance , term_months) "+
+                "VALUES (?,?,?,?,?,?)";
+        List<Map<String,Object>> productRow = db.query(sql,productFields.get("id"),productFields.get("product_name"),productFields.get("category"),
                                                     productFields.get("interest_rate"),productFields.get("min_operating_balance"),
-                                                    productFields.get("termMonths"));
+                                                    productFields.get("term_months"));
 
-        return (Long) productRow.get(0).get("id");
+        return (String) productRow.get(0).get("id");
+        //return productId
     }
 
     public List<Map<String,Object>> findAllByProductCategory(String category) throws SQLException

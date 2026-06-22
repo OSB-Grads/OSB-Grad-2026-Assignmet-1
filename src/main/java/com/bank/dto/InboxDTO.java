@@ -1,6 +1,7 @@
 package com.bank.dto;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class InboxDTO {
     private Long id;
@@ -53,7 +54,7 @@ public class InboxDTO {
     public void setMessageType(String messageType) {
         this.messageType = messageType;
     }
-    public String getPayload() {
+    public Map<String, Object> getPayload() {
         return payload;
     }
     public void setPayload(String payload) {

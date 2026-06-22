@@ -1,7 +1,10 @@
 package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
+import com.bank.dto.AccountDTO;
 import com.bank.exception.DatabaseOperationException;
+import com.bank.mapper.AccountMapper;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,26 @@ public class AccountRepository {
 
     public Map<String,Object> findProductByAccountNumber(String accountNumber){
         return this.findAccountById(Long.parseLong(accountNumber));
+    }
+
+    public AccountDTO findAccountByAccountNumber(String accountNumber){
+        try {
+            List<Map<String, Object>> row = db.query(
+                    "SELECT * FROM accounts WHERE account_number = ?",
+                    accountNumber);
+
+            if(row.isEmpty()){
+                return null;
+            }
+
+            Map<String,Object> account = row.get(0);
+            AccountDTO accountDTO = AccountMapper.toDTO(account);
+            return accountDTO;
+
+        } catch (SQLException e) {
+
+            throw new DatabaseOperationException("Failed to retrieve account", e);
+        }
     }
 
     public List<Map<String, Object>> findAccountsByCustomerId(Long customerId) {
@@ -73,7 +96,8 @@ public class AccountRepository {
 
         try {
             List<Map<String, Object>> rows = db.query(
-                    " INSERT INTO accounts( customer_id,product_id,balance,status,is_locked) VALUES (?, ?, ?, ?, ?)",
+                    " INSERT INTO accounts(  account_number,customer_id,product_id,balance,status,is_locked) VALUES (?,?, ?, ?, ?, ?)",
+                    accountFields.get("account_number"),
                     accountFields.get("customer_id"),
                     accountFields.get("product_id"),
                     accountFields.get("balance"),

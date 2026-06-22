@@ -11,6 +11,7 @@ import com.bank.exception.SameAccountTransferException;
 import com.bank.exception.UserAlreadyExistsException;
 import com.bank.exception.UserCreationFailedException;
 
+
 import java.sql.SQLException;
 import java.util.List;
 import java.math.BigDecimal;
@@ -33,8 +34,10 @@ import com.bank.exception.*;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
+import com.bank.orchestrator.PaymentOrchestrator;
 import com.bank.service.TransactionService;
 import com.bank.session.Session;
+import com.bank.utils.UuidGeneratorUtil;
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
 
@@ -53,6 +56,8 @@ public class MenuDisplay {
     private final AccountsService accountsService;
     private final AuthService authService;
     private final TransactionService transactionService;
+    private final PaymentOrchestrator paymentOrchestrator;
+    
 
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -63,6 +68,7 @@ public class MenuDisplay {
         this.transferOrchestrator = new TransferOrchestrator();
         this.authService = new AuthService();
         this.transactionService = new TransactionService();
+        this.paymentOrchestrator=new PaymentOrchestrator();
     }
 
     /**
@@ -70,13 +76,13 @@ public class MenuDisplay {
      */
     public void showMainMenu() throws SQLException {
         boolean running = true;
-
         while (running) {
             System.out.println("\n=== MAIN MENU ===");
             System.out.println("1. Login");
             System.out.println("2. Create Customer Profile");
             System.out.println("3. Exit");
             System.out.print("Please select an option (1-3): ");
+          
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
@@ -333,8 +339,12 @@ public class MenuDisplay {
 
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");
-        // TODO: Show user's accounts, get account selection and amount
-        System.out.println("TODO: Implement deposit logic using TransactionOrchestrator");
+        try{
+        paymentOrchestrator.processDeposits();
+        }
+        catch(SQLException e){
+        System.out.println("failed to process the Deposit");
+        }
     }
 
     private void handleWithdraw() {
@@ -395,52 +405,168 @@ public class MenuDisplay {
         balances.put("Fixed Deposits", BigDecimal.ZERO);
         balances.put("Limited Access", BigDecimal.ZERO);
 
+        // Calculate balances
         for (Map<String, Object> account : accounts) {
 
             String category = (String) account.get("category");
             BigDecimal balance = BigDecimal.valueOf(((Number) account.get("balance")).doubleValue());
-
             balances.put("Total Balance", balances.get("Total Balance").add(balance));
             balances.put(category, balances.getOrDefault(category, BigDecimal.ZERO).add(balance));
         }
 
-        System.out.println("Total Balance: $" + balances.get("Total Balance"));
-        char ch = 'A';
-        System.out.println("\n" + ch + ") Savings Accounts $" + balances.get("Savings"));
-        int count = 1;
-        ch++;
-        for (Map<String, Object> account : accounts) {
+        while (true) {
 
-            if ("Savings".equals(account.get("category"))) {
+            System.out.println("\n=== YOUR ACCOUNTS ===");
+            System.out.println(
+                    "Total Balance: $" + balances.get("Total Balance"));
 
-                System.out.println(count + ") Product Name: " + account.get("product_name"));
-                System.out.println("   Account Number: " + account.get("id"));
-                System.out.println("   Balance: $" + account.get("balance"));
-                count++;
+            Map<Integer, Map<String, Object>> optionMap = new HashMap<>();
+
+            String[] categories = {
+                    "Savings",
+                    "Limited Access",
+                    "Fixed Deposits"
+            };
+
+            char section = 'A';
+            int optionNumber = 1;
+
+            for (String category : categories) {
+
+                System.out.println("\n" + section + ") " + category + " Accounts $"
+                        + balances.getOrDefault(category, BigDecimal.ZERO));
+
+                for (Map<String, Object> account : accounts) {
+
+                    if (category.equals(account.get("category"))) {
+
+                        System.out.println(
+                                optionNumber + ") Product Name: "
+                                        + account.get("product_name"));
+
+                        System.out.println(
+                                "   Account Number: "
+                                        + account.get("id"));
+
+                        System.out.println(
+                                "   Balance: $"
+                                        + account.get("balance"));
+
+                        optionMap.put(optionNumber, account);
+
+                        optionNumber++;
+                    }
+                }
+
+                section++;
             }
-        }
 
-        System.out.println("\n" + ch + ") Limited Access Accounts $" + balances.get("Limited Access"));
-        ch++;
-        for (Map<String, Object> account : accounts) {
-            if ("Limited Access".equals(account.get("category"))) {
+            System.out.println("\nSelect Product Number to View Details");
+            System.out.println("0. Back to Customer Menu");
+            System.out.println("-1. Exit");
+            System.out.print("Choice: ");
 
-                System.out.println(count + ") Product Name: " + account.get("product_name"));
-                System.out.println("   Account Number: " + account.get("id"));
-                System.out.println("   Balance: $" + account.get("balance"));
-                count++;
+            int selectedOption = scanner.nextInt();
+            scanner.nextLine();
+
+            if (selectedOption == -1) {
+                System.out.println("Thank you for using CLI Banking Application!");
+                System.exit(0);
             }
-        }
-        System.out.println("\n" + ch + ") Fixed Deposit Accounts $" + balances.get("Fixed Deposits"));
-        ch++;
 
-        for (Map<String, Object> account : accounts) {
-            if ("Fixed Deposits".equals(account.get("category"))) {
+            if (selectedOption == 0) {
+                return; // back to customer menu
+            }
 
-                System.out.println(count + ") Product Name: " + account.get("product_name"));
-                System.out.println("   Account Number: " + account.get("id"));
-                System.out.println("   Balance: $" + account.get("balance"));
-                count++;
+            Map<String, Object> selectedAccount = optionMap.get(selectedOption);
+
+            if (selectedAccount == null) {
+                System.out.println("Invalid Product Number");
+                continue;
+            }
+
+            System.out.println("\n=== ACCOUNT DETAILS ===");
+
+            System.out.println(
+                    "Product Name: "
+                            + selectedAccount.get("product_name"));
+
+            System.out.println(
+                    "Account Number: "
+                            + selectedAccount.get("id"));
+
+            System.out.println(
+                    "Category: "
+                            + selectedAccount.get("category"));
+
+            System.out.println(
+                    "Balance: $"
+                            + selectedAccount.get("balance"));
+
+            Long accountId = ((Number) selectedAccount.get("id")).longValue();
+
+            List<TransactionDTO> transactions = transactionService.listAccountTransactions(accountId);
+
+            System.out.println("\n=== TRANSACTIONS ===");
+
+            System.out.printf(
+                    "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                    "TRANSACTION ID",
+                    "FROM ACCOUNT",
+                    "TO ACCOUNT",
+                    "TYPE",
+                    "AMOUNT",
+                    "STATUS",
+                    "CREATED AT");
+
+            System.out.println(
+                    "-----------------------------------------------------------------------------------------------------------------");
+
+            for (TransactionDTO transaction : transactions) {
+
+                System.out.printf(
+                        "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                        transaction.getId(),
+                        transaction.getFromAccountId() == null
+                                ? "-"
+                                : transaction.getFromAccountId(),
+                        transaction.getToAccountId() == null
+                                ? "-"
+                                : transaction.getToAccountId(),
+                        transaction.getTransactionType(),
+                        transaction.getAmount(),
+                        transaction.getStatus(),
+                        transaction.getCreatedAt());
+            }
+
+            System.out.println(
+                    "-----------------------------------------------------------------------------------------------------------------");
+
+            while (true) {
+
+                System.out.println("\nOptions:");
+                System.out.println("1. Back to Accounts List");
+                System.out.println("0. Back to Customer Menu");
+                System.out.println("-1. Exit");
+                System.out.print("Choice: ");
+
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                if (choice == 1) {
+                    break; // account list is shown again
+                }
+
+                if (choice == 0) {
+                    return; // customer menu
+                }
+
+                if (choice == -1) {
+                    System.out.println("Thank you for using CLI Banking Application!");
+                    System.exit(0);
+                }
+
+                System.out.println("Invalid Option");
             }
         }
     }
