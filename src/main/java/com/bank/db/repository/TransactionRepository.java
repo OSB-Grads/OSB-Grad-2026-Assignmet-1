@@ -34,7 +34,7 @@ public class TransactionRepository {
             );
         }
     }
-    public List<Map<String, Object>> findByCustomerId(Long customerId) {
+    public List<Map<String, Object>> findByCustomerId(String customerId) {
 
         try {
 
@@ -54,7 +54,7 @@ public class TransactionRepository {
             );
         }
     }
-    public List<Map<String, Object>> findByAccountId(Long accountId) {
+    public List<Map<String, Object>> findByAccountId(String accountId) {
         try {
             String sql = "SELECT * FROM transactions WHERE from_account_id = ? OR to_account_id = ?" +
                     "ORDER BY created_at DESC";
@@ -99,7 +99,7 @@ public class TransactionRepository {
         }
     }
 
-    public int update(Long id, Map<String, Object> changedFields) {
+    public int update(String id, Map<String, Object> changedFields) {
 
         try {
 
