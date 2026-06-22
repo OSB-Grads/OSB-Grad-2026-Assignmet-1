@@ -16,10 +16,10 @@ public class TransactionMapper {
         }
 
         TransactionDTO dto = new TransactionDTO();
-        dto.setId(((Integer) row.get("id")).longValue());
-        dto.setCustomerId(((Integer) row.get("customer_id")).longValue());
-        dto.setFromAccountId(((Integer) row.get("from_account_id")).longValue());
-        dto.setToAccountId(((Integer) row.get("to_account_id")).longValue());
+        dto.setId(((String) row.get("id")));
+        dto.setCustomerId(((String) row.get("customer_id")));
+        dto.setFromAccountId(((String) row.get("from_account_id")));
+        dto.setToAccountId(((String) row.get("to_account_id")));
         dto.setTransactionType((String) row.get("transaction_type"));
         dto.setAmount(new BigDecimal(row.get("amount").toString()));
         dto.setDescription((String) row.get("description"));

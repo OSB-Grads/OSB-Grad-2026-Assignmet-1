@@ -11,7 +11,7 @@ public class InboxMapper {
             return null;
         }
         InboxDTO dto = new InboxDTO();
-        dto.setId(((Number) row.get("id")).longValue());
+        dto.setId((String) row.get("id"));
         dto.setCorrelationId((String) row.get("correlation_id"));
         dto.setMessageType((String) row.get("message_type"));
         dto.setPayload((String) row.get("payload"));

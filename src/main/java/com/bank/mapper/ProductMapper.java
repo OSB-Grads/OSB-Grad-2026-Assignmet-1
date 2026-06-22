@@ -11,7 +11,7 @@ public class ProductMapper {
     public static ProductDTO toDTO(Map<String,Object> row){
          ProductDTO dto = new ProductDTO();
 
-         dto.setId(((Integer) row.get("id")).longValue());
+         dto.setId((String) row.get("id"));
          dto.setProductName((String) row.get("product_name"));
          dto.setProductCategory((String) row.get("category"));
          dto.setInterestRate(new BigDecimal(row.get("interest_rate").toString()));

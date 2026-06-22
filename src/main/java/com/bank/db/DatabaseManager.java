@@ -139,7 +139,7 @@ public class DatabaseManager {
         String[] createTableQueries = {
             // Customers table — profile data only, no credentials
             "CREATE TABLE IF NOT EXISTS customers (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "first_name VARCHAR(100) NOT NULL, " +
             "last_name VARCHAR(100) NOT NULL, " +
             "date_of_birth DATE NOT NULL,"+
@@ -179,10 +179,10 @@ public class DatabaseManager {
             
             // Transactions table
             "CREATE TABLE IF NOT EXISTS transactions (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            +"customer_id INTEGER NOT NULL, " +
-            "from_account_id INTEGER, " +
-            "to_account_id INTEGER, " +
+            "id VARCHAR(36) PRIMARY KEY , "
+            +"customer_id VARCHAR(36) NOT NULL, " +
+            "from_account_id VARCHAR(14), " +
+            "to_account_id VARCHAR(14), " +
             "transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER')), " +
             "amount DECIMAL(15,2) NOT NULL, " +
             "description TEXT, " +
@@ -218,7 +218,7 @@ public class DatabaseManager {
             //                   message fails to insert instead of applying twice
             // transaction_id  — the business transaction (ledger identity)
             "CREATE TABLE IF NOT EXISTS inbox (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "correlation_id VARCHAR(64) NOT NULL, " +
             "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
@@ -231,8 +231,8 @@ public class DatabaseManager {
             ")",
 
              "CREATE TABLE IF NOT EXISTS products (" +
-             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-             "product_name VARCHAR(64) NOT NULL UNIQUE, " +
+             "id VARCHAR(36) PRIMARY KEY, " +
+             "product_name VARCHAR(14) NOT NULL UNIQUE, " +
              "category VARCHAR(64) NOT NULL CHECK (category IN ('Savings', 'Limited Access','Fixed Deposits')), " +
              "interest_rate DECIMAL(4,2) NOT NULL, " +
              "min_operating_balance DECIMAL(15,2) NOT NULL , " +

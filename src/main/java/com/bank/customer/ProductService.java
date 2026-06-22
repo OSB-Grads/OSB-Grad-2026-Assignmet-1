@@ -35,15 +35,15 @@ public class ProductService {
     public List<AccountDTO> getAllAccountsForProductCategory(String category)
             throws SQLException {
 
-        List<Long> productIds = Collections.unmodifiableList(productRepository
+        List<String> productIds = Collections.unmodifiableList(productRepository
                 .findAllByProductCategory(category)
                 .stream()
-                .map(row -> (Long) row.get("id"))
+                .map(row -> (String) row.get("id"))
                 .toList());
 
         List<AccountDTO> accounts = new ArrayList<>();
 
-        for (Long productId : productIds) {
+        for (String productId : productIds) {
 
             List<Map<String, Object>> accountRows =
                     accountRepository.findAccountsByProductId(productId);
@@ -78,10 +78,10 @@ public class ProductService {
      }
      public String createProduct(String productCategory, BigDecimal minOperatingBalance, BigDecimal interestRate, Long termMonths) {
          try{
-             String productName = ProductNameGenerator.productIdGenerate(); //UUID productNumber generate
+             String productName = ProductNameGenerator.generateProductName; //productName generate
              ProductDTO productDto = new ProductDTO(null,productName,productCategory,interestRate,minOperatingBalance,termMonths);
              Map<String,Object> productRow = ProductMapper.toRow(productDto);
-             String productId = productRepository.insert(productRow);
+             productRepository.insert(productRow);
              loggerService.log(
                      "PRODUCT_CREATION",
                      "New Product created with Product Number: "+productName +" successfully",
