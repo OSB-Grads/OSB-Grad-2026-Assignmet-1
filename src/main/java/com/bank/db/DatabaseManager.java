@@ -177,7 +177,7 @@ public class DatabaseManager {
             
             // Transactions table
             "CREATE TABLE IF NOT EXISTS transactions (" +
-            "id VARCHAR(36) PRIMARY KEY AUTOINCREMENT, "
+            "id VARCHAR(36) PRIMARY KEY , "
             +"customer_id VARCHAR(36) NOT NULL, " +
             "from_account_id VARCHAR(14), " +
             "to_account_id VARCHAR(14), " +
