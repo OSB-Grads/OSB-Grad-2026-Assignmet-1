@@ -57,7 +57,7 @@ public class InboxService {
             throw e;
         }
     }
-   public void deleteById(Long id) {
+   public void deleteById(String id) {
     try {
         inboxRepository.deleteById(id);
 
