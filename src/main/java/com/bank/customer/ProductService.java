@@ -78,7 +78,7 @@ public class ProductService {
      }
      public String createProduct(String productCategory, BigDecimal minOperatingBalance, BigDecimal interestRate, Long termMonths) {
          try{
-             String productName =ProductNameGenerate.generateProductName(); //UUID productNumber generate
+             String productName = ProductIdGenerator.productIdGenerate(); //UUID productNumber generate
              ProductDTO productDto = new ProductDTO(null,productName,productCategory,interestRate,minOperatingBalance,termMonths);
              Map<String,Object> productRow = ProductMapper.toRow(productDto);
              String productId = productRepository.insert(productRow);
