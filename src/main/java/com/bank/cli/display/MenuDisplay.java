@@ -33,6 +33,7 @@ import com.bank.exception.*;
 import com.bank.orchestrator.AccountOpeningOrchestrator;
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
+import com.bank.orchestrator.PaymentOrchestrator;
 import com.bank.service.TransactionService;
 import com.bank.session.Session;
 import com.bank.orchestrator.SignupOrchestrator;
@@ -53,6 +54,7 @@ public class MenuDisplay {
     private final AccountsService accountsService;
     private final AuthService authService;
     private final TransactionService transactionService;
+    private final PaymentOrchestrator paymentOrchestrator;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -63,6 +65,7 @@ public class MenuDisplay {
         this.transferOrchestrator = new TransferOrchestrator();
         this.authService=new AuthService();
         this.transactionService = new TransactionService();
+        this.paymentOrchestrator=new PaymentOrchestrator();
     }
 
     /**
@@ -333,8 +336,12 @@ public class MenuDisplay {
 
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");
-        // TODO: Show user's accounts, get account selection and amount
-        System.out.println("TODO: Implement deposit logic using TransactionOrchestrator");
+        try{
+        paymentOrchestrator.processDeposits();
+        }
+        catch(SQLException e){
+        System.out.println("failed to process the Deposit");
+        }
     }
 
     private void handleWithdraw() {
