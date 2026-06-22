@@ -11,6 +11,7 @@ import com.bank.exception.SameAccountTransferException;
 import com.bank.exception.UserAlreadyExistsException;
 import com.bank.exception.UserCreationFailedException;
 
+
 import java.sql.SQLException;
 import java.util.List;
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ import com.bank.orchestrator.TransferOrchestrator;
 import com.bank.orchestrator.PaymentOrchestrator;
 import com.bank.service.TransactionService;
 import com.bank.session.Session;
+import com.bank.utils.UuidGeneratorUtil;
 import com.bank.orchestrator.SignupOrchestrator;
 import com.bank.orchestrator.TransferOrchestrator;
 
@@ -56,6 +58,7 @@ public class MenuDisplay {
     private final TransactionService transactionService;
     private final PaymentOrchestrator paymentOrchestrator;
     
+
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
         this.productService = new ProductService();
@@ -63,7 +66,7 @@ public class MenuDisplay {
         this.signupOrchestrator = new SignupOrchestrator();
         this.accountsService = new AccountsService();
         this.transferOrchestrator = new TransferOrchestrator();
-        this.authService=new AuthService();
+        this.authService = new AuthService();
         this.transactionService = new TransactionService();
         this.paymentOrchestrator=new PaymentOrchestrator();
     }
@@ -73,13 +76,13 @@ public class MenuDisplay {
      */
     public void showMainMenu() throws SQLException {
         boolean running = true;
-
         while (running) {
             System.out.println("\n=== MAIN MENU ===");
             System.out.println("1. Login");
             System.out.println("2. Create Customer Profile");
             System.out.println("3. Exit");
             System.out.print("Please select an option (1-3): ");
+          
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
@@ -98,7 +101,8 @@ public class MenuDisplay {
                     default:
                         System.out.println("Invalid option. Please select 1, 2, or 3.");
                 }
-            } catch (NumberFormatException | SQLException | UserCreationFailedException | UserAlreadyExistsException e) {
+            } catch (NumberFormatException | SQLException | UserCreationFailedException
+                    | UserAlreadyExistsException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
@@ -106,7 +110,8 @@ public class MenuDisplay {
 
     /**
      * Display the customer menu after a CUSTOMER logs in.
-     * @throws SQLException 
+     * 
+     * @throws SQLException
      */
     public void showCustomerMenu() throws SQLException {
         while (session.getCustomerId() != null) {
@@ -156,8 +161,8 @@ public class MenuDisplay {
                     default:
                         System.out.println("Invalid option. Please select 1-9.");
                 }
-            } catch (NumberFormatException | NegativeAmountException | AccountLockedException |
-                     SameAccountTransferException | InsufficientFundsException e) {
+            } catch (NumberFormatException | NegativeAmountException | AccountLockedException
+                    | SameAccountTransferException | InsufficientFundsException e) {
                 System.out.println("Invalid input. Please enter a number.");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -169,7 +174,6 @@ public class MenuDisplay {
      * Display the admin menu after an ADMIN logs in.
      */
     public void showAdminMenu() {
-      
 
         while (session.getCustomerId() != null) {
             System.out.println("\n=== ADMIN MENU ===");
@@ -220,23 +224,22 @@ public class MenuDisplay {
         String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-         Map<String,Object> res= authService.login(username,password);
+        Map<String, Object> res = authService.login(username, password);
 
-        session.login((Long.parseLong(res.get("customerId").toString())), (Role)res.get("role"));
+        session.login((Long.parseLong(res.get("customerId").toString())), (Role) res.get("role"));
         if (session.getRole() == Role.ADMIN) {
             System.out.println("\n\n--------------------------------------------------");
-            System.out.println("Welcome "+username);
+            System.out.println("Welcome " + username);
             System.out.println("--------------------------------------------------");
             showAdminMenu();
         } else {
             System.out.println("\n\n--------------------------------------------------");
-            System.out.println("Welcome "+username);
+            System.out.println("Welcome " + username);
             System.out.println("--------------------------------------------------");
             showCustomerMenu();
         }
 
     }
-
 
     private void handleCreateProfile() throws SQLException, UserCreationFailedException, UserAlreadyExistsException {
 
@@ -275,8 +278,8 @@ public class MenuDisplay {
         String nationalId = scanner.nextLine().trim();
 
         try {
-            signupOrchestrator.signup(username,firstName,lastName,dateOfBirth,email,phone,
-                        address,nationalId,password);
+            signupOrchestrator.signup(username, firstName, lastName, dateOfBirth, email, phone,
+                    address, nationalId, password);
         } catch (UserCreationFailedException | UserAlreadyExistsException | SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -286,53 +289,53 @@ public class MenuDisplay {
     private void handleOpenAccount() {
         System.out.println("\n=== OPEN BANK ACCOUNT ===");
 
-           System.out.println("1. Savings");
-           System.out.println("2. Fixed Deposit");
-           System.out.println("3. Limited Access");
-           System.out.println("Select a Product Category");
-           
-           int ch=scanner.nextInt();
-           System.out.println();
-          
-            List<ProductDTO> productList=null;
-            int i;
-            int productChoice = 0;
-            AccountDTO Acc;
-            String category;
-    try{
-           switch(ch){
-            case 1:
-               productList = productService.listProductsByCategory("Savings");
-            break;
-            case 2:
-               productList = productService.listProductsByCategory("Fixed Deposits");
-            break;
-            case 3:
-               productList = productService.listProductsByCategory("Limited Access");
-            break;
-            default:
-              System.out.println("Invalid choice");
-            return;
-           }
-           
-             i=1;
-             for(ProductDTO PrintProducts: productList){
-                System.out.println(i +"."+ PrintProducts.getProductName());
+        System.out.println("1. Savings");
+        System.out.println("2. Fixed Deposit");
+        System.out.println("3. Limited Access");
+        System.out.println("Select a Product Category");
+
+        int ch = scanner.nextInt();
+        System.out.println();
+
+        List<ProductDTO> productList = null;
+        int i;
+        int productChoice = 0;
+        AccountDTO Acc;
+        String category;
+        try {
+            switch (ch) {
+                case 1:
+                    productList = productService.listProductsByCategory("Savings");
+                    break;
+                case 2:
+                    productList = productService.listProductsByCategory("Fixed Deposits");
+                    break;
+                case 3:
+                    productList = productService.listProductsByCategory("Limited Access");
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+                    return;
+            }
+
+            i = 1;
+            for (ProductDTO PrintProducts : productList) {
+                System.out.println(i + "." + PrintProducts.getProductName());
                 i++;
-             }
-             System.out.println("select a product");
-             productChoice=scanner.nextInt();
-             scanner.nextLine();
-              
-              Long accNo= accountsService.createAccount(session.getCustomerId(),productList.get(productChoice-1).getId());
-              System.out.println("Account Created Suceesfully. Your Account Number is:"+accNo);
+            }
+            System.out.println("select a product");
+            productChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            Long accNo = accountsService.createAccount(session.getCustomerId(),
+                    productList.get(productChoice - 1).getId());
+            System.out.println("Account Created Suceesfully. Your Account Number is:" + accNo);
         }
-        
-        catch(SQLException e){
-               System.out.println("unable to fetch the products");
+
+        catch (SQLException e) {
+            System.out.println("unable to fetch the products");
         }
     }
-
 
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");
@@ -350,15 +353,17 @@ public class MenuDisplay {
         System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
     }
 
-    private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException, InsufficientFundsException, SQLException {
+    private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException,
+            InsufficientFundsException, SQLException {
         System.out.println("\n=== TRANSFER MONEY ===");
         List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
         System.out.println("Customer ID: " + session.getCustomerId());
         System.out.println("Accounts returned: " + accounts.size());
         int count = 1;
         System.out.println("Select source Account");
-        for(Map<String ,Object> account : accounts) {
-            System.out.println(count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
+        for (Map<String, Object> account : accounts) {
+            System.out.println(
+                    count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
         }
         int option1 = scanner.nextInt();
         scanner.nextLine();
@@ -366,8 +371,9 @@ public class MenuDisplay {
 
         count = 1;
         System.out.println("Select destination Account");
-        for(Map<String ,Object> account : accounts) {
-            System.out.println(count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
+        for (Map<String, Object> account : accounts) {
+            System.out.println(
+                    count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
 
         }
         int option2 = scanner.nextInt();
@@ -376,7 +382,8 @@ public class MenuDisplay {
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
         scanner.nextLine();
-        transferOrchestrator.transfer(session.getCustomerId(), sourceAccountId,destinationAccountId, amountToBeTransferred);
+        transferOrchestrator.transfer(session.getCustomerId(), sourceAccountId, destinationAccountId,
+                amountToBeTransferred);
         accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
         System.out.println("\n Transfer successful! Updated balances:");
         for (Map<String, Object> account : accounts) {
@@ -398,65 +405,181 @@ public class MenuDisplay {
         balances.put("Fixed Deposits", BigDecimal.ZERO);
         balances.put("Limited Access", BigDecimal.ZERO);
 
+        // Calculate balances
         for (Map<String, Object> account : accounts) {
 
             String category = (String) account.get("category");
-            BigDecimal balance =BigDecimal.valueOf(((Number) account.get("balance")).doubleValue());
 
-            balances.put("Total Balance",balances.get("Total Balance").add(balance));
-            balances.put(category,balances.getOrDefault(category, BigDecimal.ZERO).add(balance));
+            BigDecimal balance = BigDecimal.valueOf(((Number) account.get("balance")).doubleValue());
+            balances.put("Total Balance", balances.get("Total Balance").add(balance));
+            balances.put(category, balances.getOrDefault(category, BigDecimal.ZERO).add(balance));
         }
 
-        System.out.println("Total Balance: $" + balances.get("Total Balance"));
-        char ch='A';
-            System.out.println("\n"+ch+") Savings Accounts $" + balances.get("Savings"));
-            int count = 1;
-            ch++;
-            for (Map<String, Object> account : accounts) {
+        while (true) {
 
-                if ("Savings".equals(account.get("category"))) {
+            System.out.println("\n=== YOUR ACCOUNTS ===");
+            System.out.println(
+                    "Total Balance: $" + balances.get("Total Balance"));
 
-                    System.out.println(count + ") Product Name: "+ account.get("product_name"));
-                    System.out.println("   Account Number: "+ account.get("id"));
-                    System.out.println("   Balance: $"+ account.get("balance"));
-                    count++;
+            Map<Integer, Map<String, Object>> optionMap = new HashMap<>();
+
+            String[] categories = {
+                    "Savings",
+                    "Limited Access",
+                    "Fixed Deposits"
+            };
+
+            char section = 'A';
+            int optionNumber = 1;
+
+            for (String category : categories) {
+
+                System.out.println("\n" + section + ") " + category + " Accounts $"
+                        + balances.getOrDefault(category, BigDecimal.ZERO));
+
+                for (Map<String, Object> account : accounts) {
+
+                    if (category.equals(account.get("category"))) {
+
+                        System.out.println(
+                                optionNumber + ") Product Name: "
+                                        + account.get("product_name"));
+
+                        System.out.println(
+                                "   Account Number: "
+                                        + account.get("id"));
+
+                        System.out.println(
+                                "   Balance: $"
+                                        + account.get("balance"));
+
+                        optionMap.put(optionNumber, account);
+
+                        optionNumber++;
+                    }
                 }
+
+                section++;
             }
-        
-            System.out.println("\n"+ch+") Limited Access Accounts $"+ balances.get("Limited Access"));
-            ch++;
-            for (Map<String, Object> account : accounts) {
-                if ("Limited Access".equals(account.get("category"))) {
 
-                    System.out.println(count + ") Product Name: "+ account.get("product_name"));
-                    System.out.println("   Account Number: "+ account.get("id"));
-                    System.out.println("   Balance: $"+ account.get("balance"));
-                    count++;
-                }
+            System.out.println("\nSelect Product Number to View Details");
+            System.out.println("0. Back to Customer Menu");
+            System.out.println("-1. Exit");
+            System.out.print("Choice: ");
+
+            int selectedOption = scanner.nextInt();
+            scanner.nextLine();
+
+            if (selectedOption == -1) {
+                System.out.println("Thank you for using CLI Banking Application!");
+                System.exit(0);
             }
-             System.out.println("\n"+ch+") Fixed Deposit Accounts $"+ balances.get("Fixed Deposits"));
-            ch++;
 
-            for (Map<String, Object> account : accounts) {
-                if ("Fixed Deposits".equals(account.get("category"))) {
+            if (selectedOption == 0) {
+                return; // back to customer menu
+            }
 
-                    System.out.println(count + ") Product Name: "+ account.get("product_name"));
-                    System.out.println("   Account Number: "+ account.get("id"));
-                    System.out.println("   Balance: $"+ account.get("balance"));
-                    count++;
+            Map<String, Object> selectedAccount = optionMap.get(selectedOption);
+
+            if (selectedAccount == null) {
+                System.out.println("Invalid Product Number");
+                continue;
+            }
+
+            System.out.println("\n=== ACCOUNT DETAILS ===");
+
+            System.out.println(
+                    "Product Name: "
+                            + selectedAccount.get("product_name"));
+
+            System.out.println(
+                    "Account Number: "
+                            + selectedAccount.get("id"));
+
+            System.out.println(
+                    "Category: "
+                            + selectedAccount.get("category"));
+
+            System.out.println(
+                    "Balance: $"
+                            + selectedAccount.get("balance"));
+
+            Long accountId = ((Number) selectedAccount.get("id")).longValue();
+
+            List<TransactionDTO> transactions = transactionService.listAccountTransactions(accountId);
+
+            System.out.println("\n=== TRANSACTIONS ===");
+
+            System.out.printf(
+                    "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                    "TRANSACTION ID",
+                    "FROM ACCOUNT",
+                    "TO ACCOUNT",
+                    "TYPE",
+                    "AMOUNT",
+                    "STATUS",
+                    "CREATED AT");
+
+            System.out.println(
+                    "-----------------------------------------------------------------------------------------------------------------");
+
+            for (TransactionDTO transaction : transactions) {
+
+                System.out.printf(
+                        "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                        transaction.getId(),
+                        transaction.getFromAccountId() == null
+                                ? "-"
+                                : transaction.getFromAccountId(),
+                        transaction.getToAccountId() == null
+                                ? "-"
+                                : transaction.getToAccountId(),
+                        transaction.getTransactionType(),
+                        transaction.getAmount(),
+                        transaction.getStatus(),
+                        transaction.getCreatedAt());
+            }
+
+            System.out.println(
+                    "-----------------------------------------------------------------------------------------------------------------");
+
+            while (true) {
+
+                System.out.println("\nOptions:");
+                System.out.println("1. Back to Accounts List");
+                System.out.println("0. Back to Customer Menu");
+                System.out.println("-1. Exit");
+                System.out.print("Choice: ");
+
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                if (choice == 1) {
+                    break; // account list is shown again
                 }
+
+                if (choice == 0) {
+                    return; // customer menu
+                }
+
+                if (choice == -1) {
+                    System.out.println("Thank you for using CLI Banking Application!");
+                    System.exit(0);
+                }
+
+                System.out.println("Invalid Option");
             }
         }
-   
+    }
+
     private void handleViewTransactionHistory() {
         System.out.println("\n=== TRANSACTION HISTORY ===\n");
         List<TransactionDTO> transactions = transactionService.listCustomerTransactions(session.getCustomerId());
         System.out.printf(
                 "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
-                "TRANSACTION ID", "FROM ACCOUNT", "TO ACCOUNT", "TYPE", "AMOUNT", "STATUS", "CREATED AT"
-        );
-        System.out.println("----------------------------------------------------------------------------------------------------------------------");
-
+                "TRANSACTION ID", "FROM ACCOUNT", "TO ACCOUNT", "TYPE", "AMOUNT", "STATUS", "CREATED AT");
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------------------------");
 
         for (TransactionDTO transaction : transactions) {
             System.out.printf(
@@ -467,10 +590,10 @@ public class MenuDisplay {
                     transaction.getTransactionType(),
                     transaction.getAmount(),
                     transaction.getStatus(),
-                    transaction.getCreatedAt()
-            );
+                    transaction.getCreatedAt());
         }
-        System.out.println("----------------------------------------------------------------------------------------------------------------------");
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------------------------");
     }
 
     private void handleRequestLoan() {

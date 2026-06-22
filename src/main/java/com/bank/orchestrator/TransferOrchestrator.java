@@ -47,6 +47,8 @@ public class TransferOrchestrator {
                     customerId,
                     sourceAccountId,
                     destinationAccountId,
+                    "TRANSFER",
+                    "Internal Transfer",
                     amount
             );
 

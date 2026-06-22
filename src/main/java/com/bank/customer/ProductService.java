@@ -8,8 +8,10 @@ import com.bank.mapper.AccountMapper;
 import com.bank.enums.log.LogType;
 import com.bank.exception.ProductsNotFoundForCategoryException;
 import com.bank.mapper.ProductMapper;
+import com.bank.utils.*;
 import com.bank.session.Session;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,6 +74,34 @@ public class ProductService {
          {
              loggerService.log("PRODUCT_LIST_BY_CATEGORY","Accessing all products based on product category is not succesfull",LogType.FAILURE);
              throw e;
+         }
+     }
+     public String createProduct(String productCategory, BigDecimal minOperatingBalance, BigDecimal interestRate, Long termMonths) {
+         try{
+             String productName = ProductIdGenerator.productIdGenerate(); //UUID productNumber generate
+             ProductDTO productDto = new ProductDTO(null,productName,productCategory,interestRate,minOperatingBalance,termMonths);
+             Map<String,Object> productRow = ProductMapper.toRow(productDto);
+             String productId = productRepository.insert(productRow);
+             loggerService.log(
+                     "PRODUCT_CREATION",
+                     "New Product created with Product Number: "+productName +" successfully",
+                     LogType.SUCCESS
+             );
+             return productName;
+         } catch (SQLException e) {
+             loggerService.log(
+                     "PRODUCT_CREATION",
+                     "Failed to create Product "+e.getMessage(),
+                     LogType.FAILURE
+             );
+             throw new RuntimeException("Failed to Create Product",e);
+         } catch (Exception e) {
+             loggerService.log(
+                     "PRODUCT_CREATION",
+                     "Product Creation operation failed "+e.getMessage(),
+                     LogType.ERROR
+             );
+             throw new RuntimeException("Product creation operation failed ",e);
          }
      }
 }
