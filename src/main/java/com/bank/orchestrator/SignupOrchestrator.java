@@ -31,7 +31,7 @@ public class SignupOrchestrator {
             String address, String nationalId, String password) throws UserCreationFailedException, UserAlreadyExistsException, SQLException {
                 db.startTransaction();
                 String customerId= authService.signup(username,password);
-                customerService.createCustomer(Long.valueOf(customerId),firstName,lastName,dateOfBirth,email,phone,address,nationalId);
+                customerService.createCustomer(customerId,firstName,lastName,dateOfBirth,email,phone,address,nationalId);
                 db.endTransaction();
         }
     }

@@ -31,7 +31,7 @@ public class AuthService {
             row.put("username", username);
             row.put("password_hash", PasswordUtil.hashPassword(password)); //password_hash is just a variable where I'm storing password.
             row.put("role", "CUSTOMER");
-            String id = String.valueOf(authRepository.insert(row));
+            String id = authRepository.insert(row);
 
             loggerService.log(
                     "SIGNUP",

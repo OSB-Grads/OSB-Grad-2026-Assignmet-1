@@ -13,7 +13,7 @@ package com.bank.dto;
  * should never leak into layers that only need profile data.</p>
  */
 public class CustomerDTO {
-    private Long id;
+    private String id;
     private String username;
     private String role;          // CUSTOMER or ADMIN
     private String firstName;
@@ -30,7 +30,7 @@ public class CustomerDTO {
     public CustomerDTO() {}
 
     /** Constructor with all fields. */
-    public CustomerDTO(Long id, String firstName, String lastName,
+    public CustomerDTO(String id, String firstName, String lastName,
                        String dateOfBirth, String email, String phone, String address,
                        String nationalId, String createdAt, String updatedAt) {
         this.id = id;
@@ -45,11 +45,11 @@ public class CustomerDTO {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
