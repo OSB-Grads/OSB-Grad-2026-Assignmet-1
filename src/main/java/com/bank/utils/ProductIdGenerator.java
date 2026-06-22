@@ -4,14 +4,14 @@ import java.security.SecureRandom;
 
 public class ProductIdGenerator {
 
-    private static final String CHARS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final String CHARS ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static String productIdGenerate() {
         SecureRandom secureRandom = new SecureRandom();
 
         StringBuilder sb = new StringBuilder("OSBP");
 
-        for (int i = 0; i <=6; i++) {
+        for (int i = 0; i<6; i++) {
             sb.append(CHARS.charAt(secureRandom.nextInt(CHARS.length())));
         }
 
