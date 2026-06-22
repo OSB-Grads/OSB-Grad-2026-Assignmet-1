@@ -4,6 +4,7 @@ import com.bank.db.DatabaseManager;
 import com.bank.dto.AccountDTO;
 import com.bank.exception.DatabaseOperationException;
 import com.bank.mapper.AccountMapper;
+import com.bank.utils.UuidGeneratorUtil;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,7 +18,7 @@ public class AccountRepository {
         this.db = DatabaseManager.getInstance();
     }
 
-    public Map<String, Object> findAccountById(Long id) {
+    public Map<String, Object> findAccountById(String id) {
 
         try {
 
@@ -33,9 +34,6 @@ public class AccountRepository {
         }
     }
 
-    public Map<String,Object> findProductByAccountNumber(String accountNumber){
-        return this.findAccountById(Long.parseLong(accountNumber));
-    }
 
     public AccountDTO findAccountByAccountNumber(String accountNumber){
         try {
@@ -57,7 +55,7 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> findAccountsByCustomerId(Long customerId) {
+    public List<Map<String, Object>> findAccountsByCustomerId(String customerId) {
 
         try {
 
@@ -74,7 +72,7 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> findAccountsByProductId(Long productId) {
+    public List<Map<String, Object>> findAccountsByProductId(String productId) {
 
         try {
 
@@ -92,18 +90,21 @@ public class AccountRepository {
         }
     }
 
-    public Long insert(Map<String, Object> accountFields) {
+    public String insert(Map<String, Object> accountFields) {
 
         try {
+            String accId=UuidGeneratorUtil.generateUuid();
+            accountFields.put("id", accId);
             List<Map<String, Object>> rows = db.query(
-                    " INSERT INTO accounts(  account_number,customer_id,product_id,balance,status,is_locked) VALUES (?,?, ?, ?, ?, ?)",
+                    " INSERT INTO accounts(id,account_number,customer_id,product_id,balance,status,is_locked) VALUES (?,?, ?, ?, ?, ?)",
+                    accountFields.get("id"),
                     accountFields.get("account_number"),
                     accountFields.get("customer_id"),
                     accountFields.get("product_id"),
                     accountFields.get("balance"),
                     accountFields.get("status"),
                     accountFields.get("is_locked"));
-                return ((Number) rows.get(0).get("generated_key")).longValue();
+                return ((String) rows.get(0).get("generated_key"));
 
         } catch (SQLException e) {
 
@@ -134,7 +135,7 @@ public class AccountRepository {
         }
     }
 
-    public int lockAccount(Long id) {
+    public int lockAccount(String id) {
 
         try {
 
@@ -151,7 +152,7 @@ public class AccountRepository {
         }
     }
 
-    public int unlockAccount(Long id) {
+    public int unlockAccount(String id) {
 
         try {
 
@@ -185,11 +186,11 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> getAccountsWithProductByCustomerId(Long id) {
+    public List<Map<String, Object>> getAccountsWithProductByCustomerId(String id) {
         try {
             List<Map<String, Object>> rows = db.query(
                     "SELECT " +
-                            "a.id, a.customer_id, a.product_id, " +
+                            "a.id, a.account_number,a.customer_id, a.product_id, " +
                             "a.balance, a.status, a.is_locked, " +
                             "p.product_name, p.category " +
                             "FROM accounts a " +

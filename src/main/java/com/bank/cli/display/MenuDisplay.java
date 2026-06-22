@@ -327,7 +327,7 @@ public class MenuDisplay {
             productChoice = scanner.nextInt();
             scanner.nextLine();
 
-            Long accNo = accountsService.createAccount(session.getCustomerId(),
+            String accNo = accountsService.createAccount(session.getCustomerId(),
                     productList.get(productChoice - 1).getId());
             System.out.println("Account Created Suceesfully. Your Account Number is:" + accNo);
         }
@@ -446,7 +446,7 @@ public class MenuDisplay {
 
                         System.out.println(
                                 "   Account Number: "
-                                        + account.get("id"));
+                                        + account.get("account_number"));
 
                         System.out.println(
                                 "   Balance: $"
@@ -493,7 +493,7 @@ public class MenuDisplay {
 
             System.out.println(
                     "Account Number: "
-                            + selectedAccount.get("id"));
+                            + selectedAccount.get("account_number"));
 
             System.out.println(
                     "Category: "
@@ -503,7 +503,7 @@ public class MenuDisplay {
                     "Balance: $"
                             + selectedAccount.get("balance"));
 
-            Long accountId = ((Number) selectedAccount.get("id")).longValue();
+            String accountId = ((String) selectedAccount.get("account_number"));
 
             List<TransactionDTO> transactions = transactionService.listAccountTransactions(accountId);
 
