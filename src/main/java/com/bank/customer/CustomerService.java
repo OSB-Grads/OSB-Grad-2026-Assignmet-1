@@ -89,7 +89,7 @@ public class CustomerService {
      * Update the caller's own profile (email, phone, address).
      * @return the updated customer
      */
-    public Map<String, Object> updateProfile(
+    public CustomerDTO updateProfile(
             Long id,
             String firstName,
             String lastName,
@@ -102,47 +102,50 @@ public class CustomerService {
             throw new IllegalArgumentException("Customer ID cannot be null");
         }
 
-        Map<String, Object> customer = repository.findById(id);
+        Map<String, Object> row = repository.findById(id);
 
-        System.out.println(customer);
-
-        if (customer == null) {
+        if (row == null) {
             throw new RuntimeException("Customer not found with id: " + id);
         }
 
+        CustomerDTO customer = CustomerMapper.toDTO(row);
+
         if (firstName != null) {
             ValidationUtils.validateName(firstName, "First Name");
-            customer.put("first_name", firstName.trim());
+            customer.setFirstName(firstName.trim());
         }
 
         if (lastName != null) {
             ValidationUtils.validateName(lastName, "Last Name");
-            customer.put("last_name", lastName.trim());
+            customer.setLastName(lastName.trim());
         }
 
         if (email != null) {
             ValidationUtils.validateEmail(email);
-            customer.put("email", email.trim());
+            customer.setEmail(email.trim());
         }
 
         if (phone != null) {
             ValidationUtils.validatePhone(phone);
-            customer.put("phone", phone.trim());
+            customer.setPhone(phone.trim());
         }
 
         if (address != null) {
             ValidationUtils.validateAddress(address);
-            customer.put("address", address.trim());
+            customer.setAddress(address.trim());
         }
 
         try {
-            repository.update(id, customer);
+            Map<String, Object> updatedRow = CustomerMapper.toRow(customer);
+            repository.update(id, updatedRow);
             loggerService.log(
                     "UPDATE_PROFILE",
                     "Customer profile updated successfully",
                     LogType.SUCCESS
             );
-            return repository.findById(id);
+
+            Map<String, Object> savedRow = repository.findById(id);
+            return CustomerMapper.toDTO(savedRow);
         } catch (SQLException e) {
             loggerService.log(
                     "UPDATE_PROFILE",

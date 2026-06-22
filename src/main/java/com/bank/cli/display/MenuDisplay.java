@@ -3,8 +3,8 @@ package com.bank.cli.display;
 import com.bank.customer.AccountsService;
 import com.bank.customer.AuthService;
 import com.bank.customer.CustomerService;
-import com.bank.db.repository.CustomerRepository;
 import com.bank.dto.AccountDTO;
+import com.bank.dto.CustomerDTO;
 import com.bank.dto.TransactionDTO;
 import com.bank.enums.Role;
 import com.bank.exception.InsufficientFundsException;
@@ -59,7 +59,6 @@ public class MenuDisplay {
     private final AuthService authService;
     private final TransactionService transactionService;
     private final CustomerService customerService;
-    private final CustomerRepository customerRepository;
     
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -71,7 +70,6 @@ public class MenuDisplay {
         this.authService=new AuthService();
         this.transactionService = new TransactionService();
         this.customerService=new CustomerService();
-        this.customerRepository=new CustomerRepository();
     }
 
     /**
@@ -553,7 +551,7 @@ public class MenuDisplay {
                         System.out.println("Invalid option ignored: " + option);
                 }
             }
-            Map<String, Object> updatedProfile =
+            CustomerDTO updatedProfile =
                     customerService.updateProfile(
                             customerId,
                             firstName,
@@ -565,11 +563,11 @@ public class MenuDisplay {
 
             System.out.println("\nProfile updated successfully!");
             System.out.println("--------------------------------");
-            System.out.println("First Name : " + updatedProfile.get("first_name"));
-            System.out.println("Last Name  : " + updatedProfile.get("last_name"));
-            System.out.println("Email      : " + updatedProfile.get("email"));
-            System.out.println("Phone      : " + updatedProfile.get("phone"));
-            System.out.println("Address    : " + updatedProfile.get("address"));
+            System.out.println("First Name : " + updatedProfile.getFirstName());
+            System.out.println("Last Name  : " + updatedProfile.getLastName());
+            System.out.println("Email      : " + updatedProfile.getEmail());
+            System.out.println("Phone      : " + updatedProfile.getPhone());
+            System.out.println("Address    : " + updatedProfile.getAddress());
             System.out.println("--------------------------------");
 
         } catch (NumberFormatException e) {
