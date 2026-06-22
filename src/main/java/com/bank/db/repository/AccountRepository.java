@@ -74,7 +74,7 @@ public class AccountRepository {
         }
     }
 
-    public List<Map<String, Object>> findAccountsByProductId(Long productId) {
+    public List<Map<String, Object>> findAccountsByProductId(String productId) {
 
         try {
 
