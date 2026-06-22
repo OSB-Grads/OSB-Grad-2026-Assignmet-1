@@ -139,7 +139,7 @@ public class DatabaseManager {
         String[] createTableQueries = {
             // Customers table — profile data only, no credentials
             "CREATE TABLE IF NOT EXISTS customers (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
             "first_name VARCHAR(100) NOT NULL, " +
             "last_name VARCHAR(100) NOT NULL, " +
             "date_of_birth DATE NOT NULL,"+
