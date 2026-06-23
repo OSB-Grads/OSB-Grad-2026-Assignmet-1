@@ -155,4 +155,34 @@ public class TransactionService {
             throw e;
         }
     }
+    public void updateTransaction(String id, String status) {
+        try {
+            Map<String,Object> statusInfo = new HashMap<>();
+            statusInfo.put("status", status);
+            int rowAffected = transactionRepository.update(id, statusInfo);
+            if(rowAffected == 0) {
+                loggerService.log(
+                        "TRANSFER",
+                        "Failed to update transaction",
+                        LogType.FAILURE
+                );
+                throw new TransactionFailedException("Failed to update transaction");
+            }
+            loggerService.log(
+                    "TRANSFER",
+                    "Transfer transaction updated successfully",
+                    LogType.SUCCESS
+            );
+        } catch (Exception e) {
+            loggerService.log(
+                    "TRANSFER",
+                    "Transfer transaction update failed: "
+                            + e.getMessage(),
+                    LogType.FAILURE
+            );
+
+            throw new TransactionFailedException(
+                    "Failed to create transaction", e);
+        }
+    }
 }
