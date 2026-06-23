@@ -5,6 +5,7 @@ import com.bank.enums.log.LogType;
 import com.bank.exception.DatabaseOperationException;
 import com.bank.mapper.InboxMapper;
 import com.bank.session.Session;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class InboxService {
 
     public Long createInboxMessage(String correlationId,
                                    String messageType,
-                                   String payload,
+                                   Map<String,Object> payload,
                                    String status,
                                    String reason) throws SQLException
     {

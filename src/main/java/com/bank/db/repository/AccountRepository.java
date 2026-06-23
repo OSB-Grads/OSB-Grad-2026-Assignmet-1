@@ -114,7 +114,7 @@ public class AccountRepository {
         }
     }
 
-    public int update(Long id, Map<String, Object> changedFields) {
+    public int update(String id, Map<String, Object> changedFields) {
 
         try {
             List<Map<String, Object>> result = db.query(

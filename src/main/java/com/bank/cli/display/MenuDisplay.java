@@ -374,7 +374,7 @@ public class MenuDisplay {
         }
         int option1 = scanner.nextInt();
         scanner.nextLine();
-        Long sourceAccountId = ((Number) accounts.get(option1 - 1).get("id")).longValue();
+        String sourceAccountId = ((String) accounts.get(option1 - 1).get("id"));
 
         count = 1;
         System.out.println("Select destination Account");
@@ -385,7 +385,7 @@ public class MenuDisplay {
         }
         int option2 = scanner.nextInt();
         scanner.nextLine();
-        Long destinationAccountId = ((Number) accounts.get(option2 - 1).get("id")).longValue();
+        String destinationAccountId = ((String) accounts.get(option2 - 1).get("id"));
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
         scanner.nextLine();
@@ -612,7 +612,7 @@ public class MenuDisplay {
     private void handleUpdateProfile() {
         System.out.println("\n=== UPDATE PROFILE ===");
         try {
-            Long customerId = session.getCustomerId();
+            String customerId = session.getCustomerId();
 
             if (customerId == null) {
                 System.out.println("You must be logged in to update profile.");
