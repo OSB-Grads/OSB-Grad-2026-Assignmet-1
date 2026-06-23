@@ -32,6 +32,7 @@ public class TransactionService {
             String toAccountId,
             String transactionType,
             String description,
+            String status,
             BigDecimal amount) {
 
         try {
@@ -44,7 +45,7 @@ public class TransactionService {
             transactionFields.put("transaction_type", transactionType);
             transactionFields.put("amount", amount);
             transactionFields.put("description", description);
-            transactionFields.put("status", "COMPLETED");
+            transactionFields.put("status", status);
 
             Long transactionId =
                     transactionRepository.insert(transactionFields);
