@@ -75,5 +75,5 @@ public class PaymentOrchestrator {
        }
        db.endTransaction();
      }
-     //TODO: revisit account identifier usage after UUID/account-number migration is finalized.
+     
 }
