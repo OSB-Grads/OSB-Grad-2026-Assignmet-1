@@ -63,7 +63,7 @@ public class MenuDisplay {
     private final TransactionService transactionService;
     private final CustomerService customerService;
     private final PaymentOrchestrator paymentOrchestrator;
-    
+
 
     public MenuDisplay() {
         this.scanner = new Scanner(System.in);
@@ -89,7 +89,7 @@ public class MenuDisplay {
             System.out.println("2. Create Customer Profile");
             System.out.println("3. Exit");
             System.out.print("Please select an option (1-3): ");
-          
+
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
@@ -179,8 +179,9 @@ public class MenuDisplay {
 
     /**
      * Display the admin menu after an ADMIN logs in.
+     * @throws SQLException 
      */
-    public void showAdminMenu() {
+    public void showAdminMenu() throws SQLException {
 
         while (session.getCustomerId() != null) {
             System.out.println("\n=== ADMIN MENU ===");
@@ -233,7 +234,7 @@ public class MenuDisplay {
         String password = scanner.nextLine().trim();
         Map<String, Object> res = authService.login(username, password);
 
-        session.login((Long.parseLong(res.get("customerId").toString())), (Role) res.get("role"));
+        session.login((res.get("customerId").toString()), (Role) res.get("role"));
         if (session.getRole() == Role.ADMIN) {
             System.out.println("\n\n--------------------------------------------------");
             System.out.println("Welcome " + username);
@@ -347,10 +348,10 @@ public class MenuDisplay {
     private void handleDeposit() {
         System.out.println("\n=== DEPOSIT MONEY ===");
         try{
-        paymentOrchestrator.processDeposits();
+            paymentOrchestrator.processDeposits();
         }
         catch(SQLException e){
-        System.out.println("failed to process the Deposit");
+            System.out.println("failed to process the Deposit");
         }
     }
 
@@ -681,14 +682,14 @@ public class MenuDisplay {
                 }
             }
             CustomerDTO updatedProfile =
-                    customerService.updateProfile(
-                            customerId,
-                            firstName,
-                            lastName,
-                            email,
-                            phone,
-                            address
-                    );
+            customerService.updateProfile(
+                    customerId,
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    address
+                );
 
             System.out.println("\nProfile updated successfully!");
             System.out.println("--------------------------------");
@@ -739,7 +740,7 @@ public class MenuDisplay {
             }
             break;
         }
-        
+
         System.out.println("Enter Minimum Operating Balance: ");
         BigDecimal minOperatingBalance = scanner.nextBigDecimal();
         System.out.println("Enter Interest Rate: ");
@@ -767,11 +768,27 @@ public class MenuDisplay {
         System.out.println("TODO: Implement inbox viewing");
     }
 
-    private void handleRunPaymentProcessor() {
+    private void handleRunPaymentProcessor() throws SQLException {
         System.out.println("\n=== RUN PAYMENT PROCESSOR ===");
-        // TODO: process pending deposit/withdraw queue entries via
-        // PaymentProcessorOrchestrator
-        System.out.println("TODO: Implement processor run using PaymentProcessorOrchestrator");
+        System.out.println("Select Payment Method to Initialize");
+        System.out.println("1. Deposits");
+        System.out.println("2. Withdrawals");
+
+        while (true) {
+            System.out.println("Select Option:");
+            int option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    paymentOrchestrator.processDeposits();
+                    return; // or break the while loop
+                case 2:
+                    paymentOrchestrator.processWithdrawals();
+                    return; // or break the while loop
+                default:
+                    System.out.println("Invalid Input. Please try again.");
+            }
+        }
     }
 
     private void handleRunLoanRepayments() {
