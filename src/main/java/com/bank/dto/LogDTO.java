@@ -4,8 +4,8 @@ import com.bank.enums.log.LogType;
 
 public class LogDTO {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String action;
     private String details;
     private LogType status;
@@ -15,8 +15,8 @@ public class LogDTO {
     }
 
     public LogDTO(
-            Long id,
-            Long userId,
+            String id,
+            String userId,
             String action,
             String details,
             LogType status,
@@ -30,19 +30,19 @@ public class LogDTO {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

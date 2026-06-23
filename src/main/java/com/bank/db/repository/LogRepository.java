@@ -2,6 +2,7 @@ package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
 import com.bank.enums.log.LogType;
+import com.bank.utils.UuidGeneratorUtil;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,19 +25,22 @@ public class LogRepository {
         return rows.get(0);
     }
 
-    public Long create(Map<String, Object> logFields)
+    public String create(Map<String, Object> logFields)
             throws SQLException {
+        String logId = UuidGeneratorUtil.generateUuid();
+        logFields.put("id",logId);
         String sql = "INSERT INTO logs " +
-                "(customer_id, action, details, status) " + "VALUES (?, ?, ?, ?)";
+                "(id ,customer_id, action, details, status) " + "VALUES (? ,?, ?, ?, ?)";
 
         List<Map<String, Object>> result = db.query(
                 sql,
+                logFields.get("id"),
                 logFields.get("customer_id"),
                 logFields.get("action"),
                 logFields.get("details"),
                 logFields.get("status")
         );
-        return (Long) result.get(0).get("generated_key");
+        return (String) result.get(0).get("generated_key");
     }
 
     public List<Map<String, Object>> findAll()
@@ -46,7 +50,7 @@ public class LogRepository {
         return db.query(sql);
     }
 
-    public List<Map<String, Object>> findByUserId(Long customerId)
+    public List<Map<String, Object>> findByUserId(String customerId)
             throws SQLException {
         String sql = "SELECT * FROM logs " +
                 "WHERE customer_id = ? " +

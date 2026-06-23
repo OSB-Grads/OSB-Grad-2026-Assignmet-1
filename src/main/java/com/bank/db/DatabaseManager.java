@@ -197,11 +197,10 @@ public class DatabaseManager {
             // Logs table — customer_id is the acting customer (nullable: e.g.
             // failed logins where no customer was identified)
             "CREATE TABLE IF NOT EXISTS logs (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "customer_id INTEGER, " +
+            "id VARCHAR(36) PRIMARY KEY, " +
+            "customer_id VARCHAR(36), " +
             "action VARCHAR(100) NOT NULL, " +
             "details TEXT, " +
-            "ip_address VARCHAR(45), " +
             "status VARCHAR(20) DEFAULT 'SUCCESS' CHECK (status IN ('SUCCESS', 'FAILURE', 'ERROR')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
