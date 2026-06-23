@@ -69,7 +69,7 @@ public class CustomerRepository {
      * Insert a new customer.
      * @return the generated customer id
      */
-    public Long insert(Map<String, Object> customerFields) throws SQLException {
+    public String insert(Map<String, Object> customerFields) throws SQLException {
         try {
             List<Map<String, Object>> results =
                     db.query(
@@ -92,11 +92,7 @@ public class CustomerRepository {
                 return null;
             }
 
-            Object generatedKey = results.get(0).get("generated_key");
-
-            return generatedKey == null
-                    ? null
-                    : ((Number) generatedKey).longValue();
+            return (String) results.get(0).get("id");
 
         } catch (SQLException e) {
             throw new DatabaseOperationException(

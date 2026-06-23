@@ -15,6 +15,7 @@ import com.bank.exception.UserCreationFailedException;
 
 
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -233,7 +234,7 @@ public class MenuDisplay {
         String password = scanner.nextLine().trim();
         Map<String, Object> res = authService.login(username, password);
 
-        session.login((Long.parseLong(res.get("customerId").toString())), (Role) res.get("role"));
+        session.login((res.get("customerId").toString()), (Role) res.get("role"));
         if (session.getRole() == Role.ADMIN) {
             System.out.println("\n\n--------------------------------------------------");
             System.out.println("Welcome " + username);
@@ -609,10 +610,60 @@ public class MenuDisplay {
         System.out.println("TODO: Implement loan request using LoanOrchestrator");
     }
 
+    private void handleViewProfile() throws SQLException {
+        System.out.println("\n=== PROFILE DETAILS ===\n");
+
+        String customerId = session.getCustomerId();
+
+        if(customerId == null)
+        {
+            System.out.println("You must be logged in to view profile. \n");
+            return;
+        }
+
+        CustomerDTO customerProfile = customerService.viewProfile(customerId);
+
+        System.out.println("First Name : " + customerProfile.getFirstName());
+        System.out.println("Last Name : " + customerProfile.getLastName());
+        System.out.println("Date of Birth : " + customerProfile.getDateOfBirth());
+        System.out.println("Email : " + customerProfile.getEmail());
+        System.out.println("Phone Number : " + customerProfile.getPhone());
+        System.out.println("Address : " + customerProfile.getAddress());
+        System.out.println("National ID : " + customerProfile.getNationalId());
+
+        while (true) {
+
+            System.out.println("\nOptions:");
+            System.out.println("1. Update Profile Info");
+            System.out.println("0. Back to Customer Menu");
+            System.out.println("-1. Exit");
+            System.out.print("Choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 1) {
+                handleUpdateProfile();
+                break;
+            }
+
+            if (choice == 0) {
+                return; // customer menu
+            }
+
+            if (choice == -1) {
+                System.out.println("Thank you for using CLI Banking Application!");
+                System.exit(0);
+            }
+
+            System.out.println("Invalid Option");
+        }
+    }
+
     private void handleUpdateProfile() {
         System.out.println("\n=== UPDATE PROFILE ===");
         try {
-            Long customerId = session.getCustomerId();
+            String customerId = session.getCustomerId();
 
             if (customerId == null) {
                 System.out.println("You must be logged in to update profile.");
