@@ -89,7 +89,7 @@ public class CustomerService {
      * @return the updated customer
      */
     public CustomerDTO updateProfile(
-            Long id,
+            String id,
             String firstName,
             String lastName,
             String email,
@@ -161,5 +161,26 @@ public class CustomerService {
     public List<CustomerDTO> listAll() {
         // TODO: repository.findAll() -> map each row -> return list.
         throw new UnsupportedOperationException("TODO: implement listAll");
+    }
+
+    public CustomerDTO viewProfile(String id) throws SQLException {
+        try {
+            Map<String, Object> profileInfo = repository.findById(id);
+            CustomerDTO customerDTO = CustomerMapper.toDTO(profileInfo);
+            loggerService.log(
+                    "CUSTOMER INFORMATION",
+                    "Customer details are fetched successfully",
+                    LogType.SUCCESS
+            );
+            return customerDTO;
+        } catch (Exception e) {
+            loggerService.log(
+                    "CUSTOMER INFORMATION",
+                    "Failed to fetch customer details: " +
+                            "Error: " + e.getMessage(),
+                    LogType.ERROR
+            );
+            throw e;
+        }
     }
 }

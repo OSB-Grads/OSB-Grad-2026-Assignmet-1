@@ -612,7 +612,7 @@ public class MenuDisplay {
     private void handleUpdateProfile() {
         System.out.println("\n=== UPDATE PROFILE ===");
         try {
-            Long customerId = session.getCustomerId();
+            String customerId = session.getCustomerId();
 
             if (customerId == null) {
                 System.out.println("You must be logged in to update profile.");
