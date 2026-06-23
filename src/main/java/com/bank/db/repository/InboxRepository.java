@@ -158,7 +158,7 @@ public class InboxRepository {
                     "SELECT * FROM inbox " +
                             "WHERE message_type = ? " +
                             "ORDER BY created_at ASC",
-                    "Withdraw Response"
+                    "WITHDRAWAL"
             );
 
         } catch (SQLException e) {
