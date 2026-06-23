@@ -344,6 +344,7 @@ public class MenuDisplay {
         }
     }
 
+
     private void handleWithdraw() {
         System.out.println("\n=== WITHDRAW MONEY ===");
         List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
