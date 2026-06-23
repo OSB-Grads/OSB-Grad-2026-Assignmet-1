@@ -154,26 +154,12 @@ public class TransactionService {
             throw e;
         }
     }
-    public void updateTransaction(
-            String customerId,
-            String fromAccountId,
-            String toAccountId,
-            String transactionType,
-            String description,
-            String status,
-            BigDecimal amount
-    ) {
+    public void updateTransaction(String id, String status) {
         try {
-            Map<String,Object> updatedField= new HashMap<>();
-            updatedField.put("customer_id", customerId);
-            updatedField.put("from_account_id", fromAccountId);
-            updatedField.put("to_account_id", toAccountId);
-            updatedField.put("transaction_type", transactionType);
-            updatedField.put("amount", amount);
-            updatedField.put("description", description);
-            updatedField.put("status", status);
-            Integer transactionId = transactionRepository.update(customerId, updatedField);
-            if(transactionId == null) {
+            Map<String,Object> statusInfo = new HashMap<>();
+            statusInfo.put("status", status);
+            int rowAffected = transactionRepository.update(id, statusInfo);
+            if(rowAffected == 0) {
                 loggerService.log(
                         "TRANSFER",
                         "Failed to update transaction",

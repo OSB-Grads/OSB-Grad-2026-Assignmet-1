@@ -89,7 +89,7 @@ public class CustomerService {
      * @return the updated customer
      */
     public CustomerDTO updateProfile(
-            Long id,
+            String id,
             String firstName,
             String lastName,
             String email,
