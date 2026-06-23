@@ -131,7 +131,7 @@ public class MenuDisplay {
             System.out.println("5. Transfer Between My Accounts");
             System.out.println("6. Request a Loan");
             System.out.println("7. View Transaction History");
-            System.out.println("8. Update Profile Info");
+            System.out.println("8. View Profile");
             System.out.println("9. Logout");
             System.out.print("Please select an option (1-9): ");
 
@@ -161,7 +161,7 @@ public class MenuDisplay {
                         handleViewTransactionHistory();
                         break;
                     case 8:
-                        handleUpdateProfile();
+                        handleViewProfile();
                         break;
                     case 9:
                         handleLogout();
@@ -177,6 +177,7 @@ public class MenuDisplay {
             }
         }
     }
+
 
     /**
      * Display the admin menu after an ADMIN logs in.
