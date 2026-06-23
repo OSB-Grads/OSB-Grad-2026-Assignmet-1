@@ -24,9 +24,9 @@ public class TransferOrchestrator {
         this.db = DatabaseManager.getInstance();
     }
 
-    public void transfer(Long customerId,
-                         Long sourceAccountId,
-                         Long destinationAccountId,
+    public void transfer(String customerId,
+                         String sourceAccountId,
+                         String destinationAccountId,
                          BigDecimal amount)
             throws InsufficientFundsException,
             AccountLockedException,
@@ -49,6 +49,7 @@ public class TransferOrchestrator {
                     destinationAccountId,
                     "TRANSFER",
                     "Internal Transfer",
+                    "COMPLETED",
                     amount
             );
 
