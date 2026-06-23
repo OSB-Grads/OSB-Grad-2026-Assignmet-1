@@ -344,20 +344,42 @@ public class MenuDisplay {
         }
     }
 
-    private void handleDeposit() {
-        System.out.println("\n=== DEPOSIT MONEY ===");
-        try{
-        paymentOrchestrator.processDeposits();
-        }
-        catch(SQLException e){
-        System.out.println("failed to process the Deposit");
-        }
-    }
-
     private void handleWithdraw() {
+
         System.out.println("\n=== WITHDRAW MONEY ===");
-        // TODO: Show user's savings accounts only, get account selection and amount
-        System.out.println("TODO: Implement withdrawal logic using TransactionOrchestrator");
+
+        List<Map<String, Object>> accounts =
+                accountsService.getAllAccountsForCustomer(
+                        session.getCustomerId());
+
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts found.");
+            return;
+        }
+
+        int count = 1;
+
+        for (Map<String, Object> account : accounts) {
+            System.out.println(
+                    count++ +
+                            ". Account Number: " +
+                            account.get("account_number") +
+                            " | Balance: " +
+                            account.get("balance"));
+        }
+
+        System.out.print("Select Account: ");
+        int option = scanner.nextInt();
+        scanner.nextLine();
+
+        String accountNumber = accounts.get(option - 1)
+                        .get("account_number")
+                        .toString();
+
+        System.out.print("Enter Amount: ");
+        BigDecimal amount = scanner.nextBigDecimal();
+        scanner.nextLine();
+        System.out.println("Withdrawal request captured.\n" +"Account: " + accountNumber + "\nAmount: " + amount);
     }
 
     private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException,
