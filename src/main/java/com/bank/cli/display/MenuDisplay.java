@@ -345,20 +345,15 @@ public class MenuDisplay {
     }
 
     private void handleWithdraw() {
-
         System.out.println("\n=== WITHDRAW MONEY ===");
-
         List<Map<String, Object>> accounts =
                 accountsService.getAllAccountsForCustomer(
                         session.getCustomerId());
-
         if (accounts.isEmpty()) {
             System.out.println("No accounts found.");
             return;
         }
-
         int count = 1;
-
         for (Map<String, Object> account : accounts) {
             System.out.println(
                     count++ +
@@ -367,15 +362,12 @@ public class MenuDisplay {
                             " | Balance: " +
                             account.get("balance"));
         }
-
         System.out.print("Select Account: ");
         int option = scanner.nextInt();
         scanner.nextLine();
-
         String accountNumber = accounts.get(option - 1)
                         .get("account_number")
                         .toString();
-
         System.out.print("Enter Amount: ");
         BigDecimal amount = scanner.nextBigDecimal();
         scanner.nextLine();
