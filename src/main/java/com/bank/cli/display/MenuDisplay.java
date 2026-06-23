@@ -343,14 +343,10 @@ public class MenuDisplay {
             System.out.println("unable to fetch the products");
         }
     }
-
     private void handleWithdraw() {
         System.out.println("\n=== WITHDRAW MONEY ===");
-        List<Map<String, Object>> accounts =
-                accountsService.getAllAccountsForCustomer(
-                        session.getCustomerId());
-        if (accounts.isEmpty()) {
-            System.out.println("No accounts found.");
+        List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
+        if (accounts.isEmpty()) {System.out.println("No accounts found.");
             return;
         }
         int count = 1;
