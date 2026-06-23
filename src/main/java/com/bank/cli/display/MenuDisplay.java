@@ -343,6 +343,7 @@ public class MenuDisplay {
             System.out.println("unable to fetch the products");
         }
     }
+
     private void handleWithdraw() {
         System.out.println("\n=== WITHDRAW MONEY ===");
         List<Map<String, Object>> accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
@@ -358,6 +359,7 @@ public class MenuDisplay {
                             " | Balance: " +
                             account.get("balance"));
         }
+
         System.out.print("Select Account: ");
         int option = scanner.nextInt();
         scanner.nextLine();
