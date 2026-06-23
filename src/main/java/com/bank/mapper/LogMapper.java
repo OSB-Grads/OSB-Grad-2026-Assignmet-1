@@ -17,8 +17,8 @@ public class LogMapper {
                         : null
         );
         dto.setUserId(
-                row.get("user_id") != null
-                        ? ((String) row.get("user_id"))
+                row.get("customer_id") != null
+                        ? ((String) row.get("customer_id"))
                         : null
         );
         dto.setAction((String) row.get("action"));
@@ -39,7 +39,7 @@ public class LogMapper {
         Map<String, Object> row = new HashMap<>();
 
         row.put("id", dto.getId());
-        row.put("user_id", dto.getUserId());
+        row.put("customer_id", dto.getUserId());
         row.put("action", dto.getAction());
         row.put("details", dto.getDetails());
         row.put("type", dto.getStatus() != null ? dto.getStatus().name() : null);
