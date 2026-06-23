@@ -154,4 +154,48 @@ public class TransactionService {
             throw e;
         }
     }
+    public void updateTransaction(
+            String customerId,
+            String fromAccountId,
+            String toAccountId,
+            String transactionType,
+            String description,
+            String status,
+            BigDecimal amount
+    ) {
+        try {
+            Map<String,Object> updatedField= new HashMap<>();
+            updatedField.put("customer_id", customerId);
+            updatedField.put("from_account_id", fromAccountId);
+            updatedField.put("to_account_id", toAccountId);
+            updatedField.put("transaction_type", transactionType);
+            updatedField.put("amount", amount);
+            updatedField.put("description", description);
+            updatedField.put("status", status);
+            Integer transactionId = transactionRepository.update(customerId, updatedField);
+            if(transactionId == null) {
+                loggerService.log(
+                        "TRANSFER",
+                        "Failed to update transaction",
+                        LogType.FAILURE
+                );
+                throw new TransactionFailedException("Failed to update transaction");
+            }
+            loggerService.log(
+                    "TRANSFER",
+                    "Transfer transaction updated successfully",
+                    LogType.SUCCESS
+            );
+        } catch (Exception e) {
+            loggerService.log(
+                    "TRANSFER",
+                    "Transfer transaction update failed: "
+                            + e.getMessage(),
+                    LogType.FAILURE
+            );
+
+            throw new TransactionFailedException(
+                    "Failed to create transaction", e);
+        }
+    }
 }

@@ -79,7 +79,7 @@ public class InboxService {
         throw new RuntimeException("Unable to delete");
     }
 }
-    public List<InboxDTO> getAllDepositsMessages() {
+    public List<InboxDTO> pickDeposits() {
         try {
             List<InboxDTO> messages = inboxRepository.findAllDepositsMessages()
                     .stream()

@@ -99,7 +99,7 @@ public class TransactionRepository {
         }
     }
 
-    public int update(String id, Map<String, Object> changedFields) {
+    public Integer update(String id, Map<String, Object> changedFields) {
 
         try {
 
