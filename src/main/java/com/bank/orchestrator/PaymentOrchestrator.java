@@ -59,6 +59,29 @@ public class PaymentOrchestrator {
         db.endTransaction();
     }
 
+    public void processWithdrawal() throws SQLException{
+       db.startTransaction();
+       List<InboxDTO> listOfWithdrawal = inboxService.pickWithdrawalResponses();
+
+       for(InboxDTO processWithdrawal : listOfWithdrawal){
+
+            paymentService.processWithdrawal(processWithdrawal);
+            Map<String,Object> payload = processWithdrawal.getPayload();
+            AccountDTO account = accountRepository.findAccountByAccountNumber(payload.get("account_number").toString());
+            transactionService.updateTransaction(
+                    account.getCustomerId(),
+                    null,
+                    payload.get("account_number").toString(),
+                    "WITHDRAWAL",
+                    "Withdrawal Successfull  "+ payload.get("amount").toString()+"from account"+payload.get("account_number").toString(),
+                    "COMPLETED",
+                    new BigDecimal(payload.get("amount").toString())
+            );
+             inboxService.deleteById(processWithdrawal.getId());
+       }
+       db.endTransaction();
+     }
+     
     public void initiatePayment(String accountNumber, BigDecimal amount) throws SQLException, InsufficientFundsException{
         String customerId= Session.getInstance().getCustomerId();
 
