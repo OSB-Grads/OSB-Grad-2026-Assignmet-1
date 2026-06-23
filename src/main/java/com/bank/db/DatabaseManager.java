@@ -167,7 +167,7 @@ public class DatabaseManager {
             "id VARCHAR(36) PRIMARY KEY, " +
             "account_number VARCHAR(14) UNIQUE NOT NULL,"+
             "customer_id VARCHAR(36) UNIQUE NOT NULL, " +
-            "product_id VARCHAR(36) UNIQUE NOT NULL,"+
+            "product_id VARCHAR(36) NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
             "status VARCHAR(20) NOT NULL  DEFAULT 'ACTIVE' CHECK(status IN('ACTIVE','CLOSED','MATURED'))," +
