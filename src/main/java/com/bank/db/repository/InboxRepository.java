@@ -152,4 +152,20 @@ public class InboxRepository {
                     " messages from inbox",e);
         }
     }
+    public List<Map<String,Object>> findAllWithdrawalResponses() {
+        try {
+            return db.query(
+                    "SELECT * FROM inbox " +
+                            "WHERE message_type = ? " +
+                            "ORDER BY created_at ASC",
+                    "WITHDRAWAL_RESPONSE"
+            );
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(
+                    "Failed to retrieve withdrawal response messages from inbox",
+                    e
+            );
+        }
+    }
 }

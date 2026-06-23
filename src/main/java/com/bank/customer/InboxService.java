@@ -101,5 +101,32 @@ public class InboxService {
             throw e;
         }
     }
+    public List<InboxDTO> pickWithdrawalResponses() {
+        try {
+            List<InboxDTO> messages = inboxRepository
+                    .findAllWithdrawalResponses()
+                    .stream()
+                    .map(InboxMapper::toDTO)
+                    .toList();
+
+            loggerService.log(
+                    "FETCH WITHDRAWAL RESPONSES",
+                    "Fetched withdrawal response messages successfully",
+                    LogType.SUCCESS
+            );
+
+            return messages;
+
+        } catch (Exception e) {
+
+            loggerService.log(
+                    "FETCH WITHDRAWAL RESPONSES",
+                    "Failed to fetch withdrawal response messages",
+                    LogType.ERROR
+            );
+
+            throw e;
+        }
+    }
 
 }
