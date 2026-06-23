@@ -365,13 +365,17 @@ public class MenuDisplay {
         System.out.print("Select Account: ");
         int option = scanner.nextInt();
         scanner.nextLine();
-        String accountNumber = accounts.get(option - 1)
-                        .get("account_number")
-                        .toString();
+        String accountNumber = accounts.get(option - 1).get("account_number").toString();
         System.out.print("Enter Amount: ");
         BigDecimal amount = scanner.nextBigDecimal();
         scanner.nextLine();
-        System.out.println("Withdrawal request captured.\n" +"Account: " + accountNumber + "\nAmount: " + amount);
+        try {
+            paymentOrchestrator.initiatePayment(accountNumber, amount);
+            System.out.println("Withdrawal request submitted successfully.");
+
+        } catch (Exception e) {
+            System.out.println("Failed to submit withdrawal request: " + e.getMessage());
+        }
     }
 
     private void handleTransfer() throws NegativeAmountException, AccountLockedException, SameAccountTransferException,
