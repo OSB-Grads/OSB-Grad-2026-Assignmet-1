@@ -343,7 +343,15 @@ public class MenuDisplay {
             System.out.println("unable to fetch the products");
         }
     }
-
+    private void handleDeposit() {
+        System.out.println("\n=== DEPOSIT MONEY ===");
+        try{
+            paymentOrchestrator.processDeposits();
+        }
+        catch(SQLException e){
+            System.out.println("failed to process the Deposit");
+        }
+    }
 
     private void handleWithdraw() {
         System.out.println("\n=== WITHDRAW MONEY ===");
