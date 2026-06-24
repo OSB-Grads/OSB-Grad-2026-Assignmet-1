@@ -132,7 +132,7 @@ public class MenuDisplay {
             System.out.println("6. View Transaction History");
             System.out.println("7. View Profile");
             System.out.println("8. Logout");
-            System.out.print("Please select an option (1-9): ");
+            System.out.print("Please select an option (1-8): ");
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
