@@ -50,6 +50,10 @@ public class TransferService {
         }
         if(srcAccountDto.getBalance().compareTo(amount)<0)
         {
+            System.out.println(
+                    "Balance=" + srcAccountDto.getBalance()
+                            + ", Amount=" + amount
+            );
             loggerService.log(
                     "TRANSFER_BETWEEN_ACCOUNTS",
                     "Insufficient funds in the source Account",
@@ -87,8 +91,8 @@ public class TransferService {
         Map<String,Object> srcMap = AccountMapper.toRow(srcAccountDto);
         Map<String,Object> destMap = AccountMapper.toRow(destAccountDto);
 
-        repository.update(srcAccountDto.getId(), srcMap);
-        repository.update(destAccountDto.getId(),destMap);
+        repository.update(srcAccountDto.getAccountNumber(), srcMap);
+        repository.update(destAccountDto.getAccountNumber(),destMap);
 
         loggerService.log(
                     "TRANSFER_BETWEEN_ACCOUNTS",

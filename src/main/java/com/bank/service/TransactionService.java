@@ -47,7 +47,7 @@ public class TransactionService {
             transactionFields.put("description", description);
             transactionFields.put("status", status);
 
-            Long transactionId =
+            String transactionId =
                     transactionRepository.insert(transactionFields);
 
             if (transactionId == null) {
@@ -63,7 +63,7 @@ public class TransactionService {
             );
 
         } catch (Exception e) {
-
+            e.printStackTrace();
             loggerService.log(
                     "TRANSFER",
                     "Transfer transaction creation failed: "

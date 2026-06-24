@@ -61,6 +61,7 @@ public class PaymentOrchestrator {
 
     public void processWithdrawal() throws SQLException{
        db.startTransaction();
+        System.out.println("=== PROCESS WITHDRAWAL STARTED ===");
        List<InboxDTO> listOfWithdrawal = inboxService.pickWithdrawalResponses();
        for(InboxDTO processWithdrawal : listOfWithdrawal){
             paymentService.processWithdrawal(processWithdrawal);
@@ -109,9 +110,9 @@ public class PaymentOrchestrator {
         try {
             transactionService.insertTransaction(
                     customerId,
-                    account.getId(),
+                    accountNumber,
                     null,
-                    "PAYMENT",
+                    "WITHDRAWAL",
                     "Payment initiated from account " + accountNumber,
                     "PENDING",
                     amount

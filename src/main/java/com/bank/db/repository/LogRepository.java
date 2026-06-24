@@ -40,7 +40,7 @@ public class LogRepository {
                 logFields.get("details"),
                 logFields.get("status")
         );
-        return (String) result.get(0).get("generated_key");
+        return logId;
     }
 
     public List<Map<String, Object>> findAll()

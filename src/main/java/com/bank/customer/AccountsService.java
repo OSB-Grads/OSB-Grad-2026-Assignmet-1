@@ -78,6 +78,7 @@ public class AccountsService {
             return accountNumber;
         }
         catch(DatabaseOperationException e){
+            e.printStackTrace();
                        loggerService.log(
                     "CREATE_ACCOUNT",
                     "Failed to Create Account",
