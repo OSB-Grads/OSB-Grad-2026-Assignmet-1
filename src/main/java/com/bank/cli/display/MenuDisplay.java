@@ -126,14 +126,13 @@ public class MenuDisplay {
             System.out.println("\n=== CUSTOMER MENU ===");
             System.out.println("1. Open Bank Account");
             System.out.println("2. View Accounts & Balances");
-            System.out.println("3. Deposit Money (add to queue)");
-            System.out.println("4. Withdraw Money (add to queue)");
-            System.out.println("5. Transfer Between My Accounts");
-            System.out.println("6. Request a Loan");
-            System.out.println("7. View Transaction History");
-            System.out.println("8. View Profile");
-            System.out.println("9. Logout");
-            System.out.print("Please select an option (1-9): ");
+            System.out.println("3. Withdraw Money (add to queue)");
+            System.out.println("4. Transfer Between My Accounts");
+            System.out.println("5. Request a Loan");
+            System.out.println("6. View Transaction History");
+            System.out.println("7. View Profile");
+            System.out.println("8. Logout");
+            System.out.print("Please select an option (1-8): ");
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
@@ -146,33 +145,33 @@ public class MenuDisplay {
                         handleViewAccounts();
                         break;
                     case 3:
-                        handleDeposit();
-                        break;
-                    case 4:
                         handleWithdraw();
                         break;
-                    case 5:
+                    case 4:
                         handleTransfer();
                         break;
-                    case 6:
+                    case 5:
                         handleRequestLoan();
                         break;
-                    case 7:
+                    case 6:
                         handleViewTransactionHistory();
                         break;
-                    case 8:
+                    case 7:
                         handleViewProfile();
                         break;
-                    case 9:
+                    case 8:
                         handleLogout();
                         break;
                     default:
                         System.out.println("Invalid option. Please select 1-9.");
                 }
-            } catch (NumberFormatException | NegativeAmountException | AccountLockedException
-                    | SameAccountTransferException | InsufficientFundsException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
-            } catch (SQLException e) {
+            }catch( NegativeAmountException | AccountLockedException
+                    | SameAccountTransferException | InsufficientFundsException e)
+            {
+                System.out.println(e.getMessage());
+            }catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -398,22 +397,22 @@ public class MenuDisplay {
         System.out.println("Select source Account");
         for (Map<String, Object> account : accounts) {
             System.out.println(
-                    count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
+                    count++ + ". Account Number: " + account.get("account_number") + " | Balance: " + account.get("balance"));
         }
         int option1 = scanner.nextInt();
         scanner.nextLine();
-        String sourceAccountId = ((String) accounts.get(option1 - 1).get("id"));
+        String sourceAccountId = ((String) accounts.get(option1 - 1).get("account_number"));
 
         count = 1;
         System.out.println("Select destination Account");
         for (Map<String, Object> account : accounts) {
             System.out.println(
-                    count++ + ". Account Number: " + account.get("id") + " | Balance: " + account.get("balance"));
+                    count++ + ". Account Number: " + account.get("account_number") + " | Balance: " + account.get("balance"));
 
         }
         int option2 = scanner.nextInt();
         scanner.nextLine();
-        String destinationAccountId = ((String) accounts.get(option2 - 1).get("id"));
+        String destinationAccountId = ((String) accounts.get(option2 - 1).get("account_number"));
         System.out.println("Money you want to transfer");
         BigDecimal amountToBeTransferred = scanner.nextBigDecimal();
         scanner.nextLine();
@@ -422,7 +421,7 @@ public class MenuDisplay {
         accounts = accountsService.getAllAccountsForCustomer(session.getCustomerId());
         System.out.println("\n Transfer successful! Updated balances:");
         for (Map<String, Object> account : accounts) {
-            System.out.println("Account Number: " + account.get("id") +
+            System.out.println("Account Number: " + account.get("account_number") +
                     " | Balance: " + account.get("balance"));
         }
     }
@@ -451,7 +450,6 @@ public class MenuDisplay {
 
         while (true) {
 
-            System.out.println("\n=== YOUR ACCOUNTS ===");
             System.out.println(
                     "Total Balance: $" + balances.get("Total Balance"));
 
@@ -545,7 +543,7 @@ public class MenuDisplay {
             System.out.println("\n=== TRANSACTIONS ===");
 
             System.out.printf(
-                    "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                    "%-42s %-15s %-15s %-15s %-12s %-15s %-20s%n",
                     "TRANSACTION ID",
                     "FROM ACCOUNT",
                     "TO ACCOUNT",
@@ -555,12 +553,12 @@ public class MenuDisplay {
                     "CREATED AT");
 
             System.out.println(
-                    "-----------------------------------------------------------------------------------------------------------------");
+                    "-----------------------------------------------------------------------------------------------------------------------------------------");
 
             for (TransactionDTO transaction : transactions) {
 
                 System.out.printf(
-                        "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                        "%-42s %-15s %-15s %-15s %-12s %-15s %-20s%n",
                         transaction.getId(),
                         transaction.getFromAccountId() == null
                                 ? "-"
@@ -575,7 +573,7 @@ public class MenuDisplay {
             }
 
             System.out.println(
-                    "-----------------------------------------------------------------------------------------------------------------");
+                    "-----------------------------------------------------------------------------------------------------------------------------------------");
 
             while (true) {
 
@@ -610,14 +608,14 @@ public class MenuDisplay {
         System.out.println("\n=== TRANSACTION HISTORY ===\n");
         List<TransactionDTO> transactions = transactionService.listCustomerTransactions(session.getCustomerId());
         System.out.printf(
-                "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                "%-42s %-15s %-15s %-15s %-12s %-15s %-20s%n",
                 "TRANSACTION ID", "FROM ACCOUNT", "TO ACCOUNT", "TYPE", "AMOUNT", "STATUS", "CREATED AT");
         System.out.println(
-                "----------------------------------------------------------------------------------------------------------------------");
+                "----------------------------------------------------------------------------------------------------------------------------------------------");
 
         for (TransactionDTO transaction : transactions) {
             System.out.printf(
-                    "%-18s %-15s %-15s %-15s %-12s %-15s %-20s%n",
+                    "%-42s %-15s %-15s %-15s %-12s %-15s %-20s%n",
                     transaction.getId(),
                     transaction.getFromAccountId() == null ? "-" : transaction.getFromAccountId(),
                     transaction.getToAccountId() == null ? "-" : transaction.getToAccountId(),
@@ -627,7 +625,7 @@ public class MenuDisplay {
                     transaction.getCreatedAt());
         }
         System.out.println(
-                "----------------------------------------------------------------------------------------------------------------------");
+                "----------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
     private void handleRequestLoan() {
@@ -854,13 +852,16 @@ public class MenuDisplay {
         while (true) {
             System.out.println("Select Option:");
             int option = scanner.nextInt();
+            scanner.nextLine();
 
             switch (option) {
                 case 1:
                     paymentOrchestrator.processDeposits();
+                    System.out.println("Deposit Successful");
                     return; // or break the while loop
                 case 2:
-                    paymentOrchestrator.processWithdrawals();
+                    paymentOrchestrator.processWithdrawal();
+                    System.out.println("Withdraw Successful");
                     return; // or break the while loop
                 default:
                     System.out.println("Invalid Input. Please try again.");

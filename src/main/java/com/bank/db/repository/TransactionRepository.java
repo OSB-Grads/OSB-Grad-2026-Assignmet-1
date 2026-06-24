@@ -2,6 +2,8 @@ package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
 import com.bank.exception.DatabaseOperationException;
+import com.bank.utils.UuidGeneratorUtil;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -68,16 +70,19 @@ public class TransactionRepository {
         }
     }
 
-    public Long insert(Map<String, Object> transactionFields) {
+    public String insert(Map<String, Object> transactionFields) {
 
         try {
+            String transactionId = UuidGeneratorUtil.generateUuid();
+            transactionFields.put("id",transactionId);
 
             List<Map<String, Object>> result =
                     db.query(
                             "INSERT INTO transactions " +
-                                    "(customer_id, from_account_id, to_account_id, " +
+                                    "(id ,customer_id, from_account_id, to_account_id, " +
                                     "transaction_type, amount, description, status) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?,?)",
+                                    transactionFields.get("id"),
                                     transactionFields.get("customer_id"),
                                     transactionFields.get("from_account_id"),
                                     transactionFields.get("to_account_id"),
@@ -86,15 +91,10 @@ public class TransactionRepository {
                                     transactionFields.get("description"),
                                     transactionFields.get("status"));
 
-            Object generatedKey =
-                    result.get(0).get("generated_key");
-
-            return generatedKey == null
-                    ? null
-                    : ((Number) generatedKey).longValue();
+            return transactionId;
 
         } catch (SQLException e) {
-
+            e.printStackTrace();
             throw new DatabaseOperationException("Failed to create transaction", e);
         }
     }
@@ -106,7 +106,6 @@ public class TransactionRepository {
             List<Map<String, Object>> result =
                     db.query("UPDATE transactions " +
                                     "SET status = ? " +
-                                    "updated_at = CURRENT_TIMESTAMP," +
                                     "WHERE id = ?",
                                     changedFields.get("status"), id);
 

@@ -166,7 +166,7 @@ public class DatabaseManager {
             "CREATE TABLE IF NOT EXISTS accounts (" +
             "id VARCHAR(36) PRIMARY KEY, " +
             "account_number VARCHAR(14) UNIQUE NOT NULL,"+
-            "customer_id VARCHAR(36) UNIQUE NOT NULL, " +
+            "customer_id VARCHAR(36) NOT NULL, " +
             "product_id VARCHAR(36) NOT NULL,"+
             "balance DECIMAL(15,2) DEFAULT 0.00, " +
             "is_locked BOOLEAN DEFAULT FALSE, " +
@@ -189,8 +189,8 @@ public class DatabaseManager {
             "status VARCHAR(20) DEFAULT 'COMPLETED' CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED')), " +
             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
-            "FOREIGN KEY (from_account_id) REFERENCES accounts(id), " +
-            "FOREIGN KEY (to_account_id) REFERENCES accounts(id)" +
+            "FOREIGN KEY (from_account_id) REFERENCES accounts(account_number), " +
+            "FOREIGN KEY (to_account_id) REFERENCES accounts(account_number)" +
             "FOREIGN KEY (customer_id) REFERENCES customers(id)" +
             ")",
 
@@ -219,7 +219,6 @@ public class DatabaseManager {
             "CREATE TABLE IF NOT EXISTS inbox (" +
             "id VARCHAR(36) PRIMARY KEY, " +
             "correlation_id VARCHAR(64) NOT NULL, " +
-            "idempotency_key VARCHAR(64) NOT NULL UNIQUE, " +
             "transaction_id VARCHAR(64), " +
             "message_type VARCHAR(40) NOT NULL, " +
             "payload TEXT NOT NULL, " +

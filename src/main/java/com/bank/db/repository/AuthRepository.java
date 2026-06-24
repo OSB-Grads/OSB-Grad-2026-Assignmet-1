@@ -2,6 +2,7 @@ package com.bank.db.repository;
 
 import com.bank.db.DatabaseManager;
 import com.bank.exception.DatabaseOperationException;
+import com.bank.utils.UuidGeneratorUtil;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -64,6 +65,8 @@ public class AuthRepository {
     public String insert(Map<String, Object> authFields) {
 
         try {
+            String authId = UuidGeneratorUtil.generateUuid();
+            authFields.put("id",authId);
 
             String sql =
                     "INSERT INTO auth " +
@@ -78,10 +81,7 @@ public class AuthRepository {
                             authFields.get("password_hash"),
                             authFields.get("role")
                     );
-
-            return (String) authRow.get(0).get("id");
-
-            // here we are returning the id
+            return authId;
 
         } catch (SQLException e) {
             throw new DatabaseOperationException(

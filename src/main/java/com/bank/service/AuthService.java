@@ -26,8 +26,6 @@ public class AuthService {
             ValidationUtils.validatePassword(password); // calls the utils folder method.
 
             Map<String, Object> row = new HashMap<>(); // row object for pushing into repo
-            row.put("id",UuidGeneratorUtil.generateUuid());
-            System.out.println("Generated UUID = " + row.get("id"));
             row.put("username", username);
             row.put("password_hash", PasswordUtil.hashPassword(password)); //password_hash is just a variable where I'm storing password.
             row.put("role", "CUSTOMER");

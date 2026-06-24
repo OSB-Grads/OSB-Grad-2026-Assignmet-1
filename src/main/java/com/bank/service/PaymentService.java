@@ -34,9 +34,10 @@ public class PaymentService {
             }
 
             Map<String, Object> payload = inboxDTO.getPayload();
-            String accountNumber = payload.get("accountNumber").toString(); // getting the account_number
+            String accountNumber = payload.get("account_number").toString(); // getting the account_number
             BigDecimal amount = new BigDecimal(payload.get("amount").toString()); // getting the amount
             AccountDTO account = accountRepository.findAccountByAccountNumber(accountNumber);
+
             if (account == null) {
 
                 loggerService.log(
@@ -53,6 +54,7 @@ public class PaymentService {
 
             BigDecimal currentBalance = (BigDecimal) accountMap.get("balance");
             accountMap.put("balance", currentBalance.add(amount)); // adding
+
             accountRepository.update(accountNumber, accountMap); // updating
 
             loggerService.log(
@@ -79,6 +81,7 @@ public class PaymentService {
 
     public void processWithdrawal(InboxDTO inboxDTO)
     {
+
         try{
             if(inboxDTO==null || inboxDTO.getPayload()==null)
             {
@@ -90,8 +93,9 @@ public class PaymentService {
                 throw new IllegalArgumentException("Invalid Withdrawal payload");
             }
             Map<String,Object> payload = inboxDTO.getPayload();
-            String accountNumber = payload.get("accountNumber").toString();
+            String accountNumber = payload.get("account_number").toString();
             BigDecimal amount = new BigDecimal(payload.get("amount").toString());
+
             AccountDTO account = accountRepository.findAccountByAccountNumber(accountNumber);
             if(account == null)
             {

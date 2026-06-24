@@ -96,7 +96,7 @@ public class AccountRepository {
             String accId=UuidGeneratorUtil.generateUuid();
             accountFields.put("id", accId);
             List<Map<String, Object>> rows = db.query(
-                    " INSERT INTO accounts(id,account_number,customer_id,product_id,balance,status,is_locked) VALUES (?,?, ?, ?, ?, ?)",
+                    " INSERT INTO accounts(id,account_number,customer_id,product_id,balance,status,is_locked) VALUES (?,?, ?, ?, ?, ?,?)",
                     accountFields.get("id"),
                     accountFields.get("account_number"),
                     accountFields.get("customer_id"),
@@ -104,7 +104,7 @@ public class AccountRepository {
                     accountFields.get("balance"),
                     accountFields.get("status"),
                     accountFields.get("is_locked"));
-                return ((String) rows.get(0).get("generated_key"));
+                return accId;
 
         } catch (SQLException e) {
 
@@ -114,23 +114,23 @@ public class AccountRepository {
         }
     }
 
-    public int update(String id, Map<String, Object> changedFields) {
+    public int update(String accountNumber, Map<String, Object> changedFields) {
 
         try {
             List<Map<String, Object>> result = db.query(
-                    "UPDATE accounts SET customer_id = ?,product_id = ?, balance = ?,status = ?,is_locked = ? WHERE id = ?",
+                    "UPDATE accounts SET customer_id = ?,product_id = ?, balance = ?,status = ?,is_locked = ? WHERE account_number = ?",
                     changedFields.get("customer_id"),
                     changedFields.get("product_id"),
                     changedFields.get("balance"),
                     changedFields.get("status"),
                     changedFields.get("is_locked"),
-                    id);
+                    accountNumber);
             return ((Number) result.get(0).get("affected_rows")).intValue();
 
         } catch (SQLException e) {
 
             throw new DatabaseOperationException(
-                    "Failed to update account with id: " + id,
+                    "Failed to update account with account_number: " + accountNumber,
                     e);
         }
     }
