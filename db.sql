@@ -30,23 +30,23 @@ DELETE FROM products;
 -- =========================================================
 
 INSERT INTO inbox (
-id,
-correlation_id,
-transaction_id,
-message_type,
-payload,
-status,
-reason
+    id,
+    correlation_id,
+    transaction_id,
+    message_type,
+    payload,
+    status,
+    reason
 )
 VALUES (
-'',
-'',
-'',
-'DEPOSITS',
-'{"account_number":"","amount":0.00}',
-'PENDING',
-''
-);
+           '',
+           '',
+           '',
+           'DEPOSITS',
+           '{"account_number":"","amount":0.00}',
+           'PENDING',
+           ''
+       );
 
 -- View Deposit Messages
 
@@ -59,21 +59,21 @@ WHERE message_type = 'DEPOSITS';
 -- =========================================================
 
 INSERT INTO inbox (
-id,
-correlation_id,
-message_type,
-payload,
-status,
-reason
+    id,
+    correlation_id,
+    message_type,
+    payload,
+    status,
+    reason
 )
 VALUES (
-'',
-'',
-'WITHDRAWAL_RESPONSE',
-'{"account_number":"","amount":0.00,"transaction_id":""}',
-'PENDING',
-''
-);
+           '',
+           '',
+           'WITHDRAWAL_RESPONSE',
+           '{"account_number":"","amount":0.00,"transaction_id":""}',
+           'PENDING',
+           ''
+       );
 
 -- View Withdrawal Messages
 
